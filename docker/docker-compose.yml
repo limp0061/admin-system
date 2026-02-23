@@ -1,0 +1,77 @@
+services:
+  web-server:
+    image: nginx:stable-alpine
+    ports:
+      - 80:80
+    volumes:
+      - ./conf/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - admin-app
+    restart: always
+
+  admin-app:
+    image: limp0061/admin-system:1.0
+    container_name: admin-app
+    environment:
+      - SERVER_PORT=9091
+      - SPRING_PROFILES_ACTIVE=dev
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - JAVA_TOOL_OPTIONS=-Xmx384m -Xms256m -Dfile.encoding=UTF-8
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: always
+
+  redis:
+    image: redis:latest
+    container_name: redis-admin
+    restart: always
+    ports:
+      - 6379:6379
+    volumes:
+      - redis_data:/data
+      - ./conf/redis.conf:/usr/local/etc/redis/redis.conf
+    command: [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mysql-db:
+    image: mysql:8.4
+    container_name: mysql-db
+    restart: always
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ../sql:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --init-connect=SET NAMES utf8mb4
+      - --innodb-redo-log-capacity=64M
+      - --innodb-buffer-pool-size=128M
+      - --innodb-flush-log-at-trx-commit=2
+      - --max-connections=50
+      - --performance-schema=OFF
+      - --skip-name-resolve
+
+volumes:
+  redis_data:
+  mysql_data:

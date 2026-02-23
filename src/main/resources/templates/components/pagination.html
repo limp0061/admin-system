@@ -1,0 +1,53 @@
+<div class="flex justify-center items-center gap-1 py-2" id="pageNation"
+     th:fragment="pageNation"
+     th:with="start=${(list.pageNumber /10)*10},
+              end=${(start+9 <list.totalPages) ? start+9 : (list.totalPages > 0 ? list.totalPages - 1 : 0)},
+              pageSize=${list.pageSize}">
+
+    <a href="javascript:void(0)"
+       class="page-btn"
+       th:classappend="${list.pageNumber == 0} ? 'pointer-events-none opacity-50' : ''"
+       th:onclick="|goToFirstPage()|">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+             class="size-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5"/>
+        </svg>
+    </a>
+
+    <a href="javascript:void(0)"
+       class="page-btn"
+       th:classappend="${list.pageNumber == 0} ? 'pointer-events-none opacity-50' : ''"
+       th:onClick="|goToPrevPage(${list.pageNumber})|">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+             class="size-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/>
+        </svg>
+    </a>
+
+    <a href="javascript:void(0)"
+       class="page-btn"
+       th:classappend="${pageIdx == list.pageNumber} ? 'border-[#383F51]' : ''"
+       th:each="pageIdx : ${#numbers.sequence(start, end)}"
+       th:text="${pageIdx + 1}"
+       th:onClick="|goToPage(${pageIdx})|">
+    </a>
+
+    <a href="javascript:void(0)"
+       class="page-btn"
+       th:classappend="${list.isLastPage} ? 'pointer-events-none opacity-50' : ''"
+       th:onClick="|goToNextPage(${list.pageNumber},${list.totalPages})|">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+             class="size-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
+        </svg>
+    </a>
+    <a href="javascript:void(0)"
+       class="page-btn"
+       th:classappend="${list.isLastPage} ? 'pointer-events-none opacity-50' : ''"
+       th:onClick="|goToLastPage(${list.totalPages})|">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+             class="size-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5"/>
+        </svg>
+    </a>
+</div>

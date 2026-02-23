@@ -1,0 +1,123 @@
+<div th:fragment="content" class="modal-form z-10">
+    <div class="flex items-center justify-between border-b pb-3">
+        <span class="text-xl font-semibold">리소스 추가</span>
+        <button onClick="closeModal()">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                 stroke="currentColor"
+                 class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
+    <form id="resource-form" class="overflow-y-auto ">
+        <div class="flex flex-col gap-1">
+            <div class="flex px-6 rounded-lg w-full">
+                <div class="form-row form-row-bg">
+                    <label for="name" class="form-label">리소스 명</label>
+                    <div class="form-field">
+                        <input
+                                id="name"
+                                name="name"
+                                type="text"
+                                placeholder="리소스 이름을 입력해주세요."
+                                class="form-input"
+                                th:value="${resource.name}"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col gap-1">
+                <div class="flex px-6 rounded-lg w-full">
+                    <input type="hidden" name="id" th:value="${resource.id}">
+                    <div class="form-row form-row-bg bg-gray-100 pointer-events-none">
+                        <label for="url-pattern" class="form-label">URL Pattern</label>
+                        <div class="form-field">
+                            <input
+                                    id="url-pattern"
+                                    name="urlPattern"
+                                    type="text"
+                                    placeholder="예: /admins/**"
+                                    class="form-input"
+                                    th:value="${resource.urlPattern}"
+                                    readonly
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div class="flex px-6 rounded-lg w-full">
+                    <div class="form-row form-row-bg">
+                        <label for="modal-method" class="form-label">Method</label>
+                        <div class="form-field gap-1 relative">
+                            <input type="hidden" name="method" id="method-input" th:value="${resource.method.name()}">
+                            <button type="button" class="form-input text-left ignore-close" id="modal-method"
+                                    data-action="toggleSelect"
+                                    th:text="${resource.method.name() == 'ALL' ? '전체' : resource.method.name()}">
+                            </button>
+                            <ul class="data-template">
+                                <li class="select-li"
+                                    th:each="method : ${methods}"
+                                    th:data-value="${method.name()}"
+                                    th:text="${method.name() == 'ALL' ? '전체' : method.name()}">
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex px-6 rounded-lg w-full">
+                    <div class="form-row form-row-bg">
+                        <label for="role" class="form-label">권한</label>
+                        <div class="flex flex-col flex-1 gap-2">
+                            <div class="form-field gap-1 relative">
+                                <button type="button" class="form-input text-left ignore-close" id="role"
+                                        data-action="toggleSelect"
+                                        data-target="badge-container"
+                                        data-multi="true"
+                                        th:data-is-placeholder="true">
+                                    전체 허용
+                                </button>
+                                <ul class="data-template">
+                                    <li class="select-li"
+                                        th:each="role : ${roles}"
+                                        th:data-value="${role.id}"
+                                        th:text="${role.roleName}">
+                                    </li>
+                                </ul>
+                            </div>
+                            <div id="badge-container" class="flex flex-wrap gap-2">
+                                <div class="flex items-center gap-1.5 w-fit bg-white text-slate-700 px-2.5 py-1.5 rounded-md border border-gray-200 shadow-sm"
+                                     th:each="role : ${resource.roles}"
+                                     th:if="${role.roleKey != 'ROLE_ANONYMOUS'}"
+                                >
+                                    <input type="hidden" class="badge-value" th:value="${role.id}">
+                                    <span class="badge-text text-xs font-semibold" th:text="${role.roleName}"></span>
+                                    <button type="button" class="text-gray-400 hover:text-red-500 transition-colors"
+                                            onclick="this.parentElement.remove()">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="size-3.5" fill="none"
+                                             viewBox="0 0 24 24"
+                                             stroke="currentColor" stroke-width="2.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex px-6 rounded-lg w-full">
+                <textarea
+                        name="description"
+                        class="w-full bg-gray-50 rounded-lg border-none focus:ring-0 focus:outline-none resize-none p-5 min-h-32 text-sm text-gray-700"
+                        placeholder="이 리소스에 대한 설명을 남겨주세요."
+                        th:text="${resource.description}">
+                </textarea>
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 mt-4 px-6 w-full">
+                <button type="button" class="btn btn-primary" data-action="updateResource">변경</button>
+                <button type="button" class="btn bg-gray-100 px-4" onClick="closeModal()">닫기</button>
+            </div>
+        </div>
+    </form>
+    <ul id="common-select-ul" class="select-ul hidden"></ul>
+</div>

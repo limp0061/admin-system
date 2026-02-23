@@ -1,0 +1,56 @@
+<div th:fragment="modalTable" class="w-full flex-1 text-xs flex flex-col h-full">
+    <div class="flex-1 overflow-y-auto">
+        <table class="table-modal">
+            <thead>
+            <tr>
+                <th class="w-12">
+                    <div class="flex items-center justify-center">
+                        <input type="checkbox" data-action="checkToggle" class="size-3 check-all">
+                    </div>
+                </th>
+                <th class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between gap-2">
+                        <span>이름</span>
+                    </div>
+                </th>
+                <th class="w-[25%]">
+                    <div class="flex items-center justify-between gap-2">
+                        <span>사번</span>
+                    </div>
+                </th>
+                <th class="w-[25%]">
+                    <div class="flex items-center justify-between gap-2">
+                        <span>부서</span>
+                    </div>
+                </th>
+            </tr>
+            </thead>
+            <tbody th:if="${#lists.isEmpty(list.content)}">
+            <tr>
+                <td colspan="6" class="py-16 text-center text-gray-400">
+                    부서에 소속된 사용자가 없습니다
+                </td>
+            </tr>
+            </tbody>
+
+            <tbody th:unless="${#lists.isEmpty(list.content)}">
+            <tr th:each="item : ${list.content}"
+                th:data-id="${item.id}"
+                class="hover:bg-gray-50 hover:cursor-pointer"
+                data-action="clickRow">
+                <td class="text-center align-middle">
+                    <input type="checkbox"
+                           class="size-3 check-box"
+                           th:value="${item.id}">
+                </td>
+                <td class="truncate" th:text="${item.name}"></td>
+                <td th:text="${item.userCode}"></td>
+                <td th:data-dept-id="${item.deptId}"
+                    th:text="${item.deptName}">
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div th:replace="~{components/pagination :: pageNation}"></div>
+</div>

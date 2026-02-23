@@ -1,0 +1,74 @@
+<div th:fragment="deptTable" class="w-full flex-1">
+    <table class="table">
+        <thead class="border border-b-2">
+        <tr>
+            <th class="w-12">
+                <div class="flex items-center justify-center">
+                    <input type="checkbox" data-action="checkToggle" class="size-3 check-all">
+                </div>
+            </th>
+            <th class="flex-1 ">
+                <div class="flex items-center justify-between gap-2">
+                    <span>이름</span>
+                </div>
+            </th>
+            <th class="w-[15%]">
+                <div class="flex items-center justify-between gap-2">
+                    <span>사번</span>
+                </div>
+            </th>
+            <th class="w-[15%]">
+                <div class="flex items-center justify-between gap-2">
+                    <span>직급</span>
+                </div>
+            </th>
+            <th class="w-[20%]">
+                <div class="flex items-center justify-between gap-2">
+                    <span>부서</span>
+                </div>
+            </th>
+            <th class="w-[15%]">
+                <div class="flex items-center justify-between gap-2">
+                    <span>계정 상태</span>
+                </div>
+            </th>
+        </tr>
+        </thead>
+        <tbody th:if="${#lists.isEmpty(list.content)}">
+        <tr>
+            <td colspan="6" class="py-16 text-center text-gray-400">
+                부서에 소속된 사용자가 없습니다
+            </td>
+        </tr>
+        </tbody>
+
+        <tbody th:unless="${#lists.isEmpty(list.content)}">
+        <tr th:each="item : ${list.content}"
+            th:data-id="${item.id}"
+            class="hover:bg-gray-50 hover:cursor-pointer"
+            data-action="clickRow">
+            <td class="text-center align-middle">
+                <input type="checkbox"
+                       class="size-3 check-box"
+                       th:value="${item.id}">
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap overflow-visible">
+                <div class="inline-flex items-center relative group">
+                    <span th:text="${item.name}" class="cursor-pointer mr-2"></span>
+                    <div class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200
+                    absolute left-full z-[100]
+                    bg-slate-800 text-white rounded py-1 px-2 whitespace-nowrap shadow-xl">
+                        <span th:text="${item.emailId}"></span>
+                        <div class="absolute right-full top-1/2 -translate-y-1/2
+                        border-[4px] border-transparent border-r-slate-800"></div>
+                    </div>
+                </div>
+            </td>
+            <td th:text="${item.userCode}"></td>
+            <td th:text="${item.position}"></td>
+            <td th:data-dept-id="${item.deptId}" th:text="${item.deptName}"></td>
+            <td th:text="${item.userStatus.label}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>

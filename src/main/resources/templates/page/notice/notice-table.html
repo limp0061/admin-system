@@ -1,0 +1,70 @@
+<div th:fragment="noticeTable" class="w-full flex-1 text-xs flex flex-col h-full">
+    <div class="flex-1 overflow-y-auto">
+        <table class="table">
+            <thead class="border border-b-2">
+            <tr>
+                <th class="w-12">
+                    <div class="flex items-center justify-center">
+                        <input type="checkbox" data-action="checkToggle" class="size-3 check-all">
+                    </div>
+                </th>
+                <th class="w-[10%]">
+                    <div class="flex items-center justify-between gap-2">
+                        <span>유형</span>
+                    </div>
+                </th>
+                <th class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between gap-2">
+                        <span>제목</span>
+                    </div>
+                </th>
+                <th class="w-[25%]">
+                    <div class="flex items-center justify-between gap-2">
+                        <span>공지 기간</span>
+                    </div>
+                </th>
+                <th class="w-[15%]">
+                    <div class="flex items-center justify-between gap-2">
+                        <span>수정 일시</span>
+                    </div>
+                </th>
+            </tr>
+            </thead>
+            <tbody th:if="${#lists.isEmpty(list.content)}">
+            <tr>
+                <td colspan="6" class="py-16 text-center text-gray-400">
+                    작성된 공지가 없습니다
+                </td>
+            </tr>
+            </tbody>
+
+            <tbody th:unless="${#lists.isEmpty(list.content)}">
+            <tr th:each="item : ${list.content}"
+                th:data-id="${item.id}"
+                class="hover:bg-gray-50 hover:cursor-pointer"
+                data-action="clickRow">
+                <td class="text-center align-middle">
+                    <input type="checkbox"
+                           class="size-3 check-box"
+                           th:value="${item.id}">
+                </td>
+                <td th:text="${item.type.label}"></td>
+                <td class="truncate" th:text="${item.title}">
+                </td>
+                <td>
+                    <th:block th:if="${item.startAt != null or item.endAt != null}">
+                        <span th:text="${item.startAt != null ? #temporals.format(item.startAt, 'yyyy-MM-dd HH') : ''}"></span>
+                        <span class="mx-1">~</span>
+                        <span th:text="${item.endAt != null ? #temporals.format(item.endAt, 'yyyy-MM-dd HH') : '상시'}"></span>
+                    </th:block>
+                    <th:block th:unless="${item.startAt != null or item.endAt != null}">
+                        <span class="text-gray-400">기한 없음</span>
+                    </th:block>
+                </td>
+                <td th:text="${#temporals.format(item.updatedAt, 'yyyy-MM-dd HH:mm')}">
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

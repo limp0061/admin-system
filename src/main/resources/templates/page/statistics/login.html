@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/output.css}">
+    <title>관리자 | 로그인 통계</title>
+</head>
+<body class="min-h-screen">
+<div class="min-h-screen flex">
+    <nav th:replace="~{fragments/nav :: nav}"></nav>
+    <div class="flex flex-col flex-1">
+        <header th:replace="~{fragments/header :: header}"></header>
+        <main class="vt-main flex flex-1 flex-col">
+            <div id="list-wrapper" class="flex flex-col flex-1">
+                <div th:replace="~{components/prepare :: main}"></div>
+            </div>
+        </main>
+        <footer th:replace="~{fragments/footer :: footer}"></footer>
+    </div>
+</div>
+
+<script type="module" th:src="@{/js/menu/menu.js}"></script>
+</body>
+
+</html>

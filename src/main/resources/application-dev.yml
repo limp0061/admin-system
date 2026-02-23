@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:mysql://mysql-db:3306/${MYSQL_DATABASE}?serverTimezone=Asia/Seoul&useUnicode=true&characterEncoding=utf8
+    username: ${MYSQL_USER:admin_user}
+    password: ${MYSQL_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+
+  sql:
+    init:
+      mode: never
+
+  data:
+    redis:
+      host: redis
+      port: 6379
+
+server:
+  port: 9091

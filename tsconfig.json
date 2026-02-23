@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "target": "ESNext",
+    "module": "ESNext",
+    "outDir": "src/main/resources/static/js",
+    "strict": true,
+    "strictNullChecks": false,
+    "moduleDetection": "force",
+    "moduleResolution": "node",
+    "esModuleInterop": true
+  },
+  "include": [
+    "src/main/ts/**/*.ts"
+  ]
+}

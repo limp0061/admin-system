@@ -1,0 +1,85 @@
+<div th:fragment="content" class="modal-form z-10">
+    <div class="flex items-center justify-between border-b pb-3">
+        <span class="text-xl font-semibold" th:text="${mode eq 'EDIT' ? '권한 수정' : '권한 추가'}"></span>
+        <button onClick="closeModal()">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                 stroke="currentColor"
+                 class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
+    <form id="role-form" class="overflow-y-auto ">
+        <input type="hidden" name="id" th:value="${role?.id}">
+        <div class="flex flex-col gap-1">
+            <div class="flex px-6 rounded-lg w-full">
+                <div class="form-row form-row-bg">
+                    <label for="role_key" class="form-label">권한 키</label>
+                    <div class="form-field">
+                        <input
+                                id="role_key"
+                                name="roleKey"
+                                type="text"
+                                placeholder="권한 키를 입력해주세요. 예) ROLE_"
+                                class="form-input"
+                                th:value="${role?.roleKey}"
+                                autocomplete="off"
+                        />
+                        <span id="error-roleKey" class="error-msg text-red-600 text-xs mt-1 px-1"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex px-6 rounded-lg w-full">
+                <div class="form-row form-row-bg">
+                    <label for="role_name" class="form-label">권한 명</label>
+                    <div class="form-field">
+                        <input
+                                id="role_name"
+                                name="roleName"
+                                type="text"
+                                placeholder="권한 명을 입력해주세요. "
+                                class="form-input"
+                                th:value="${role?.roleName}"
+                                autocomplete="off"
+                        />
+                        <span id="error-roleName" class="error-msg text-red-600 text-xs mt-1 px-1"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex px-6 rounded-lg w-full">
+                <div class="form-row form-row-bg">
+                    <label for="parent-role" class="form-label">상위 권한</label>
+                    <div class="form-field gap-1 relative"
+                         th:with="selectedRole=${tree.?[id == #root.role?.parentId]}">
+                        <input type="hidden" name="parentId" id="parent-id" th:value="${role?.parentId}">
+                        <button type="button" class="form-input text-left ignore-close" id="parent-role"
+                                data-action="toggleSelect"
+                                th:text="${!#lists.isEmpty(selectedRole) ? selectedRole[0].roleName : '없음'}">
+                        </button>
+                        <ul class="data-template">
+                            <li class="select-li"
+                                th:each="node : ${tree}"
+                                th:data-value="${node.id}"
+                                th:text="${node.roleName}">
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="flex px-6 rounded-lg w-full">
+                <div class="form-row form-row-bg">
+                    <label for="isAdmin" class="form-label break-keep">관리자 역할</label>
+                    <input type="checkbox"
+                           id="isAdmin"
+                           name="isAdmin"
+                           th:checked="${role?.isAdmin}"/>
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-end gap-2 mt-4 px-6 w-full">
+            <button type="button" class="btn btn-primary" data-action="saveRole">저장</button>
+            <button type="button" class="btn bg-gray-100 px-4" onClick="closeModal()">닫기</button>
+        </div>
+    </form>
+    <ul id="common-select-ul" class="select-ul hidden"></ul>
+</div>

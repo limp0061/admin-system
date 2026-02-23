@@ -1,0 +1,106 @@
+<div th:fragment="content" class="modal-form z-10">
+    <div class="flex items-center justify-between border-b pb-3">
+        <span class="text-xl font-semibold" th:text="${mode eq 'EDIT' ? '부서 수정' :'부서 추가'}">부서 추가</span>
+        <button onClick="closeModal()">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                 stroke="currentColor"
+                 class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
+    <form id="dept-form" class="overflow-y-auto ">
+        <div class="flex flex-col gap-1">
+            <input type="hidden" name="id" th:value="${dept.id}"/>
+            <div class="flex gap-4 px-6 rounded-lg w-full">
+                <div class="form-row form-row-bg">
+                    <label for="dept-name" class="form-label">부서명</label>
+                    <div class="form-field">
+                        <input
+                                id="dept-name"
+                                name="deptName"
+                                type="text"
+                                placeholder="개발팀"
+                                class="form-input"
+                                th:value="${dept.deptName}"
+                        />
+                        <span id="error-deptName" class="error-msg text-red-600 text-xs mt-1 px-1"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex gap-4 px-6 rounded-lg w-full">
+                <div class="form-row form-row-bg">
+                    <label for="dept-code" class="form-label">부서 코드</label>
+                    <div class="form-field">
+                        <input
+                                id="dept-code"
+                                name="deptCode"
+                                type="text"
+                                class="form-input"
+                                th:value="${dept.deptCode}"
+                        />
+                        <span id="error-deptCode" class="error-msg text-red-600 text-xs mt-1 px-1"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex gap-4 px-6 rounded-lg w-full">
+                <div class="form-row form-row-bg">
+                    <label for="upper-dept-id-btn" class="form-label">상위 부서</label>
+                    <div class="form-field gap-1 relative">
+                        <input type="hidden" name="upperDeptId" id="upper-dept-id-input"
+                               th:value="${dept.upperDeptId}">
+                        <button type="button" class="form-input text-left ignore-close" id="upper-dept-id-btn"
+                                data-action="toggleSelect"
+                                th:with="selectedDept=${tree.?[id == #root.dept.upperDeptId]}"
+                                th:text="${!#lists.isEmpty(selectedDept) ? selectedDept[0].deptName : '전체'}">
+                            >
+                            전체
+                        </button>
+                        <ul class="data-template">
+                            <li class="select-li"
+                                th:each="item : ${tree}"
+                                th:data-value="${item.id}"
+                                th:text="${item.deptName}">
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="flex gap-4 px-6 rounded-lg w-full">
+                <div class="form-row form-row-bg">
+                    <label for="sort" class="form-label">정렬</label>
+                    <div class="form-field">
+                        <input
+                                id="sort"
+                                name="sortOrder"
+                                type="number"
+                                placeholder="정렬 순서를 입력해주세요. ex) 0"
+                                class="form-input"
+                                th:value="${dept.sortOrder}"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="flex gap-4 px-6 rounded-lg w-full">
+                <div class="form-row form-row-bg">
+                    <label for="active-btn" class="form-label">활성 여부</label>
+                    <div class="form-field gap-1 relative">
+                        <input type="hidden" name="isActive" id="active-input" th:value="${dept.isActive}">
+                        <button class="form-input text-left ignore-close" type="button" id="active-btn"
+                                data-action="toggleSelect"
+                                th:text="${dept.isActive ? '사용' : '미사용'}"></button>
+                        <ul class="data-template">
+                            <li class="select-li" data-value="true">사용</li>
+                            <li class="select-li" data-value="false">미사용</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-end gap-2 mt-4 px-6 w-full">
+            <button type="button" class="btn btn-primary" data-action="saveDept">저장</button>
+            <button type="button" class="btn bg-gray-100 px-4" onClick="closeModal()">닫기</button>
+        </div>
+    </form>
+    <ul id="common-select-ul" class="select-ul hidden"></ul>
+</div>

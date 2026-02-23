@@ -1,0 +1,105 @@
+<div th:fragment="content" id="modal-form" class="modal-form min-w-[650px] z-10 font-normal text-sm">
+    <div class="flex items-center justify-between border-b pb-3">
+        <span class="text-xl font-semibold" th:text="${mode eq 'EDIT' ? '공지 수정' : '공지 추가'}"></span>
+        <button data-action="closeEditModal">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                 stroke="currentColor"
+                 class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
+    <div class="flex flex-col flex-1 gap-3 ">
+        <form class="flex flex-col gap-3" id="noticeForm">
+            <input type="hidden" name="id" th:value="${notice.id}"/>
+            <div class="flex flex-col gap-3 w-full p-3 border rounded-md border-gray-300">
+                <div class="flex flex-col gap-3" th:with="selectedType=${notice?.type}">
+                    <input type="hidden" name="type" id="modal-type" th:value="${selectedType?.name() ?: ''}">
+
+                    <button class="form-input flex items-center justify-between border-0 border-b border-gray-300
+                                text-left ignore-close focus:focus:border-gray-400 focus:ring-0 hover:bg-gray-50"
+                            data-action="toggleSelect"
+                            id="notice-type-btn"
+                            th:data-is-placeholder="${#lists.isEmpty(selectedType)} ? 'true' : null"
+                            type="button">
+                        <span th:text="${selectedType != null ? selectedType.label : '공지 유형을 선택해주세요...'}"></span>
+                        <svg class="ml-2 w-3 h-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <span id="error-type" class="error-msg text-red-600 text-xs mt-1 px-1"></span>
+                    <ul class="data-template z-100 hidden">
+                        <li class="select-li text-left" th:each="type : ${types}"
+                            th:data-value="${type.name()}" th:text="${type.label}"></li>
+                    </ul>
+
+                    <input type="text" name="title" placeholder="제목을 입력해주세요..."
+                           class="form-input flex items-center bg-gray-100 text-sm px-4 py-2 h-11 cursor-none focus:border-gray-400 focus:ring-0 hover:bg-gray-50 focus:outline-none"
+                           th:value="${notice.title}"/>
+                    <span id="error-title" class="error-msg text-red-600 text-xs mt-1 px-1"></span>
+
+                    <div class="flex justify-end gap-2">
+                        <div class="flex items-center gap-2">
+                            <input type="checkbox" name="isForce" id="isForce"
+                                   class="size-3.5 mt-0.5 cursor-pointer" th:value="true"
+                                   th:checked="${notice.isForce}" data-action="checkForce">
+                            <label for="isForce" class="text-sm font-medium text-gray-600 whitespace-nowrap">강제/긴급
+                                발송</label>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <input type="checkbox" name="isRealTimeNoticed" id="isRealTimeNoticed"
+                                   class="size-3.5 mt-0.5 cursor-pointer" th:value="true"
+                                   th:checked="${notice.isRealTimeNoticed}" data-action="checkRealTime">
+                            <label for="isRealTimeNoticed" class="text-sm font-medium text-gray-600 whitespace-nowrap">실시간
+                                발송</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="editor-wrapper"
+                 class="opacity-0 transition-opacity duration-300 overflow-hidden">
+                <textarea id="editor"
+                          name="content"
+                          th:utext="${notice.content}"
+                ></textarea>
+                <span id="error-content" class="error-msg text-red-600 text-xs mt-1 px-1"></span>
+            </div>
+            <div class="flex items-center gap-3 w-full border-t pt-4">
+                <div class="shrink-0 text-gray-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                         stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M6.75 2.994v2.25m10.5-2.25v2.25m-14.252 13.5V7.491a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v11.251m-18 0a2.25 2.25 0 0 0 2.25 2.25h13.5a2.25 2.25 0 0 0 2.25-2.25m-18 0v-7.5a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v7.5m-6.75-6h2.25m-9 2.25h4.5m.002-2.25h.005v.006H12v-.006Zm-.001 4.5h.006v.006h-.006v-.005Zm-2.25.001h.005v.006H9.75v-.006Zm-2.25 0h.005v.005h-.006v-.005Zm6.75-2.247h.005v.005h-.005v-.005Zm0 2.247h.006v.006h-.006v-.006Zm2.25-2.248h.006V15H16.5v-.005Z"/>
+                    </svg>
+                </div>
+                <label class="text-sm font-medium text-gray-600 whitespace-nowrap">기간 설정</label>
+                <div class="flex items-center gap-2 flex-1">
+                    <div class="relative flex-1">
+                        <input name="startAt" id="startAt" type="text" data-datepicker
+                               th:value="${notice.startAt}"
+                               placeholder="시작 기간을 선택해주세요."
+                               class="w-full border rounded px-3 py-2 text-sm focus:border-gray-400 focus:ring-0 hover:bg-gray-50 focus:outline-none"/>
+                    </div>
+                    <span class="text-gray-400 shrink-0"> ~ </span>
+                    <div class="relative flex-1">
+                        <input name="endAt" id="endAt" type="text" data-datepicker
+                               th:value="${notice.endAt}"
+                               placeholder="종료 기간을 선택해주세요."
+                               class="w-full border rounded px-3 py-2 text-sm focus:border-gray-400 focus:ring-0 hover:bg-gray-50 focus:outline-none"/>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="flex justify-end gap-2 w-full mt-1">
+        <button type="button" class="btn btn-primary" data-action="saveNotice"
+                th:text="${mode eq 'EDIT'} ?
+                (${notice.isRealTimeNoticed} ? '수정 및 재발송' : '수정') :
+                '저장'"></button>
+        <button type="button" class="btn bg-gray-100 px-4" data-action="closeEditModal">닫기</button>
+    </div>
+
+    <ul id="common-select-ul" class="select-ul hidden"></ul>
+</div>

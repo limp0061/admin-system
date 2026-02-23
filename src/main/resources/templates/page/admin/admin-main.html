@@ -1,0 +1,5 @@
+<div th:fragment="adminMain" class="flex flex-col h-full">
+    <div th:replace="~{page/admin/admin-header :: adminHeader}"></div>
+    <div th:replace="~{page/admin/admin-table :: pageTable}"></div>
+    <div th:replace="~{components/pagination :: pageNation}"></div>
+</div>

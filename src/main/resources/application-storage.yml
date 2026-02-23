@@ -1,0 +1,7 @@
+cloudflare:
+  r2:
+    endpoint: "https://b2a412638ab7e26e02e5cdbaa2f84b8c.r2.cloudflarestorage.com"
+    bucket: "admin-demo"
+    access-key: ${R2_ACCESS_KEY}
+    secret-key: ${R2_SECRET_KEY}
+    public-url: "https://pub-04de91f2b9e84f0d9cc88fb2bcddf737.r2.dev"

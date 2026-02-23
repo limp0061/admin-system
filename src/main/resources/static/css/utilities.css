@@ -1,0 +1,9 @@
+@layer utilities {
+    .vt-main {
+        view-transition-name: main;
+    }
+
+    .vt-nav {
+        view-transition-name: sidebar;
+    }
+}

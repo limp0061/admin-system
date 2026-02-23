@@ -1,0 +1,15 @@
+{
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.19",
+    "@types/flatpickr": "^3.0.2",
+    "autoprefixer": "^10.4.23",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.19"
+  },
+  "scripts": {
+    "tailwind:build": "tailwindcss -i ./src/main/resources/static/css/tailwind.css -o ./src/main/resources/static/css/output.css --watch"
+  },
+  "dependencies": {
+    "@types/node": "^25.0.3"
+  }
+}

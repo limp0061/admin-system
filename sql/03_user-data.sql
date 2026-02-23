@@ -1,0 +1,78 @@
+SET NAMES utf8mb4;
+-- 1. USER 테이블 데이터 삽입 (200명)
+INSERT INTO user (user_id, email_id, name, user_code, position, password, password_fail_count, profile_path,
+                  user_status, gender, role_id, created_at, updated_at, deleted_at)
+SELECT n,
+       CONCAT('user', n, '@kyj2579.com'),
+       CONCAT('테스트유저', LPAD(n, 3, '0')),
+       CONCAT('USER-', LPAD(n, 5, '0')),
+       CASE MOD(n, 10)
+           WHEN 1 THEN '사원'
+           WHEN 2 THEN '대리'
+           WHEN 3 THEN '과장'
+           WHEN 4 THEN '차장'
+           WHEN 5 THEN '부장'
+           ELSE NULL END,
+       '{noop}1234',
+       CASE WHEN MOD(n, 7) = 0 THEN 5 ELSE 0 END,
+       NULL,
+       CASE
+           WHEN MOD(n, 15) = 0 THEN 'DELETED'
+           WHEN MOD(n, 17) = 0 THEN 'INACTIVE'
+           WHEN MOD(n, 10) = 0 THEN 'BLOCKED'
+           WHEN MOD(n, 7) = 0 THEN 'LOCKED'
+           ELSE 'ACTIVE' END,
+       CASE WHEN MOD(n, 2) = 0 THEN 'MALE' ELSE 'FEMALE' END,
+       CASE
+           WHEN n <= 5 THEN 1 -- SUPER
+           WHEN n <= 10 THEN 2 -- ADMIN
+           WHEN n <= 15 THEN 3 -- MANAGER
+           WHEN n <= 150 THEN 4 -- STAFF
+           ELSE 5 END,
+       -- [수정] TIMESTAMPADD 사용 (H2, MySQL 공통 문법)
+       TIMESTAMPADD(MINUTE, -n, TIMESTAMPADD(DAY, -n, CURRENT_TIMESTAMP)),
+       TIMESTAMPADD(SECOND, -n, TIMESTAMPADD(HOUR, -n, CURRENT_TIMESTAMP)),
+       CASE WHEN MOD(n, 15) = 0 THEN TIMESTAMPADD(MINUTE, -n, CURRENT_TIMESTAMP) ELSE NULL END
+FROM (SELECT (a.N + b.N * 10 + c.N * 100) + 1 AS n
+      FROM (SELECT 0 AS N UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) a,
+           (SELECT 0 AS N UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) b,
+           (SELECT 0 AS N UNION SELECT 1) c) AS numbers
+WHERE n <= 200;
+
+-- 2. USER_DEPT 데이터 삽입 (이전과 동일)
+INSERT INTO user_dept (user_id, dept_id)
+SELECT n,
+       CASE
+           WHEN n <= 40 THEN 3
+           WHEN n <= 80 THEN 4
+           WHEN n <= 120 THEN 1
+           WHEN n <= 150 THEN 5
+           WHEN n <= 180 THEN 6
+           ELSE 2 END
+FROM (SELECT (a.N + b.N * 10 + c.N * 100) + 1 AS n
+      FROM (SELECT 0 AS N UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) a,
+           (SELECT 0 AS N UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) b,
+           (SELECT 0 AS N UNION SELECT 1) c) AS numbers
+WHERE n <= 200;
+
+-- 3. USER_CONFIG 데이터 삽입
+INSERT INTO user_config (user_id, is_received_notice, last_notice_check_at, created_at, updated_at)
+SELECT n,
+       TRUE,
+       TIMESTAMPADD(DAY, -30, CURRENT_TIMESTAMP), -- [수정] TIMESTAMPADD 사용
+       CURRENT_TIMESTAMP,
+       CURRENT_TIMESTAMP
+FROM (SELECT (a.N + b.N * 10 + c.N * 100) + 1 AS n
+      FROM (SELECT 0 AS N UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) a,
+           (SELECT 0 AS N UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) b,
+           (SELECT 0 AS N UNION SELECT 1) c) AS numbers
+WHERE n <= 200;
+
+-- 4. USER_ALLOWED_IPS 데이터 삽입
+INSERT INTO user_allowed_ips (user_id, ip_address)
+SELECT n, '0.0.0.0'
+FROM (SELECT (a.N + b.N * 10 + c.N * 100) + 1 AS n
+      FROM (SELECT 0 AS N UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) a,
+           (SELECT 0 AS N UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) b,
+           (SELECT 0 AS N UNION SELECT 1) c) AS numbers
+WHERE n <= 10;

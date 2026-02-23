@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/output.css}">
+    <title>로그인</title>
+</head>
+<body class="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-300 to-indigo-500">
+
+<div class="flex flex-col min-w-96 max-w-md bg-white rounded-lg p-8 gap-3">
+    <div class="text-center text-xl font-bold text-slate-800 italic uppercase tracking-wider">
+        Admin Login
+    </div>
+    <form id="login-form" class="flex flex-col gap-2" th:action="@{/api/login}"
+          method="post">
+        <div class="relative mt-8">
+            <input type="text" id="username" name="username"
+                   class="input-group peer h-10 w-full border-b-2 border-gray-200 text-base text-gray-900 placeholder-transparent focus:border-blue-500 focus:outline-none"
+                   placeholder=" "
+                   autocomplete="off"
+            />
+            <label for="username"
+                   class="absolute left-0 transition-all duration-200 pointer-events-none
+                  -top-3.5 text-[11px] text-gray-500 leading-none
+
+                  peer-placeholder-shown:top-2
+                  peer-placeholder-shown:text-sm
+                  peer-placeholder-shown:leading-none
+                  peer-placeholder-shown:text-gray-400
+
+                  peer-focus:-top-3.5
+                  peer-focus:text-[11px]
+                  peer-focus:leading-none
+                  peer-focus:text-gray-500">
+                이메일을 입력해주세요
+            </label>
+        </div>
+        <div class="relative mt-8">
+            <input type="password" id="password" name="password"
+                   class="input-group peer h-10 w-full border-b-2 border-gray-200 text-base text-gray-900 placeholder-transparent focus:border-blue-500 focus:outline-none"
+                   placeholder=" "
+                   autocomplete="off"
+            />
+            <label for="password"
+                   class="absolute left-0 transition-all duration-200 pointer-events-none
+                  -top-3.5 text-[11px] text-gray-500 leading-none
+
+                  peer-placeholder-shown:top-2
+                  peer-placeholder-shown:text-sm
+                  peer-placeholder-shown:leading-none
+                  peer-placeholder-shown:text-gray-400
+
+                  peer-focus:-top-3.5
+                  peer-focus:text-[11px]
+                  peer-focus:leading-none
+                  peer-focus:text-gray-500">
+                비밀번호를 입력해주세요
+            </label>
+        </div>
+        <div th:if="${param.error}" class="mt-2 text-red-600 font-semibold" id="alert-toast">
+            <span th:with="errCode=${param.exception[0]}"
+                  th:text="${T(com.project.admin_system.common.exception.ErrorCode).valueOf(errCode).message}">
+            </span>
+            !!
+        </div>
+        <div class="flex items-center justify-end mt-5">
+            <button id="login-btn" type="button" class="px-6 py-2.5 text-sm font-bold text-white bg-slate-800 rounded-lg
+                   hover:bg-slate-900 transition-all active:scale-95">
+                로그인
+            </button>
+        </div>
+    </form>
+</div>
+</body>
+<script type="module" th:src="@{/js/login/login.js}"></script>
+</html>

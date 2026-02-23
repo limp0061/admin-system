@@ -1,0 +1,316 @@
+@layer components {
+    :root {
+        --table-font-size: 14px;
+    }
+
+    .sidebar {
+        @apply w-[250px] px-3 bg-[#383F51] text-[#FFFFFF]
+        dark:bg-[#111827];
+
+        li {
+            @apply min-h-[50px] align-middle;
+        }
+
+
+        li.active {
+            @apply bg-[#1E2333] dark:bg-blue-600/20;
+        }
+    }
+
+    .btn {
+        @apply inline-flex items-center gap-2
+        px-1 py-1 h-[34px] rounded-md text-sm font-medium text-gray-800
+        bg-transparent hover:bg-gray-100 transition;
+    }
+
+    .btn-primary {
+        @apply bg-[#383F51] text-white hover:bg-[#1E2333] px-4;
+    }
+
+    .btn-danger {
+        @apply border border-[#960909] text-[#960909] hover:bg-[#960909] hover:text-white px-4;
+    }
+
+    .btn-status {
+        @apply font-medium text-xs bg-gray-50 hover:bg-gray-100 border-[#D1D5DB] text-[#374151] p-3.5 h-9;
+    }
+
+    .table {
+        @apply w-full;
+    }
+
+    .table thead th,
+    .table tbody td {
+        @apply border-b border-r border-gray-200 p-3 font-medium
+        dark:border-slate-700 dark:text-slate-300;
+
+        font-size: var(--table-font-size) !important;
+        line-height: 1.5 !important;
+    }
+
+    .table thead th:last-child,
+    .table tbody td:last-child {
+        @apply border-r-0
+    }
+
+    .form-row {
+        @apply flex gap-4 w-full px-6 py-3 rounded-lg;
+    }
+
+    .form-row-bg {
+        @apply bg-gray-50;
+    }
+
+    .form-row:focus-within {
+        @apply bg-blue-50;
+    }
+
+    .form-label {
+        @apply w-16 mt-2 text-sm font-bold text-gray-700 shrink-0;
+    }
+
+    .form-field {
+        @apply flex flex-col flex-1 gap-2;
+    }
+
+    .form-input {
+        @apply w-full px-3 py-2 text-sm bg-white h-9
+        border border-gray-300 rounded-md shadow-sm
+        placeholder-gray-400
+        hover:cursor-pointer
+        dark:bg-slate-900 dark:border-slate-700 dark:text-white dark:placeholder-slate-500;
+    }
+
+    .form-input:focus {
+        @apply outline-none border-blue-500 ring-4 focus:ring-blue-100
+    }
+
+    .select-ul {
+        @apply fixed z-[9999] mt-1 max-h-[250px]
+        overflow-y-auto overflow-x-hidden
+        text-sm bg-white border border-gray-300 rounded-md shadow-lg;
+    }
+
+    .select-li {
+        @apply w-full px-3 py-2 mt-1 text-sm bg-white
+        hover:bg-blue-50
+        hover:border-blue-500
+        hover:cursor-pointer
+    }
+
+    .data-template {
+        @apply hidden
+    }
+
+
+    .modal-form {
+        @apply flex flex-col w-[480px] min-h-[300px] bg-white rounded p-4 gap-3 max-h-[85vh] overflow-hidden
+        dark:text-slate-200;
+    }
+
+    .modal-confirm {
+        @apply flex flex-col w-[360px] bg-white min-h-[150px] rounded shadow-xl overflow-hidden p-4 gap-4
+        dark:text-slate-200;
+    }
+
+    .toast {
+        @apply flex items-center justify-center
+        min-w-[200px] max-w-[320px] px-6 py-4
+        rounded-xl shadow-lg bg-white
+        text-sm font-medium text-gray-700
+        animate-slide-in;
+    }
+
+    .toast-success {
+        @apply border-l-4 border-[#26472d] text-[#26472d];
+    }
+
+    .toast-error {
+        @apply border-l-4 border-[#c40808] text-[#c40808];
+
+    }
+
+    .page-btn {
+        @apply flex items-center justify-center border border-gray-200
+        bg-gray-50 p-1 font-medium w-7 h-7
+        hover:bg-gray-100
+        disabled:opacity-20
+        disabled:cursor-not-allowed
+        disabled:hover:bg-transparent
+        ;
+    }
+
+    .animate-slide-in {
+        animation: slideIn 0.3s ease-out forwards;
+    }
+
+    [data-is-placeholder="true"] {
+        @apply text-gray-400;
+    }
+
+    .table-modal {
+        @apply w-full border-collapse;
+    }
+
+    .table-modal thead th {
+        @apply border-b-2 border-gray-200 p-3 font-semibold text-gray-600 bg-gray-50;
+    }
+
+    .table-modal tbody td {
+        @apply border-b border-gray-100 p-3 font-normal text-gray-700;
+    }
+
+    .table-modal tbody tr:hover {
+        @apply bg-blue-50/50;
+    }
+}
+
+/* 1. 헤더 전체 정렬 및 버튼(< >) 중앙 배치 */
+.flatpickr-calendar .flatpickr-months {
+    height: 50px !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+.flatpickr .cur-month {
+    font-weight: 300 !important;
+}
+
+/* 월 이동 버튼(< >) 수직 중앙 정렬 및 커서 */
+.flatpickr-calendar .flatpickr-prev-month,
+.flatpickr-calendar .flatpickr-next-month {
+    height: 50px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+}
+
+.flatpickr-calendar .flatpickr-current-month {
+    display: flex !important;
+    flex-direction: row-reverse !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 14px !important;
+    font-weight: 300 !important;
+    gap: 12px !important;
+}
+
+/* 2. 년도 숫자 박스 패딩 및 화살표 간격 */
+.flatpickr-calendar .numInputWrapper {
+    background: transparent !important;
+    width: 100px !important; /* 공간을 넉넉히 확보 */
+    display: inline-flex !important;
+    align-items: center !important;
+    padding: 5px;
+}
+
+.flatpickr-calendar .numInputWrapper:hover {
+    background: #f9fafb !important;
+}
+
+
+.flatpickr-calendar .numInputWrapper input.cur-year {
+    padding: 2px 35px 2px 8px !important; /* 내부 상하좌우 여백(Padding) 확보 */
+    border-radius: 4px !important;
+    font-size: 14px !important;
+    font-weight: 300 !important;
+    cursor: text !important;
+}
+
+/* 년도 숫자 옆 화살표 위치 고정 */
+.flatpickr-calendar .numInputWrapper span {
+    right: 22px !important;
+    height: 40% !important;
+    border: none;
+}
+
+.flatpickr-calendar .cur-month {
+    font-weight: normal !important; /* 또는 400 !important */
+}
+
+/* 헤더에만 "년" 글자 추가 */
+.flatpickr-current-month .numInputWrapper::after {
+    content: "년";
+    position: absolute;
+    right: 5px;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+/* 3. 색상 원상복구 (파란색 -> #383F51) 및 사각형 유지 */
+.flatpickr-calendar .flatpickr-day.selected,
+.flatpickr-calendar .flatpickr-day.startRange,
+.flatpickr-calendar .flatpickr-day.endRange {
+    background: #383F51 !important;
+    border-color: #383F51 !important;
+    border-radius: 4px !important;
+}
+
+.flatpickr-calendar .flatpickr-day:hover {
+    border-radius: 4px !important;
+}
+
+.flatpickr-calendar .flatpickr-day.today {
+    border-color: #383F51 !important;
+    color: #383F51 !important;
+    border-radius: 4px !important;
+}
+
+/* 4. 시간 선택 영역 커서 및 포커스 수정 */
+.flatpickr-calendar .flatpickr-time {
+    height: 45px !important;
+    line-height: 45px !important;
+}
+
+.flatpickr-calendar .flatpickr-time input,
+.flatpickr-calendar .flatpickr-time .flatpickr-am-pm {
+    cursor: pointer !important; /* 12:00 영역에 손가락 커서 추가 */
+    font-weight: 300 !important;
+}
+
+.flatpickr-calendar .flatpickr-time input:hover {
+    background: #f3f4f6 !important;
+}
+
+/* 하단 유령 "년" 글자 삭제 */
+.flatpickr-time .numInputWrapper::after {
+    display: none !important;
+}
+
+.ck-editor__editable_inline {
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+    height: 30vh !important;
+    min-height: 300px !important;
+    overflow-y: auto;
+}
+
+.ck-editor__editable_inline ul {
+    list-style-type: disc !important;
+    padding-left: 1.5rem !important;
+}
+
+.ck-editor__editable_inline ol {
+    list-style-type: decimal !important;
+    padding-left: 1.5rem !important;
+}
+
+.ck-editor__editable_inline h1 {
+    font-size: 1.6em !important;
+    font-weight: bold !important;
+}
+
+.ck-editor__editable_inline h2 {
+    font-size: 1.4em !important;
+    font-weight: bold !important;
+}
+
+.ck-editor__editable_inline h3 {
+    font-size: 1.2em !important;
+    font-weight: bold !important;
+}
+
+.ck-content img {
+    display: inline-block !important;
+}

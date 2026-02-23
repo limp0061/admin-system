@@ -1,0 +1,54 @@
+<div th:fragment="content" class="modal-confirm" th:with="mName=${mode.name()}">
+    <div class="text-center p-2">
+        <div class="mx-auto flex items-center justify-center h-14 w-14 rounded-full mb-4"
+             th:classappend="${mName.matches('APPROVE|UNLOCKED|ACTIVE') ? 'bg-blue-50' : 'bg-red-50'}">
+            <svg class="h-8 w-8"
+                 th:classappend="${mName.matches('APPROVE|UNLOCKED|ACTIVE') ? 'text-blue-500' : 'text-red-500'}"
+                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path th:if="${mName.matches('APPROVE|UNLOCKED|ACTIVE')}" stroke-linecap="round" stroke-linejoin="round"
+                      stroke-width="2" d="M5 13l4 4L19 7"/>
+                <path th:unless="${mName.matches('APPROVE|UNLOCKED|ACTIVE')}" stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+        </div>
+
+        <p class="text-sm text-gray-500 leading-relaxed">
+            <th:block th:if="${count > 0}">
+                <span class="text-gray-700 font-medium">
+                    <th:block th:if="${mName == 'DELETED' or mName == 'REMOVE'}"
+                              th:text="|${count}명의 사용자를 정말 삭제하시겠습니까?|"></th:block>
+
+                    <th:block th:unless="${mName == 'DELETED' or mName == 'REMOVE'}" th:switch="${mName}">
+                        <th:block th:case="'REJECT'" th:text="|${count}명의 사용자를 정말 반려하시겠습니까?|"></th:block>
+                        <th:block th:case="'APPROVE'" th:text="|${count}명의 사용자를 승인하시겠습니까?|"></th:block>
+                        <th:block th:case="'UNLOCKED'" th:text="|${count}명의 사용자를 잠금 해제하시겠습니까?|"></th:block>
+                        <th:block th:case="*" th:text="|${count}명의 사용자를 변경하시겠습니까?|"></th:block>
+                    </th:block>
+                </span>
+            </th:block>
+        </p>
+    </div>
+
+    <div class="btn-list flex justify-end gap-3 mt-4">
+        <button th:if="${count > 0}"
+                type="button"
+                data-action="changeStatus"
+                th:data-ids="${#strings.listJoin(ids, ',')}"
+                th:data-mode="${mName}"
+                th:classappend="${mName.matches('DELETED|REMOVE|REJECT') ? 'btn-danger' : 'btn-primary'}"
+                class="btn">
+            <th:block th:switch="${mName}">
+                <th:block th:case="'DELETED'">삭제</th:block>
+                <th:block th:case="'REMOVE'">삭제</th:block>
+                <th:block th:case="'REJECT'">반려</th:block>
+                <th:block th:case="'APPROVE'">승인</th:block>
+                <th:block th:case="'UNLOCKED'">잠금 해제</th:block>
+
+                <th:block th:case="*">변경</th:block>
+            </th:block>
+        </button>
+        <button type="button" onClick="closeModal()" class="btn btn-white px-4">닫기</button>
+    </div>
+</div>

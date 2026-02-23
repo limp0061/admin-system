@@ -1,0 +1,47 @@
+<div th:fragment="viewController" class="hidden lg:flex gap-1">
+    <div class="relative inline-block">
+        <button class="btn ignore-close" data-action="btnDropDown">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                 stroke="currentColor" class="size-5">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M6 13.5V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m12-3V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m-6-9V3.75m0 3.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 9.75V10.5"/>
+            </svg>
+        </button>
+        <div class="btn-dropDown ignore-close hidden absolute right-0 top-full mt-1 bg-white border border-gray-300 rounded shadow-md z-50">
+            <ul class="flex flex-col text-xs">
+                <li class="relative w-full group flex items-center justify-center hover:cursor-pointer hover:bg-gray-100">
+                        <span class="whitespace-nowrap p-3" data-action="btnDropDown">
+                            목록 크기
+                        </span>
+                    <div class="btn-dropDown hidden absolute right-full -top-0.5 mr-0.5 flex-col bg-white border border-gray-300 rounded shadow-md min-w-[50px]">
+                        <a href="javascript:void(0)" onclick="changeSize(10)"
+                           class="text-center whitespace-nowrap p-3 hover:bg-gray-100">10개</a>
+                        <a href="javascript:void(0)" onclick="changeSize(20)"
+                           class="text-center whitespace-nowrap p-3 hover:bg-gray-100">20개</a>
+                        <a href="javascript:void(0)" onclick="changeSize(30)"
+                           class="text-center whitespace-nowrap p-3 hover:bg-gray-100">30개</a>
+                        <a href="javascript:void(0)" onclick="changeSize(40)"
+                           class="text-center whitespace-nowrap p-3 hover:bg-gray-100">40개</a>
+                    </div>
+                </li>
+                <li class="relative w-full group flex items-center justify-center hover:cursor-pointer hover:bg-gray-100">
+                    <span class="whitespace-nowrap p-3" data-action="btnDropDown">폰트 크기</span>
+                    <div class="btn-dropDown hidden absolute right-full -top-0.5 mr-0.5 flex-col bg-white border border-gray-300 rounded shadow-md min-w-[50px]">
+                        <button class="text-center whitespace-nowrap p-3 hover:bg-gray-100"
+                                data-font-size="12px">
+                            12px
+                        </button>
+                        <button class="text-center whitespace-nowrap p-3 hover:bg-gray-100"
+                                data-font-size="14px">
+                            14px
+                        </button>
+                        <button class="text-center whitespace-nowrap p-3 hover:bg-gray-100"
+                                data-font-size="16px">
+                            16px
+                        </button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

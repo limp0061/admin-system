@@ -1,0 +1,15 @@
+.idea
+.git
+.gitignore
+.dockerignore
+Dockerfile
+*.md
+*.sh
+*.yml
+scripts
+build/
+src/
+!build/libs/*.jar
+
+src/main/resources/application-secret.yml
+docker/redis/.env

@@ -1,0 +1,123 @@
+<div th:fragment="content" id="modal-form" class="modal-form w-[70vw] z-10 overflow-y-auto">
+    <div class="flex items-center justify-between border-b pb-3">
+        <span class="text-lg font-semibold">구성원 변경</span>
+        <button data-action="closeModal">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                 stroke="currentColor"
+                 class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
+    <div class="flex gap-2 w-full items-stretch h-[600px]">
+        <div class="flex flex-col flex-1 gap-2 min-w-0">
+            <div class="flex w-full gap-2">
+                <input type="hidden" name="selectDeptId" id="select-dept-id">
+                <button type="button"
+                        class="form-input text-left ignore-close basis-1/4 focus:border-gray-400 focus:ring-0 hover:bg-gray-50"
+                        id="select-dept-btn"
+                        data-action="toggleSelect">
+                    전체
+                </button>
+                <ul class="data-template">
+                    <li class="select-li"
+                        th:each="item : ${tree}"
+                        th:data-value="${item.id}"
+                        th:text="${item.deptName}"
+                        data-action="selectModalDept">
+                    </li>
+                </ul>
+                <div class="flex flex-1 search-container">
+                    <form class="relative w-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                             stroke="currentColor"
+                             class="absolute left-3 top-1/2 -translate-y-1/2 w-3 h-3 text-gray-400">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/>
+                        </svg>
+                        <input
+                                type="text"
+                                name="keyword"
+                                placeholder="사번 또는 이름을 입력해주세요..."
+                                class="search-input w-full h-9 pl-10 pr-4 py-3 rounded-md border border-gray-300 font-medium text-xs focus:outline-none focus:ring-1 focus:ring-gray-300"
+                        />
+                        <button type="button" class="clear-btn absolute top-1/2 -translate-y-1/2 right-2 z-5 hidden"
+                                data-action="clearInput">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                 stroke="currentColor" class="size-3">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div id="modal-list-wrapper" class="w-full flex-1">
+                <div th:replace="~{page/dept/dept-modal-table::modalTable}"></div>
+            </div>
+        </div>
+
+        <div class="flex flex-col justify-center items-center gap-4 w-10 shrink-0">
+            <button class="p-1 hover:bg-gray-100 rounded-md border border-gray-200" data-action="moveUser">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                     stroke="currentColor" class="size-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
+                </svg>
+            </button>
+            <button class="p-1 hover:bg-gray-100 rounded-md border border-gray-200" data-action="removeUser">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                     stroke="currentColor" class="size-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="flex flex-col w-64 shrink-0 rounded-lg overflow-hidden border">
+            <div class="w-full py-2 px-3 border-b">
+                <input type="hidden" name="targetDeptId" id="targetDeptId">
+                <button type="button"
+                        class="form-input text-left ignore-close basis-1/4 focus:border-gray-400 focus:ring-0 hover:bg-gray-50"
+                        id="targetDept-btn"
+                        data-action="toggleSelect"
+                        th:data-is-placeholder="true">
+                    부서를 선택해주세요
+                </button>
+                <ul class="data-template">
+                    <li class="select-li"
+                        th:each="item : ${tree}"
+                        th:if="${item.deptCode != 'ROOT'}"
+                        th:data-value="${item.id}"
+                        th:text="${item.deptName}">
+                    </li>
+                </ul>
+            </div>
+            <div class="w-full flex-1 bg-gray-50 p-1 overflow-y-auto">
+                <p id="empty-msg" class="text-[11px] text-gray-400 text-center mt-10"
+                   th:classappend="${!#lists.isEmpty(selectedUsers)} ? 'hidden' : ''">
+                    사용자를 이동 시켜주세요
+                </p>
+                <ul id="selected-user-list"
+                    th:classappend="${#lists.isEmpty(selectedUsers)} ? 'hidden' : 'flex flex-col gap-1'">
+                    <li th:each="user : ${selectedUsers}"
+                        class="flex items-center justify-between p-2 border-b bg-white text-xs hover:cursor-pointer hover:bg-gray-50"
+                        th:data-user-id="${user.id}" th:data-dept-id="${user.deptId}" data-action="clickRow">
+                        <div class="flex items-center gap-3">
+                            <input type="checkbox" class="check-box size-3" th:value="${user.id}">
+                            <span th:text="|${user.name} (${user.userCode})|"></span>
+                        </div>
+                        <button type="button" data-action="removeOne">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                 stroke="currentColor" class="size-3">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="flex justify-end gap-2 mt-4 px-6 w-full">
+        <button type="button" class="btn btn-primary" data-mode="EDIT" data-action="userChangeDept">변경</button>
+        <button type="button" class="btn bg-gray-100 px-4" data-action="closeModal">닫기</button>
+    </div>
+    <ul id="common-select-ul" class="select-ul hidden"></ul>
+</div>

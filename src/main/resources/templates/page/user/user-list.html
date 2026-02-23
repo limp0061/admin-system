@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/output.css}">
+    <title>관리자 | 사용자 관리</title>
+</head>
+<body class="min-h-screen">
+<div class="min-h-screen flex">
+    <nav th:replace="~{fragments/nav :: nav}"></nav>
+    <div class="flex flex-col flex-1">
+        <header th:replace="~{fragments/header :: header}"></header>
+        <main class="vt-main flex flex-1 flex-col">
+            <div id="list-wrapper" class="flex flex-col flex-1">
+                <div th:replace="~{page/user/user-main::userMain}"></div>
+            </div>
+        </main>
+        <footer th:replace="~{fragments/footer :: footer}"></footer>
+    </div>
+</div>
+<div id="modal-root"></div>
+<div th:replace="~{components/common-ui :: toast}"></div>
+<script type="module" th:src="@{/js/menu/menu.js}"></script>
+<script type="module" th:src="@{/js/page/user/user-list.js}"></script>
+<script type="module" th:src="@{/js/common/index.js}"></script>
+</body>
+
+</html>

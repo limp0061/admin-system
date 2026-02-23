@@ -1,0 +1,5 @@
+<div th:fragment="userMain" class="flex flex-col h-full">
+    <div th:replace="~{page/user/user-header :: userHeader(${pageType})}"></div>
+    <div th:replace="~{page/user/user-table :: pageTable(${pageType})}"></div>
+    <div th:replace="~{components/pagination :: pageNation}"></div>
+</div>

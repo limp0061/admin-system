@@ -1,0 +1,162 @@
+<div th:fragment="content" class="modal-form w-[900px] z-10">
+    <div class="flex items-center justify-between border-b pb-3">
+        <span class="text-xl font-semibold">사용자 수정</span>
+        <button onClick="closeModal()">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                 stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
+
+    <form id="user-form" class="overflow-y-auto pt-6">
+        <input type="hidden" name="id" th:value="${user.id}">
+
+        <div class="flex gap-8 px-6">
+            <div id="profile-container" class="flex flex-col items-center gap-3 shrink-0 pt-2">
+                <div id="image-preview"
+                     onclick="document.getElementById('fileInput').click()"
+                     class="w-32 h-32 border-2 flex items-center justify-center overflow-hidden bg-gray-50 cursor-pointer hover:border-blue-500 rounded-lg"
+                     th:classappend="${user.profilePath != null ? 'border-solid border-gray-400':'border-dashed border-gray-300'}">
+                    <img id="preview-img" th:src="${user.profilePath}" class="w-full h-full object-cover"
+                         alt="Profile Preview"
+                         th:classappend="${user.profilePath != null ? 'flex' : 'hidden'}">
+                    <div id="placeholder" class="text-center text-gray-400"
+                         th:classappend="${user.profilePath != null ? 'hidden' : 'flex'}">
+                        <span class="text-xs">사진 추가</span>
+                    </div>
+                </div>
+                <input type="file" id="fileInput" accept="image/*" class="hidden" onchange="previewImage(this)">
+                <p class="text-[11px] text-gray-400 italic"
+                   th:text="${user.profilePath != null ? '클릭하여 변경' : '클릭하여 업로드'}"></p>
+            </div>
+
+            <div class="flex-1 grid grid-cols-2 gap-x-4 gap-y-4">
+
+                <div class="form-row form-row-bg col-span-2">
+                    <label for="name" class="form-label">이름</label>
+                    <div class="form-field">
+                        <input id="name" name="name" type="text" placeholder="이름을 입력해주세요" class="form-input"
+                               th:value="${user.name}"/>
+                        <span id="error-name" class="error-msg text-red-600 text-xs mt-1 px-1"></span>
+                    </div>
+                </div>
+
+                <div class="form-row form-row-bg">
+                    <label for="emailId" class="form-label">이메일</label>
+                    <div class="form-field">
+                        <input id="emailId" name="emailId" type="text" placeholder="example@example.com"
+                               class="form-input" th:value="${user.emailId}"/>
+                        <span id="error-emailId" class="error-msg text-red-600 text-xs mt-1 px-1"></span>
+                    </div>
+                </div>
+
+                <div class="form-row form-row-bg">
+                    <label for="password" class="form-label">비밀번호</label>
+                    <div class="form-field">
+                        <input id="password" name="password" type="password" placeholder="변경 시에만 입력"
+                               class="form-input"/>
+                        <span id="error-password" class="error-msg text-red-600 text-xs mt-1 px-1"></span>
+                    </div>
+                </div>
+
+                <div class="form-row form-row-bg">
+                    <label for="user-code" class="form-label">사번</label>
+                    <div class="form-field">
+                        <input id="user-code" name="userCode" type="text" placeholder="사번을 입력해주세요" class="form-input"
+                               th:value="${user.userCode}"/>
+                    </div>
+                </div>
+
+                <div class="form-row form-row-bg">
+                    <label for="position" class="form-label">직급</label>
+                    <div class="form-field">
+                        <input id="position" name="position" type="text" placeholder="직급을 입력해주세요" class="form-input"
+                               th:value="${user.position}"/>
+                    </div>
+                </div>
+
+                <div class="form-row form-row-bg">
+                    <label for="gender-btn" class="form-label">성별</label>
+                    <div class="form-field gap-1 relative">
+                        <input type="hidden" name="gender" id="gender-input"
+                               th:value="${user.gender.name() == 'NONE' ? '' : user.gender.name()}">
+                        <button class="form-input text-left ignore-close" type="button" id="gender-btn"
+                                data-action="toggleSelect"
+                                th:data-is-placeholder="${user.gender == null || user.gender.name() == 'NONE'}"
+                                th:text="${user.gender == null || user.gender.name() == 'NONE' ? '성별을 선택해주세요' : user.gender.label}">
+                        </button>
+                        <ul class="data-template">
+                            <li class="select-li" th:each="gender : ${genders}" th:if="${gender.name() != 'NONE'}"
+                                th:data-value="${gender.name()}" th:text="${gender.label}"></li>
+                        </ul>
+                        <span id="error-gender" class="error-msg text-red-600 text-xs mt-1 px-1"></span>
+                    </div>
+                </div>
+
+                <div class="form-row form-row-bg">
+                    <label for="dept-btn" class="form-label">부서</label>
+                    <div class="form-field gap-1 relative"
+                         th:with="targetId=${user?.deptId}, selectedDept=${tree.?[id == #root.targetId]}">
+                        <input type="hidden" name="deptId" id="dept-code-input" th:value="${targetId}">
+                        <button type="button" class="form-input text-left ignore-close" id="dept-btn"
+                                data-action="toggleSelect"
+                                th:data-is-placeholder="${#lists.isEmpty(selectedDept)} ? 'true' : null"
+                                th:text="${!#lists.isEmpty(selectedDept) ? selectedDept[0].deptName : '부서를 선택해주세요'}">
+                        </button>
+                        <ul class="data-template">
+                            <li class="select-li" th:each="item : ${tree}" th:if="${item.deptCode != 'ROOT'}"
+                                th:data-value="${item.id}" th:text="${item.deptName}"></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="form-row form-row-bg">
+                    <label for="userStatus-btn" class="form-label">계정 상태</label>
+                    <div class="form-field gap-1 relative">
+                        <input type="hidden" name="userStatus" id="userStatus-input"
+                               th:value="${user.userStatus.name()} ?: null">
+                        <button class="form-input text-left ignore-close" type="button" id="userStatus-btn"
+                                data-action="toggleSelect"
+                                th:text="${user.userStatus != null ? user.userStatus.label : '정상'}">
+                        </button>
+                        <ul class="data-template">
+                            <li class="select-li" th:each="userStatus : ${userStatuses}"
+                                th:data-value="${userStatus.name()}" th:text="${userStatus.label}"></li>
+                        </ul>
+                        <span id="error-userStatus" class="error-msg text-red-600 text-xs mt-1 px-1"></span>
+                    </div>
+                </div>
+                <div class="form-row form-row-bg">
+                    <label for="role" class="form-label">권한</label>
+                    <div class="form-field gap-1 relative">
+                        <input type="hidden" id="role-input" name="role" th:value="${user.roleId}">
+                        <button type="button" class="form-input text-left ignore-close" id="role"
+                                data-action="toggleSelect" th:text="${user.roleName}">
+                        </button>
+                        <ul class="data-template">
+                            <li class="select-li"
+                                th:each="role : ${roles}"
+                                th:data-value="${role.id}"
+                                th:text="${role.roleName}">
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="form-row form-row-bg col-span-2">
+                    <label class="form-label">가입일</label>
+                    <div class="form-field">
+                        <input type="text" class="form-input bg-gray-50"
+                               th:value="${#temporals.format(user.createdAt, 'yyyy-MM-dd HH:mm')}" disabled/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-end gap-2 mt-8 border-t pt-4 px-6 w-full">
+            <button type="button" class="btn btn-primary" data-action="editUser">저장</button>
+            <button type="button" class="btn bg-gray-100 px-4" onClick="closeModal()">닫기</button>
+        </div>
+    </form>
+    <ul id="common-select-ul" class="select-ul hidden"></ul>
+</div>

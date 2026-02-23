@@ -1,0 +1,94 @@
+<div th:fragment="pageTable" id="page-table" class="w-full px-5 flex-1">
+    <table class="table min-w-[900px]">
+        <thead class="border border-b-2">
+        <tr>
+            <th class="w-12">
+                <div class="flex items-center justify-center">
+                    <input type="checkbox" data-action="checkToggle" class="size-3 check-all">
+                </div>
+            </th>
+            <th class="w-[20%]">
+                <div class="flex items-center justify-between gap-2">
+                    <span>리소스 명</span>
+                </div>
+            </th>
+            <th class="flex-1">
+                <div class="flex items-center justify-between gap-2">
+                    <span>URL Pattern</span>
+                    <button
+                            type="button"
+                            class="sort-btn p-1 rounded hover:bg-gray-100"
+                            data-action="sort"
+                            data-sort="urlPattern"
+                            th:data-order="${list.direction}"
+                            aria-label="정렬">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                             stroke-width="1.5" stroke="currentColor"
+                             class="h-4 w-4 inline-block transform transition-transform duration-200"
+                             th:classappend="${list.sortBy == 'urlPattern' and list.direction == 'ASC'} ? 'rotate-180' : ''">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="m19.5 8.25-7.5 7.5-7.5-7.5"/>
+                        </svg>
+                    </button>
+                </div>
+            </th>
+            <th class="w-[15%]">
+                <div class="flex items-center justify-between gap-2">
+                    <span>Method</span>
+                </div>
+            </th>
+            <th class="w-[15%]">
+                <div class="flex items-center justify-between gap-2">
+                    <span>권한</span>
+                </div>
+            </th>
+            <th class="w-[15%]">
+                <div class="flex items-center justify-between gap-2">
+                    <span>수정 일시</span>
+                    <button
+                            type="button"
+                            class="sort-btn p-1 rounded hover:bg-gray-100"
+                            data-action="sort"
+                            data-sort="updatedAt"
+                            th:data-order="${list.direction}"
+                            aria-label="정렬">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                             stroke-width="1.5" stroke="currentColor"
+                             class="h-4 w-4 inline-block transform transition-transform duration-200"
+                             th:classappend="${list.sortBy == 'updatedAt' and list.direction == 'ASC'} ? 'rotate-180' : ''">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="m19.5 8.25-7.5 7.5-7.5-7.5"/>
+                        </svg>
+                    </button>
+                </div>
+            </th>
+        </tr>
+        </thead>
+        <tbody th:if="${#lists.isEmpty(list.content)}">
+        <tr>
+            <td colspan="6" class="py-16 text-center text-gray-400">
+                등록된 리소스 가 없습니다.
+            </td>
+        </tr>
+        </tbody>
+
+        <tbody th:unless="${#lists.isEmpty(list.content)}">
+        <tr th:each="item : ${list.content}"
+            th:data-id="${item.id}"
+            class="hover:bg-gray-50 hover:cursor-pointer"
+            data-action="clickRow">
+            <td class="text-center align-middle">
+                <input type="checkbox"
+                       class="size-3 check-box"
+                       th:value="${item.id}">
+            </td>
+            <td th:text="${item.name}"></td>
+            <td th:text="${item.urlPattern}"></td>
+            <td th:text="${item.method.name() == 'ALL' ? '전체' : item.method.name()}"></td>
+            <td th:text="${item.displayRole}"></td>
+            <td th:text="${#temporals.format(item.updatedAt, 'yyyy-MM-dd HH:mm')}">
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

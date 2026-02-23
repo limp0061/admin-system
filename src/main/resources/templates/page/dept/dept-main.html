@@ -1,0 +1,5 @@
+<div th:fragment="deptMain" class="flex flex-col h-full min-w-0 px-6">
+    <div th:replace="~{page/dept/dept-header :: deptHeader}"></div>
+    <div th:replace="~{page/dept/dept-table :: deptTable}"></div>
+    <div th:replace="~{components/pagination :: pageNation}"></div>
+</div>
