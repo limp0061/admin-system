@@ -43,3 +43,12 @@ src/main/resources/static/docs/
 src/main/generated
 src/main/resources/application-secret.yml
 docker/redis/.env
+
+### Node ###
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+coverage/
+.env*
