@@ -77,7 +77,7 @@ public class AdminUserService {
             Role defaultRole = roleValidator.validateRoleKey("ROLE_USER");
 
             // 유저 엔티티에 객체 전달
-            user.assignRole(defaultRole);
+            user.resetToDefaultRole(defaultRole);
         }
         return ids.size();
     }

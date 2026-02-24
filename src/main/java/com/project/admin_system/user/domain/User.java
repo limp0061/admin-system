@@ -219,6 +219,10 @@ public class User extends BaseEntity {
 
     public void assignRole(Role defaultRole) {
         this.role = defaultRole;
+    }
+
+    public void resetToDefaultRole(Role defaultRole) {
+        assignRole(defaultRole);
         this.allowedIps.clear();
     }
 
