@@ -12,11 +12,11 @@ public class LogsController {
 
     @GetMapping("/user")
     public String userLogs() {
-        return "/page/logs/user";
+        return "page/logs/user";
     }
 
     @GetMapping("/admin")
     public String adminLogs() {
-        return "/page/logs/admin";
+        return "page/logs/admin";
     }
 }
