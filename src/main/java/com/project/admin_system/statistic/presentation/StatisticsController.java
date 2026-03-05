@@ -12,11 +12,11 @@ public class StatisticsController {
 
     @GetMapping("/login")
     public String loginStatistics() {
-        return "/page/statistics/login";
+        return "page/statistics/login";
     }
 
     @GetMapping("/system")
     public String systemStatistics() {
-        return "/page/statistics/system";
+        return "page/statistics/system";
     }
 }
