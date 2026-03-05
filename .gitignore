@@ -57,12 +57,13 @@ coverage/
 src/main/resources/static/css/out.css
 
 # 프론트엔드 빌드 결과물 (TS -> JS 변환 파일)
-# 만약 static/js 폴더에 생성된다면 아래와 같이 지정합니다.
-src/main/resources/static/js/*.js
+# static/js/ckeditor5 폴더는 제외
+src/main/resources/static/js/**/*.js
+!src/main/resources/static/js/ckeditor5/**
 
 ### Log4j2 Logs ###
-# 로그 루트 디렉토리 자체를 제외 (가장 확실함)
-logs/
+# 로그 루트 디렉토리 자체를 제외
+/logs/
 
 # 또는 특정 패턴의 로그 파일들만 제외
 *.log
