@@ -53,7 +53,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
         loginHistoryService.saveLoginHistory(loginHistory);
 
-        log.info("Login Success: User[{}] from IP[{}]", username, clientIp);
+        log.info("Login Success: emailId [{}] from ip [{}]", username, clientIp);
         SavedRequest savedRequest = requestCache.getRequest(request, response);
         if (savedRequest != null) {
             String targetUrl = savedRequest.getRedirectUrl();

@@ -2,28 +2,24 @@ package com.project.admin_system.common.service;
 
 
 import java.io.IOException;
-import java.net.URL;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.CopyObjectRequest;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
-import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 
-
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class S3StorageManager {
@@ -58,8 +54,9 @@ public class S3StorageManager {
         try {
             s3Client.putObject(putObjectRequest,
                     RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
-
+            log.info("[S3 업로드] key={}", key);
         } catch (IOException | S3Exception e) {
+            log.error("[S3 업로드 실패] key={} | {}", key, e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -71,7 +68,10 @@ public class S3StorageManager {
                     .key(key)
                     .build();
             s3Client.deleteObject(deleteObjectRequest);
+
+            log.info("[S3 삭제] key={}", key);
         } catch (S3Exception e) {
+            log.error("[S3 삭제 실패] key={} | {}", key, e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -96,15 +96,20 @@ public class S3StorageManager {
     }
 
     public void moveObject(String sourceKey, String destinationKey) {
+        try {
+            CopyObjectRequest copyRequest = CopyObjectRequest.builder()
+                    .sourceBucket(bucketName)
+                    .sourceKey(sourceKey)
+                    .destinationBucket(bucketName)
+                    .destinationKey(destinationKey)
+                    .build();
+            s3Client.copyObject(copyRequest);
+            deleteFile(sourceKey);
+            log.info("[S3 이동] {} → {}", sourceKey, destinationKey);
+        } catch (S3Exception e) {
+            log.error("[S3 이동 실패] {} → {} | {}", sourceKey, destinationKey, e.getMessage());
+            throw new RuntimeException(e);
+        }
 
-        CopyObjectRequest copyRequest = CopyObjectRequest.builder()
-                .sourceBucket(bucketName)
-                .sourceKey(sourceKey)
-                .destinationBucket(bucketName)
-                .destinationKey(destinationKey)
-                .build();
-        s3Client.copyObject(copyRequest);
-
-        deleteFile(sourceKey);
     }
 }

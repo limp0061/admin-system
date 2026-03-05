@@ -150,6 +150,28 @@ CREATE TABLE `user_allowed_ips` (
     `ip_address` varchar(50)
 );
 
+CREATE TABLE `audit_log` (
+    `log_id` bigint PRIMARY KEY AUTO_INCREMENT,
+    `actor_id` bigint NOT NULL,
+    `actor_username` varchar(100) NOT NULL,
+    `action` varchar(20) NOT NULL COMMENT 'CREATE, DELETE, EXCEL_DOWNLOAD, UPDATE, VIEW',
+    `target_entity` varchar(20) NOT NULL COMMENT 'DEPT, NOTICE, RESOURCE, ROLE, USER, USER_DEPT',
+    `created_at` timestamp,
+    `updated_at` timestamp,
+    `deleted_at` timestamp,
+    `created_by` varchar(100)
+);
+
+CREATE TABLE `audit_log_detail` (
+    `id` bigint PRIMARY KEY AUTO_INCREMENT,
+    `log_id` bigint NOT NULL,
+    `target_entity_id` bigint,
+    `target_entity_name`varchar(255),
+    `details` text,
+    `created_at` timestamp,
+    `updated_at` timestamp
+);
+
 ALTER TABLE `user` ADD FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`);
 
 ALTER TABLE `dept` ADD FOREIGN KEY (`upper_dept_id`) REFERENCES `dept` (`dept_id`);
@@ -169,6 +191,8 @@ ALTER TABLE `user_dept` ADD FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`
 ALTER TABLE `user_dept` ADD FOREIGN KEY (`dept_id`) REFERENCES `dept` (`dept_id`);
 
 ALTER TABLE `user_allowed_ips` ADD FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`);
+
+ALTER TABLE `audit_log_detail` ADD FOREIGN KEY (`log_id`) REFERENCES `audit_log` (`log_id`);
 
 GRANT ALL PRIVILEGES ON *.* TO 'admin_user'@'%';
 FLUSH PRIVILEGES;

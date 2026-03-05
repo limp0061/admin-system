@@ -35,8 +35,8 @@ export const MENU = [
         icon: "log",
         collapsed: true,
         children: [
-            { name: "감사 로그", url: "/logs/admin" },
-            { name: "활동 로그", url: "/logs/user" }
+            { name: "감사 로그", url: "/logs/audit" },
+            { name: "활동 로그", url: "/logs/activity" }
         ]
     },
     {

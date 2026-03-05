@@ -26,6 +26,7 @@ public class RedisReceiver {
             eventPublisher.publishEvent(event);
 
         } catch (Exception e) {
+            log.error("[Redis 수신 실패] Resource 메시지 파싱 오류 | message={} | {}", message, e.getMessage());
             eventPublisher.publishEvent(new ResourceRefreshEvent(null, null, "UNKNOWN"));
         }
     }
@@ -36,7 +37,7 @@ public class RedisReceiver {
 
             notificationService.broadcast(request);
         } catch (Exception e) {
-            log.error("Notice Redis 메시지 처리 실패", e);
+            log.error("[Redis 수신 실패] Notification 메시지 파싱 오류 | message={} | {}", message, e.getMessage());
         }
     }
 }

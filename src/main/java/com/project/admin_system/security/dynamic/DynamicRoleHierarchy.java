@@ -26,7 +26,7 @@ public class DynamicRoleHierarchy implements RoleHierarchy {
 
     public void reload() {
         String hierarchy = roleHierarchyService.generateHierarchy();
-        log.info("Generated Hierarchy: \n{}", hierarchy);
+        log.debug("Generated Hierarchy: \n{}", hierarchy);
         this.roleHierarchy = RoleHierarchyImpl.fromHierarchy(hierarchy);
     }
 

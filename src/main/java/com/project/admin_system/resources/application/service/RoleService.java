@@ -3,7 +3,12 @@ package com.project.admin_system.resources.application.service;
 import com.project.admin_system.common.exception.BusinessException;
 import com.project.admin_system.common.exception.ErrorCode;
 import com.project.admin_system.common.service.RedisEventPublisher;
+import com.project.admin_system.logs.application.dto.AuditLogDetailRequest;
+import com.project.admin_system.logs.application.dto.AuditLogUpdateRequest;
+import com.project.admin_system.logs.application.service.AuditLogService;
+import com.project.admin_system.logs.domain.AuditTarget;
 import com.project.admin_system.resources.application.dto.ResourceRefreshEvent;
+import com.project.admin_system.resources.application.dto.RoleAuditLog;
 import com.project.admin_system.resources.application.dto.RoleDto;
 import com.project.admin_system.resources.application.dto.RoleSaveRequest;
 import com.project.admin_system.resources.application.dto.RoleTreeDto;
@@ -28,6 +33,7 @@ public class RoleService {
     private final RoleRepository roleRepository;
     private final RedisEventPublisher redisEventPublisher;
     private final RoleValidator roleValidator;
+    private final AuditLogService auditLogService;
 
     public String generateHierarchy() {
         List<Role> roleHierarchies = roleRepository.findAll(Sort.by(Sort.Direction.ASC, "depth"));
@@ -128,6 +134,11 @@ public class RoleService {
 
         roleRepository.save(role);
 
+        RoleAuditLog auditLog = RoleAuditLog.from(role);
+
+        AuditLogDetailRequest detailRequest = new AuditLogDetailRequest(role.getId(), role.getRoleName(), auditLog);
+        auditLogService.logCreate(AuditTarget.ROLE, List.of(detailRequest));
+
         ResourceRefreshEvent event = new ResourceRefreshEvent("ROLE", List.of(role.getId()), "CREATE");
         redisEventPublisher.refreshResource(event);
     }
@@ -144,7 +155,14 @@ public class RoleService {
         if (!role.getRoleKey().equals(request.roleKey())) {
             roleValidator.duplicateRoleCheck(request.roleKey());
         }
+
+        RoleAuditLog before = RoleAuditLog.from(role);
         role.update(request.roleKey(), request.roleName(), parentRole, request.isAdmin());
+        RoleAuditLog after = RoleAuditLog.from(role);
+
+        AuditLogUpdateRequest updateRequest = new AuditLogUpdateRequest(role.getId(), role.getRoleName(), before,
+                after);
+        auditLogService.logUpdate(AuditTarget.ROLE, List.of(updateRequest));
 
         ResourceRefreshEvent event = new ResourceRefreshEvent("ROLE", List.of(role.getId()), "UPDATE");
         redisEventPublisher.refreshResource(event);
@@ -158,6 +176,12 @@ public class RoleService {
         }
 
         roleRepository.deleteById(id);
+
+        AuditLogDetailRequest detailRequest = new AuditLogDetailRequest(id, roleValidResponse.role().roleName(),
+                roleValidResponse.role());
+
+        auditLogService.logDelete(AuditTarget.ROLE, List.of(detailRequest));
+
         ResourceRefreshEvent event = new ResourceRefreshEvent("ROLE", List.of(id), "DELETE");
         redisEventPublisher.refreshResource(event);
     }
