@@ -2,6 +2,7 @@ package com.project.admin_system.notification.application.service;
 
 import static com.project.admin_system.common.dto.RedisConstants.USER_CONFIG_PREFIX;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.admin_system.common.exception.BusinessException;
 import com.project.admin_system.common.exception.ErrorCode;
 import com.project.admin_system.common.service.RedisManager;
@@ -38,6 +39,7 @@ public class NotificationService {
     private final NotificationMasterRepository notificationMasterRepository;
     private final NotificationReadRepository notificationReadRepository;
     private final RedisManager redisManager;
+    private final ObjectMapper objectMapper;
 
     public SseEmitter subscribe(Long id) {
         long timeout = 1000L * 60 * 60;
@@ -103,7 +105,7 @@ public class NotificationService {
     public void broadcast(NotificationSendRequest request) {
         sseEmitterMap.keySet().forEach(userId -> {
             Long currentCount = getUnReadCount(userId);
-            EventData originalData = (EventData) request.data();
+            EventData originalData = objectMapper.convertValue(request.data(), EventData.class);
             EventData personalData = new EventData(
                     originalData.notificationId(),
                     originalData.title(),
