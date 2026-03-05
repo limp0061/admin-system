@@ -21,7 +21,7 @@ public record AdminUserListResponse(
                 user.getUserCode(),
                 user.getRole() != null ? user.getRole().getId() : null,
                 user.getRole() != null ? user.getRole().getRoleName() : null,
-                user.getAllowedIps() != null ? java.util.Set.copyOf(user.getAllowedIps()) : java.util.Set.of(),
+                user.getAllowedIps() != null ? Set.copyOf(user.getAllowedIps()) : Set.of(),
                 user.getUpdatedAt()
         );
     }

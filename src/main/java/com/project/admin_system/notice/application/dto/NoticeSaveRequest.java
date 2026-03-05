@@ -5,6 +5,7 @@ import com.project.admin_system.notice.domain.NoticeType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 public record NoticeSaveRequest(
         Long id,
@@ -23,6 +24,15 @@ public record NoticeSaveRequest(
         LocalDateTime startAt,
         LocalDateTime endAt
 ) {
+
+    public NoticeSaveRequest {
+        if (startAt != null) {
+            startAt = startAt.truncatedTo(ChronoUnit.SECONDS);
+        }
+        if (endAt != null) {
+            endAt = endAt.truncatedTo(ChronoUnit.SECONDS);
+        }
+    }
 
     public Notice toEntity() {
         LocalDateTime finalStartAt = (isForce || isRealTimeNoticed || startAt == null)

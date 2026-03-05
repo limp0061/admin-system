@@ -1,5 +1,8 @@
 package com.project.admin_system.user.domain;
 
+import lombok.Getter;
+
+@Getter
 public enum UserStatusMode {
     ACTIVE("정상"),
     INACTIVE("임시"),

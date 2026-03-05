@@ -262,7 +262,6 @@ const openEditModal = async (btn: HTMLElement): Promise<void> => {
     closeDropdown();
 
     const checkedBoxes = document.querySelectorAll<HTMLInputElement>(".check-box:checked");
-    if (checkedBoxes.length == 0) return;
 
     let ids = Array.from(checkedBoxes).map(check => Number(check.value));
     if (ids.length <= 0) {

@@ -52,3 +52,10 @@ yarn-error.log*
 .pnpm-debug.log*
 coverage/
 .env*
+
+# Tailwind CSS 빌드 결과물
+src/main/resources/static/css/out.css
+
+# 프론트엔드 빌드 결과물 (TS -> JS 변환 파일)
+# 만약 static/js 폴더에 생성된다면 아래와 같이 지정합니다.
+src/main/resources/static/js/*.js

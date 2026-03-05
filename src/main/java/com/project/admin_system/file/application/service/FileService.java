@@ -14,14 +14,13 @@ import com.project.admin_system.file.domain.FileStatus;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-;
-
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -38,6 +37,7 @@ public class FileService {
 
         storageManager.upload(fullPath, file);
 
+        log.info("파일 업로드 | path: {}", fullPath);
         return fullPath;
     }
 
@@ -49,6 +49,7 @@ public class FileService {
     }
 
     public void deleteFile(String profilePath) {
+        log.info("파일 삭제 | path: {}", profilePath);
         storageManager.deleteFile(profilePath);
     }
 
@@ -104,8 +105,8 @@ public class FileService {
 
             file.finalizeFile(newPath, domainId);
         }
-        List<File> existingFiles = fileRepository.findAllByDomainTypeAndDomainId(domainType, domainId);
 
+        List<File> existingFiles = fileRepository.findAllByDomainTypeAndDomainId(domainType, domainId);
         for (File existingFile : existingFiles) {
             if (!fileIds.contains(existingFile.getId())) {
                 existingFile.markAsDeleted();

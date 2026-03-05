@@ -195,8 +195,6 @@ const openDeptUserModal = async (btn) => {
  */
 const openDeptUserConfirmModal = async (mode) => {
     const checkedBoxes = document.querySelectorAll(".check-box:checked");
-    if (checkedBoxes.length == 0)
-        return;
     let ids = Array.from(checkedBoxes).map(check => Number(check.value));
     if (ids.length <= 0) {
         showToast("사용자를 선택해주세요.", "error");

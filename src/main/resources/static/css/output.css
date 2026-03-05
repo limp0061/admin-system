@@ -88,6 +88,10 @@
   border-radius: 4px !important;
 }
 
+.flatpickr-calendar .flatpickr-day.today.selected {
+  color: #f3f4f6 !important;
+}
+
 .flatpickr-calendar .flatpickr-day:hover {
   border-radius: 4px !important;
 }
@@ -1735,8 +1739,8 @@ input[type=number] {
   max-height: 80vh;
 }
 
-.max-h-\[30vh\] {
-  max-height: 30vh;
+.min-h-0 {
+  min-height: 0px;
 }
 
 .min-h-32 {
@@ -1745,10 +1749,6 @@ input[type=number] {
 
 .min-h-\[200px\] {
   min-height: 200px;
-}
-
-.min-h-\[300px\] {
-  min-height: 300px;
 }
 
 .min-h-\[500px\] {
@@ -1785,6 +1785,10 @@ input[type=number] {
 
 .w-4 {
   width: 1rem;
+}
+
+.w-40 {
+  width: 10rem;
 }
 
 .w-48 {
@@ -1831,6 +1835,10 @@ input[type=number] {
   width: 550px;
 }
 
+.w-\[650px\] {
+  width: 650px;
+}
+
 .w-\[70vw\] {
   width: 70vw;
 }
@@ -1850,6 +1858,10 @@ input[type=number] {
 
 .min-w-0 {
   min-width: 0px;
+}
+
+.min-w-28 {
+  min-width: 7rem;
 }
 
 .min-w-96 {
@@ -1876,12 +1888,20 @@ input[type=number] {
   min-width: 900px;
 }
 
+.min-w-full {
+  min-width: 100%;
+}
+
 .max-w-\[200px\] {
   max-width: 200px;
 }
 
 .max-w-md {
   max-width: 28rem;
+}
+
+.max-w-\[60\%\] {
+  max-width: 60%;
 }
 
 .flex-1 {
@@ -2025,6 +2045,17 @@ input[type=number] {
   row-gap: 1rem;
 }
 
+.divide-y > :not([hidden]) ~ :not([hidden]) {
+  --tw-divide-y-reverse: 0;
+  border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
+  border-bottom-width: calc(1px * var(--tw-divide-y-reverse));
+}
+
+.divide-slate-100 > :not([hidden]) ~ :not([hidden]) {
+  --tw-divide-opacity: 1;
+  border-color: rgb(241 245 249 / var(--tw-divide-opacity, 1));
+}
+
 .overflow-hidden {
   overflow: hidden;
 }
@@ -2057,6 +2088,10 @@ input[type=number] {
 
 .break-words {
   overflow-wrap: break-word;
+}
+
+.break-all {
+  word-break: break-all;
 }
 
 .break-keep {
@@ -2176,6 +2211,11 @@ input[type=number] {
   border-color: rgb(156 163 175 / var(--tw-border-opacity, 1));
 }
 
+.border-slate-100 {
+  --tw-border-opacity: 1;
+  border-color: rgb(241 245 249 / var(--tw-border-opacity, 1));
+}
+
 .border-slate-200 {
   --tw-border-opacity: 1;
   border-color: rgb(226 232 240 / var(--tw-border-opacity, 1));
@@ -2212,6 +2252,11 @@ input[type=number] {
 .bg-blue-50 {
   --tw-bg-opacity: 1;
   background-color: rgb(239 246 255 / var(--tw-bg-opacity, 1));
+}
+
+.bg-emerald-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(209 250 229 / var(--tw-bg-opacity, 1));
 }
 
 .bg-gray-100 {
@@ -2260,6 +2305,16 @@ input[type=number] {
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
+}
+
+.bg-emerald-50 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(236 253 245 / var(--tw-bg-opacity, 1));
+}
+
+.bg-slate-50 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(248 250 252 / var(--tw-bg-opacity, 1));
 }
 
 .bg-gradient-to-br {
@@ -2446,12 +2501,20 @@ input[type=number] {
   padding-top: 10vh;
 }
 
+.pl-1 {
+  padding-left: 0.25rem;
+}
+
 .text-left {
   text-align: left;
 }
 
 .text-center {
   text-align: center;
+}
+
+.text-right {
+  text-align: right;
 }
 
 .align-middle {
@@ -2563,6 +2626,11 @@ input[type=number] {
   color: rgb(30 58 138 / var(--tw-text-opacity, 1));
 }
 
+.text-emerald-500 {
+  --tw-text-opacity: 1;
+  color: rgb(16 185 129 / var(--tw-text-opacity, 1));
+}
+
 .text-gray-300 {
   --tw-text-opacity: 1;
   color: rgb(209 213 219 / var(--tw-text-opacity, 1));
@@ -2623,9 +2691,19 @@ input[type=number] {
   color: rgb(185 28 28 / var(--tw-text-opacity, 1));
 }
 
+.text-slate-400 {
+  --tw-text-opacity: 1;
+  color: rgb(148 163 184 / var(--tw-text-opacity, 1));
+}
+
 .text-slate-500 {
   --tw-text-opacity: 1;
   color: rgb(100 116 139 / var(--tw-text-opacity, 1));
+}
+
+.text-slate-600 {
+  --tw-text-opacity: 1;
+  color: rgb(71 85 105 / var(--tw-text-opacity, 1));
 }
 
 .text-slate-700 {
@@ -2651,6 +2729,11 @@ input[type=number] {
 .text-yellow-400 {
   --tw-text-opacity: 1;
   color: rgb(250 204 21 / var(--tw-text-opacity, 1));
+}
+
+.text-emerald-300 {
+  --tw-text-opacity: 1;
+  color: rgb(110 231 183 / var(--tw-text-opacity, 1));
 }
 
 .underline {
@@ -2679,6 +2762,12 @@ input[type=number] {
 
 .opacity-50 {
   opacity: 0.5;
+}
+
+.shadow {
+  --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
 .shadow-lg {

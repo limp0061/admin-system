@@ -9,6 +9,8 @@ services:
       - redis_data:/data
       - ./conf/redis.conf:/usr/local/etc/redis/redis.conf
     command: [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
+    networks:
+      - admin-net
 
   redisinsight:
     image: redis/redisinsight
@@ -18,6 +20,12 @@ services:
     restart: always
     depends_on:
       - redis
+    networks:
+      - admin-net
+
+networks:
+  admin-net:
+    driver: bridge
 
 volumes:
   redis_data:

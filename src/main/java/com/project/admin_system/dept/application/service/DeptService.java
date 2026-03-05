@@ -3,11 +3,16 @@ package com.project.admin_system.dept.application.service;
 import com.project.admin_system.common.exception.BusinessException;
 import com.project.admin_system.common.exception.ErrorCode;
 import com.project.admin_system.dept.application.dto.DeptNode;
+import com.project.admin_system.dept.application.dto.DeptResponse;
 import com.project.admin_system.dept.application.dto.DeptSaveRequest;
 import com.project.admin_system.dept.application.dto.DeptValidResponse;
 import com.project.admin_system.dept.application.validate.DeptValidator;
 import com.project.admin_system.dept.domain.Dept;
 import com.project.admin_system.dept.domain.DeptRepository;
+import com.project.admin_system.logs.application.dto.AuditLogDetailRequest;
+import com.project.admin_system.logs.application.dto.AuditLogUpdateRequest;
+import com.project.admin_system.logs.application.service.AuditLogService;
+import com.project.admin_system.logs.domain.AuditTarget;
 import com.project.admin_system.user.domain.UserRepository;
 import com.project.admin_system.userdept.domain.UserDept;
 import java.util.ArrayList;
@@ -16,9 +21,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -27,6 +34,7 @@ public class DeptService {
     private final DeptRepository deptRepository;
     private final DeptValidator deptValidator;
     private final UserRepository userRepository;
+    private final AuditLogService auditLogService;
 
     @Transactional
     public void createDept(DeptSaveRequest dto) {
@@ -34,7 +42,12 @@ public class DeptService {
         Dept upperDept = deptValidator.validateCreateAndGetUpperDept(dto);
         int depth = (upperDept == null) ? 1 : upperDept.getDepth() + 1;
 
-        deptRepository.save(dto.toEntity(depth, upperDept));
+        Dept saved = deptRepository.save(dto.toEntity(depth, upperDept));
+
+        AuditLogDetailRequest detailRequest = new AuditLogDetailRequest(saved.getId(), saved.getDeptName(),
+                DeptResponse.from(saved));
+
+        auditLogService.logCreate(AuditTarget.DEPT, List.of(detailRequest));
     }
 
     @Transactional
@@ -45,16 +58,20 @@ public class DeptService {
 
         Dept dept = deptRepository.findById(dto.id())
                 .orElseThrow(() -> new BusinessException(ErrorCode.DEPT_CODE_NOT_FOUND));
+
+        DeptResponse before = DeptResponse.from(dept);
+
         dept.update(dto, upperDept, depth);
+
+        DeptResponse after = DeptResponse.from(dept);
+
+        AuditLogUpdateRequest updateRequest = new AuditLogUpdateRequest(dept.getId(), dept.getDeptName(), before,
+                after);
+        auditLogService.logUpdate(AuditTarget.DEPT, List.of(updateRequest));
     }
 
     public Dept findDeptById(Long id) {
         return deptRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.DEPT_CODE_NOT_FOUND));
-    }
-
-    public Dept findWithChildren(Long id) {
-        return deptRepository.findWithChildrenById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.DEPT_CODE_NOT_FOUND));
     }
 
@@ -70,6 +87,10 @@ public class DeptService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.DEPT_CODE_NOT_FOUND));
 
         deptRepository.delete(dept);
+
+        AuditLogDetailRequest detailRequest = new AuditLogDetailRequest(deptId, dept.getDeptName(),
+                DeptResponse.from(dept));
+        auditLogService.logDelete(AuditTarget.DEPT, List.of(detailRequest));
     }
 
     public List<DeptNode> selectDeptNodes() {

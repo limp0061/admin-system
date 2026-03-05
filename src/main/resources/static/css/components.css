@@ -247,6 +247,10 @@
     border-radius: 4px !important;
 }
 
+.flatpickr-calendar .flatpickr-day.today.selected {
+    color: #f3f4f6 !important;
+}
+
 .flatpickr-calendar .flatpickr-day:hover {
     border-radius: 4px !important;
 }
