@@ -39,8 +39,8 @@ public class LogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
                     .clientIp(clientIp)
                     .build()
             );
-            super.setDefaultTargetUrl("/login?logout");
-            super.onLogoutSuccess(request, response, authentication);
         }
+        super.setDefaultTargetUrl("/login?logout");
+        super.onLogoutSuccess(request, response, authentication);
     }
 }
