@@ -221,7 +221,6 @@ const openDeptUserModal = async (btn: HTMLElement): Promise<void> => {
 
 const openDeptUserConfirmModal = async (mode: 'EDIT' | 'DEL'): Promise<void> => {
     const checkedBoxes = document.querySelectorAll<HTMLInputElement>(".check-box:checked");
-    if (checkedBoxes.length == 0) return;
 
     let ids = Array.from(checkedBoxes).map(check => Number(check.value));
     if (ids.length <= 0) {

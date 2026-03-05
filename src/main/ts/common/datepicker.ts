@@ -1,7 +1,6 @@
 declare const flatpickr: any;
 
 export const defaultFlatpickrOptions = {
-
     locale: (window as any).flatpickr.l10ns.ko,
     enableTime: true,
     time_24hr: true,

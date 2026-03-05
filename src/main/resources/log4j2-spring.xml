@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Log4j2 메인 설정 파일
+    - status="WARN" : Log4j2 내부 로그는 WARN 이상만 출력
+    - monitorInterval="30" : 30초마다 이 설정 파일 변경 감지 후 자동 재적용
+    - shutdownHook="enable" :  앱 종료 시 비동기 큐에 남은 로그 유실 안 되게 막아줌
+-->
+<Configuration status="WARN" monitorInterval="30" shutdownHook="enable">
+    <Properties>
+        <Property name="LOG_PATTERN">
+            %d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%t] [%X{requestId}] [%X{clientIp}] [%X{adminId}] : %msg%n%throwable
+        </Property>
+        <!-- 로그 파일이 저장될 디렉토리 경로 -->
+        <Property name="LOG_DIR">./logs/app</Property>
+    </Properties>
+
+    <Appenders>
+        <!-- 콘솔(터미널)에 로그 출력 -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
+
+        <!--
+            일반 로그 파일 출력 (롤링 파일)
+            - fileName        : 현재 기록 중인 파일 경로
+            - filePattern     : 롤링(교체) 시 저장될 파일명 패턴 (.gz = 압축)
+        -->
+        <RollingFile name="RollingFile"
+                     fileName="${LOG_DIR}/app.log"
+                     filePattern="${LOG_DIR}/app-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+
+            <!-- 롤링 발생 조건 (아래 중 하나라도 충족되면 파일 교체) -->
+            <Policies>
+                <!-- 날짜가 바뀌면 (자정) 새 파일로 교체 -->
+                <TimeBasedTriggeringPolicy/>
+                <!-- 파일 크기가 100MB를 초과하면 새 파일로 교체 -->
+                <SizeBasedTriggeringPolicy size="100MB"/>
+            </Policies>
+
+            <!-- 롤링 파일 보관 전략 -->
+            <DefaultRolloverStrategy max="30">
+                <!-- 오래된 로그 파일 자동 삭제 -->
+                <Delete basePath="${LOG_DIR}" maxDepth="1">
+                    <!-- 삭제 대상 : app-*.log.gz 패턴의 파일 -->
+                    <IfFileName glob="app-*.log.gz"/>
+                    <!-- 조건 : 마지막 수정일로부터 30일이 지난 파일만 삭제 -->
+                    <IfLastModified age="30d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <!--
+            에러 전용 로그 파일 (ERROR 레벨 이상만 기록)
+            - 날짜 단위로만 롤링 (크기 제한 없음)
+        -->
+        <RollingFile name="ErrorFile"
+                     fileName="${LOG_DIR}/error.log"
+                     filePattern="${LOG_DIR}/error-%d{yyyy-MM-dd}.log.gz">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <!--
+                ThresholdFilter : 특정 레벨 기준으로 필터링
+                - ERROR 이상(ERROR, FATAL)이면 → ACCEPT (기록)
+                - ERROR 미만이면              → DENY   (무시)
+            -->
+            <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+
+    </Appenders>
+
+    <SpringProfile name="local">
+        <Loggers>
+            <!--
+                프로젝트 패키지 전용 Logger
+                - additivity="false" : Root Logger에 로그가 중복 전달되지 않도록 차단
+            -->
+            <AsyncLogger name="com.project.admin_system" level="DEBUG" additivity="false">
+                <AppenderRef ref="Console"/>     <!-- 콘솔 출력 -->
+                <AppenderRef ref="RollingFile"/> <!-- 일반 로그 파일 -->
+                <AppenderRef ref="ErrorFile"/>   <!-- 에러 로그 파일 -->
+            </AsyncLogger>
+
+            <!-- Spring 프레임워크 내부 로그는 INFO만 출력 -->
+            <AsyncLogger name="org.springframework" level="INFO"/>
+
+            <!-- SQL 쿼리 로그 출력 (Hibernate가 실행하는 쿼리 확인용) -->
+            <AsyncLogger name="org.hibernate.SQL" level="INFO"/>
+
+            <!-- 위 Logger에 해당하지 않는 나머지 모든 로그의 기본 처리 -->
+            <AsyncRoot level="INFO">
+                <AppenderRef ref="Console"/>
+                <AppenderRef ref="RollingFile"/>
+            </AsyncRoot>
+        </Loggers>
+    </SpringProfile>
+
+    <SpringProfile name="dev">
+        <Loggers>
+            <AsyncLogger name="com.project.admin_system" level="INFO" additivity="false">
+                <AppenderRef ref="Console"/>
+                <AppenderRef ref="RollingFile"/>
+                <AppenderRef ref="ErrorFile"/>
+            </AsyncLogger>
+
+            <AsyncRoot level="INFO">
+                <AppenderRef ref="Console"/>
+                <AppenderRef ref="RollingFile"/>
+            </AsyncRoot>
+        </Loggers>
+    </SpringProfile>
+
+</Configuration>

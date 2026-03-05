@@ -3,17 +3,20 @@ package com.project.admin_system.resources.application.service;
 import com.project.admin_system.common.exception.BusinessException;
 import com.project.admin_system.common.exception.ErrorCode;
 import com.project.admin_system.common.service.RedisEventPublisher;
+import com.project.admin_system.logs.application.dto.AuditLogDetailRequest;
+import com.project.admin_system.logs.application.dto.AuditLogUpdateRequest;
+import com.project.admin_system.logs.application.service.AuditLogService;
+import com.project.admin_system.logs.domain.AuditTarget;
+import com.project.admin_system.resources.application.dto.ResourceAuditLog;
 import com.project.admin_system.resources.application.dto.ResourceRefreshEvent;
 import com.project.admin_system.resources.application.dto.ResourcesListResponse;
 import com.project.admin_system.resources.application.dto.ResourcesSaveRequest;
 import com.project.admin_system.resources.application.dto.ResourcesSearchRequest;
 import com.project.admin_system.resources.application.validate.ResourcesValidator;
+import com.project.admin_system.resources.application.validate.RoleValidator;
 import com.project.admin_system.resources.domain.Resource;
 import com.project.admin_system.resources.domain.ResourcesRepository;
-
-import com.project.admin_system.resources.application.validate.RoleValidator;
 import com.project.admin_system.resources.domain.Role;
-
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +38,8 @@ public class ResourcesService {
     private final RoleValidator roleValidator;
 
     private final RedisEventPublisher redisEventPublisher;
+
+    private final AuditLogService auditLogService;
 
     public Page<ResourcesListResponse> getAllResources(Pageable pageable, ResourcesSearchRequest request) {
         Page<Resource> resources = resourcesRepository.findAllOrderBySortOrder(pageable, request);
@@ -66,17 +71,21 @@ public class ResourcesService {
                 .description(request.description())
                 .build();
 
+        resource.addRoles(roles);
         resourcesRepository.save(resource);
 
-        resource.addRoles(roles);
+        AuditLogDetailRequest detailRequest = new AuditLogDetailRequest(resource.getId(), resource.getName(),
+                ResourceAuditLog.from(resource));
+        auditLogService.logCreate(AuditTarget.RESOURCE, List.of(detailRequest));
+
         ResourceRefreshEvent event = new ResourceRefreshEvent("RESOURCE", List.of(resource.getId()), "CREATE");
         redisEventPublisher.refreshResource(event);
     }
 
     @Transactional
     public void updateResource(ResourcesSaveRequest request, Long resourceId) {
-        Resource resource;
 
+        Resource resource;
         List<Role> roles = roleService.findAllByIds(request.roleIds());
 
         if (roles.isEmpty()) {
@@ -88,8 +97,16 @@ public class ResourcesService {
         resource = resourcesRepository.findById(resourceId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND));
 
-        resource.updateFields(request.name(), request.method(), request.description());
+        ResourceAuditLog before = ResourceAuditLog.from(resource);
+
         resource.addRoles(roles);
+        resource.updateFields(request.name(), request.method(), request.description());
+
+        ResourceAuditLog after = ResourceAuditLog.from(resource);
+
+        AuditLogUpdateRequest updateRequest = new AuditLogUpdateRequest(resource.getId(), resource.getName(), before,
+                after);
+        auditLogService.logUpdate(AuditTarget.RESOURCE, List.of(updateRequest));
 
         ResourceRefreshEvent event = new ResourceRefreshEvent("RESOURCE", List.of(resource.getId()), "UPDATE");
         redisEventPublisher.refreshResource(event);
@@ -115,7 +132,15 @@ public class ResourcesService {
             return 0;
         }
 
+        List<AuditLogDetailRequest> detailRequests = resourcesRepository.findAllById(ids)
+                .stream()
+                .map(resource -> new AuditLogDetailRequest(resource.getId(), resource.getName(),
+                        ResourceAuditLog.from(resource)))
+                .toList();
+
         resourcesRepository.deleteAllByIdInBatch(ids);
+
+        auditLogService.logDelete(AuditTarget.RESOURCE, detailRequests);
 
         ResourceRefreshEvent event = new ResourceRefreshEvent("RESOURCE", ids, "DELETE");
         redisEventPublisher.refreshResource(event);

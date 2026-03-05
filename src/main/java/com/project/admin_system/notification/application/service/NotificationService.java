@@ -45,10 +45,13 @@ public class NotificationService {
         SseEmitter sseEmitter = new SseEmitter(timeout);
         sseEmitterMap.computeIfAbsent(id, k -> new CopyOnWriteArrayList<>()).add(sseEmitter);
 
-        sseEmitter.onTimeout(sseEmitter::complete);
+        sseEmitter.onTimeout(() -> {
+            removeEmitter(id, sseEmitter);
+            sseEmitter.complete();
+        });
 
         sseEmitter.onError((e) -> {
-            sseEmitter.complete();
+            removeEmitter(id, sseEmitter);
         });
 
         sseEmitter.onCompletion(() -> {
@@ -62,8 +65,12 @@ public class NotificationService {
                 id,
                 true
         );
-        sendToClient(id, connectEvent);
-
+        try {
+            sendToClient(id, connectEvent);
+        } catch (Exception e) {
+            removeEmitter(id, sseEmitter);
+            sseEmitter.complete();
+        }
         return sseEmitter;
     }
 
@@ -125,6 +132,7 @@ public class NotificationService {
                     .id(String.valueOf(request.noticeId())));
         } catch (IOException e) {
             removeEmitter(id, sseEmitter);
+            sseEmitter.complete();
         }
     }
 

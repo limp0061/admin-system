@@ -53,6 +53,9 @@ public enum ErrorCode {
     ROLE_HAS_CHILDREN(HttpStatus.CONFLICT, "하위 권한이 존재하여 삭제할 수 없습니다."),
     DUPLICATE_ROLE_KEY(HttpStatus.CONFLICT, "중복된 권한 키가 있습니다."),
 
+    // 로그
+    LOG_NOT_FOUND(HttpStatus.NOT_FOUND, "로그 정보가 존재하지 않습니다."),
+    INVALID_LOG_FORMAT(HttpStatus.BAD_REQUEST, "로그 포맷이 올바르지 않습니다."),
 
     // 서버 오류
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류가 발생했습니다."),
@@ -62,7 +65,10 @@ public enum ErrorCode {
 
     // IP 정규식
     INVALID_IP_FORMAT(HttpStatus.BAD_REQUEST, "IP의 형식이 올바르지 않습니다."),
-    ;
+
+    INVALID_DATE_RANGE(HttpStatus.BAD_REQUEST, "시작일은 종료일보다 클 수 없습니다."),
+    DATE_REQUIRED(HttpStatus.BAD_REQUEST, "검색 기간을 모두 선택해주세요."),
+    DATE_RANGE_EXCEEDED(HttpStatus.BAD_REQUEST, "조회 기간은 90일을 초과할 수 없습니다.");;
 
     private final HttpStatus status;
     private final String message;

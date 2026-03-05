@@ -9,8 +9,13 @@ import com.project.admin_system.dept.domain.Dept;
 import com.project.admin_system.dept.domain.DeptRepository;
 import com.project.admin_system.file.application.service.FileService;
 import com.project.admin_system.file.domain.DomainType;
+import com.project.admin_system.logs.application.dto.AuditLogDetailRequest;
+import com.project.admin_system.logs.application.dto.AuditLogUpdateRequest;
+import com.project.admin_system.logs.application.service.AuditLogService;
+import com.project.admin_system.logs.domain.AuditTarget;
 import com.project.admin_system.resources.application.validate.RoleValidator;
 import com.project.admin_system.resources.domain.Role;
+import com.project.admin_system.user.application.dto.UserAuditLog;
 import com.project.admin_system.user.application.dto.UserConfigDto;
 import com.project.admin_system.user.application.dto.UserCreateRequest;
 import com.project.admin_system.user.application.dto.UserListResponse;
@@ -25,6 +30,7 @@ import com.project.admin_system.user.domain.UserRepository;
 import com.project.admin_system.user.domain.UserStatus;
 import com.project.admin_system.user.domain.UserStatusMode;
 import com.project.admin_system.userdept.domain.UserDept;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +56,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final RedisManager redisManager;
     private final UserConfigRepository userConfigRepository;
+    private final AuditLogService auditLogService;
 
     @Transactional
     public void createUser(UserCreateRequest dto, MultipartFile profileImage) {
@@ -82,9 +89,14 @@ public class UserService {
         userRepository.save(user);
 
         if (profileImage != null && !profileImage.isEmpty()) {
+            log.info("프로필 이미지 업로드 | userId: {}", user.getId());
             String profilePath = fileService.fileUpload(profileImage, DomainType.PROFILE, user.getId());
             user.updateProfilePath(profilePath);
         }
+
+        AuditLogDetailRequest detailRequest = new AuditLogDetailRequest(user.getId(), user.getEmailId(),
+                UserAuditLog.from(user));
+        auditLogService.logCreate(AuditTarget.USER, List.of(detailRequest));
     }
 
     @Transactional
@@ -102,6 +114,8 @@ public class UserService {
             userValidator.validateDuplicateUserCode(dto.userCode());
         }
 
+        UserAuditLog before = UserAuditLog.from(user);
+
         Dept dept = (dto.deptId() != null) ?
                 deptRepository.findById(dto.deptId()).orElse(null) : null;
 
@@ -117,12 +131,18 @@ public class UserService {
 
         if (profileImage != null && !profileImage.isEmpty()) {
             if (user.getProfilePath() != null) {
+                log.info("프로필 이미지 삭제 | userId: {}", user.getId());
                 fileService.deleteFile(user.getProfilePath());
             }
 
+            log.info("프로필 이미지 업로드 | userId: {}", user.getId());
             String profilePath = fileService.fileUpload(profileImage, DomainType.PROFILE, user.getId());
             user.updateProfilePath(profilePath);
         }
+
+        UserAuditLog after = UserAuditLog.from(user);
+        auditLogService.logUpdate(AuditTarget.USER,
+                List.of(new AuditLogUpdateRequest(user.getId(), user.getEmailId(), before, after)));
     }
 
     public Page<UserListResponse> findAllByDeletedAtIsNull(Pageable pageable, UserStatus userStatus, String keyword) {
@@ -163,7 +183,14 @@ public class UserService {
 
         if (userStatus == UserStatusMode.REMOVE || userStatus == UserStatusMode.REJECT) {
             List<Long> validIds = userValidator.validateForDelete(ids);
+            List<User> users = userRepository.findAllById(validIds);
+
+            List<AuditLogDetailRequest> detailRequests = users.stream()
+                    .map(user -> new AuditLogDetailRequest(user.getId(), user.getEmailId(), UserAuditLog.from(user)))
+                    .toList();
+
             userRepository.deleteAllById(validIds);
+            auditLogService.logDelete(AuditTarget.USER, detailRequests);
         } else {
             List<User> users = findUsersByIdIn(ids);
             UserStatus target = switch (userStatus) {
@@ -171,7 +198,16 @@ public class UserService {
                 case DELETED -> UserStatus.DELETED;
                 default -> UserStatus.valueOf(userStatus.name());
             };
-            users.forEach(user -> user.updateUserStatus(target));
+            List<AuditLogUpdateRequest> updateRequests = new ArrayList<>();
+            for (User user : users) {
+                UserAuditLog before = UserAuditLog.from(user);
+                user.updateUserStatus(target);
+                UserAuditLog after = UserAuditLog.from(user);
+                updateRequests.add(new AuditLogUpdateRequest(user.getId(), user.getEmailId(),
+                        before, after));
+            }
+
+            auditLogService.logUpdate(AuditTarget.USER, updateRequests);
         }
     }
 
