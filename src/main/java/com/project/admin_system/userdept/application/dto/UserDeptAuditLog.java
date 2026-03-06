@@ -10,7 +10,7 @@ public record UserDeptAuditLog(
 ) {
     public static UserDeptAuditLog from(UserDept userDept) {
         return new UserDeptAuditLog(
-                userDept.getUserId(),
+                userDept.getId(),
                 userDept.getUser().getName(),
                 userDept.getDept() != null ? userDept.getDept().getId() : null,
                 userDept.getDept() != null ? userDept.getDept().getDeptName() : null
