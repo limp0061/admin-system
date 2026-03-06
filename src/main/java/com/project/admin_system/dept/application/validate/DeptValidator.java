@@ -10,9 +10,11 @@ import com.project.admin_system.userdept.domain.UserDeptRepository;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -34,6 +36,7 @@ public class DeptValidator {
     public void validateDuplicateCode(String deptCode, Long id) {
         deptRepository.findByDeptCode(deptCode).ifPresent(dept -> {
             if (!dept.getId().equals(id)) {
+                log.warn("DeptCode Duplicate. deptCode : {}", deptCode);
                 throw new BusinessException(ErrorCode.DUPLICATE_DEPT_CODE);
             }
         });

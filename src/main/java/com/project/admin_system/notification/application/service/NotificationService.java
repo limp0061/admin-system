@@ -24,10 +24,12 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class NotificationService {
@@ -40,23 +42,24 @@ public class NotificationService {
     private final RedisManager redisManager;
 
     public SseEmitter subscribe(Long id) {
+        log.debug("SSE subscribe. userId: {}", id);
         long timeout = 1000L * 60 * 60;
 
         SseEmitter sseEmitter = new SseEmitter(timeout);
         sseEmitterMap.computeIfAbsent(id, k -> new CopyOnWriteArrayList<>()).add(sseEmitter);
 
         sseEmitter.onTimeout(() -> {
+            log.warn("SSE Timeout. userId: {}", id);
             removeEmitter(id, sseEmitter);
             sseEmitter.complete();
         });
 
         sseEmitter.onError((e) -> {
+            log.warn("SSE error. userId: {}, error: {}", id, e.getMessage());
             removeEmitter(id, sseEmitter);
         });
 
-        sseEmitter.onCompletion(() -> {
-            removeEmitter(id, sseEmitter);
-        });
+        sseEmitter.onCompletion(() -> removeEmitter(id, sseEmitter));
 
         NotificationSendRequest connectEvent = new NotificationSendRequest(
                 NotificationType.CONNECT,
@@ -68,6 +71,7 @@ public class NotificationService {
         try {
             sendToClient(id, connectEvent);
         } catch (Exception e) {
+            log.warn("SSE connect event send failed. userId: {}, error: {}", id, e.getMessage());
             removeEmitter(id, sseEmitter);
             sseEmitter.complete();
         }
@@ -101,6 +105,8 @@ public class NotificationService {
     }
 
     public void broadcast(NotificationSendRequest request) {
+        log.info("Broadcast notification. targetCount: {}", sseEmitterMap.size());
+
         sseEmitterMap.keySet().forEach(userId -> {
             Long currentCount = getUnReadCount(userId);
             EventData originalData = (EventData) request.data();
@@ -131,6 +137,7 @@ public class NotificationService {
                     .data(request.data())
                     .id(String.valueOf(request.noticeId())));
         } catch (IOException e) {
+            log.warn("SSE send failed. userId: {}, error: {}", id, e.getMessage());
             removeEmitter(id, sseEmitter);
             sseEmitter.complete();
         }
@@ -188,7 +195,11 @@ public class NotificationService {
     public void markAsRead(Long notificationId, Long userId) {
 
         NotificationMaster master = notificationMasterRepository.findById(notificationId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.NOTIFICATION_NOT_FOUND));
+                .orElseGet(() -> {
+                    log.warn("Mark as read failed. Invalid notificationId: {}, userId: {}",
+                            notificationId, userId);
+                    throw new BusinessException(ErrorCode.NOTIFICATION_NOT_FOUND);
+                });
 
         if (notificationReadRepository.existsByNotificationIdAndUserId(notificationId, userId)) {
             return;
@@ -210,9 +221,11 @@ public class NotificationService {
     public void markReadAll(Long userId) {
         UserConfig userConfig = userConfigRepository.findByUserId(userId);
         if (userConfig == null) {
+            log.warn("UserConfig not found in DB. userId: {}", userId);
             throw new BusinessException(ErrorCode.USER_NOT_FOUND);
         }
 
+        log.info("Read All Notification. UserId : {}", userId);
         userConfig.updateLastNoticeCheckAt(LocalDateTime.now());
         redisManager.deleteData(USER_CONFIG_PREFIX + userId);
     }

@@ -28,6 +28,7 @@ public class RedisEventPublisher {
 
 
     public void refreshResource(ResourceRefreshEvent event) {
+        log.info("Redis 리소스 이벤트 발행 | action: {}, targetIds: {}", event.action(), event.targetIds());
         try {
             redisTemplate.convertAndSend(resourceChannelTopic.getTopic(), event);
         } catch (Exception e) {
@@ -36,6 +37,7 @@ public class RedisEventPublisher {
     }
 
     public void publishNotification(NotificationSendRequest request) {
+        log.info("Redis 알림 발행 | noticeId: {}, userId: {}", request.noticeId(), request.userId());
         try {
             redisTemplate.convertAndSend(notificationChannelTopic.getTopic(), request);
         } catch (Exception e) {
