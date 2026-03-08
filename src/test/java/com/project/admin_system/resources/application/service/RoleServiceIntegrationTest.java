@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.project.admin_system.common.annotation.IntegrationTest;
 import com.project.admin_system.common.exception.BusinessException;
 import com.project.admin_system.common.exception.ErrorCode;
+import com.project.admin_system.logs.application.service.AuditLogService;
 import com.project.admin_system.resources.application.dto.RoleSaveRequest;
 import com.project.admin_system.resources.domain.Role;
 import com.project.admin_system.resources.domain.RoleRepository;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 
 @IntegrationTest
@@ -27,18 +29,21 @@ class RoleServiceIntegrationTest {
     @Autowired
     private EntityManager em;
 
+    @MockitoBean
+    private AuditLogService auditLogService;
+
     private Long savedRoleId;
 
     @BeforeEach
     void init() {
-        Role role = roleRepository.findByRoleKey("ROLE_TEST")
-                .orElseGet(() -> roleRepository.save(
-                        Role.builder()
-                                .roleKey("ROLE_TEST")
-                                .roleName("관리자")
-                                .isAdmin(true)
-                                .build()
-                ));
+        Role role = roleRepository.save(
+                Role.builder()
+                        .roleKey("ROLE_TEST")
+                        .roleName("관리자")
+                        .isAdmin(true)
+                        .build()
+        );
+
         savedRoleId = role.getId();
     }
 

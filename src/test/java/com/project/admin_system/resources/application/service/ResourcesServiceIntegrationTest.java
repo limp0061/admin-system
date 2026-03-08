@@ -6,6 +6,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.project.admin_system.common.annotation.IntegrationTest;
 import com.project.admin_system.common.exception.BusinessException;
 import com.project.admin_system.common.exception.ErrorCode;
+import com.project.admin_system.common.service.RedisEventPublisher;
+import com.project.admin_system.logs.application.service.AuditLogService;
 import com.project.admin_system.resources.application.dto.ResourcesSaveRequest;
 import com.project.admin_system.resources.domain.Method;
 import com.project.admin_system.resources.domain.Resource;
@@ -18,6 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -32,6 +35,11 @@ class ResourcesServiceIntegrationTest {
     @Autowired
     private ResourcesRepository resourcesRepository;
 
+    @MockitoBean
+    private AuditLogService auditLogService;
+
+    @MockitoBean
+    private RedisEventPublisher redisEventPublisher;
 
     @Autowired
     private EntityManager em;
@@ -41,24 +49,22 @@ class ResourcesServiceIntegrationTest {
 
     @BeforeEach
     void init() {
-        Role role = roleRepository.findByRoleKey("ROLE_TEST")
-                .orElseGet(() -> roleRepository.save(
-                        Role.builder()
-                                .roleKey("ROLE_TEST")
-                                .roleName("관리자")
-                                .isAdmin(true)
-                                .build()
-                ));
+        Role role = roleRepository.save(Role.builder()
+                .roleKey("ROLE_TEST")
+                .roleName("관리자")
+                .isAdmin(true)
+                .build()
+        );
+
         savedRoleId = role.getId();
 
-        Resource resource = resourcesRepository.findByUrlPatternAndMethod("/users/test/**", Method.POST)
-                .orElseGet(() -> resourcesRepository.save(Resource.builder()
-                        .name("사용자 페이지")
-                        .urlPattern("/users/test/**")
-                        .method(Method.POST)
-                        .description("사용자 페이지 접근 정책")
-                        .build())
-                );
+        Resource resource = resourcesRepository.save(Resource.builder()
+                .name("사용자 페이지")
+                .urlPattern("/users/test/**")
+                .method(Method.POST)
+                .description("사용자 페이지 접근 정책")
+                .build());
+
         savedResourceId = resource.getId();
 
         em.flush();
@@ -136,6 +142,9 @@ class ResourcesServiceIntegrationTest {
         // given
         // when
         resourcesService.deleteResource(List.of(savedResourceId));
+
+        em.flush();
+        em.clear();
 
         // then
         assertThat(resourcesRepository.findById(savedResourceId)).isEmpty();

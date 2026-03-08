@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.project.admin_system.common.annotation.IntegrationTest;
 import com.project.admin_system.dept.domain.Dept;
 import com.project.admin_system.dept.domain.DeptRepository;
+import com.project.admin_system.logs.application.service.AuditLogService;
 import com.project.admin_system.resources.domain.Role;
 import com.project.admin_system.resources.domain.RoleRepository;
 import com.project.admin_system.user.application.dto.UserCreateRequest;
@@ -22,6 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 
 @IntegrationTest
@@ -41,6 +43,9 @@ public class UserServiceIntegrationTest {
     @Autowired
     private EntityManager em;
 
+    @MockitoBean
+    private AuditLogService auditLogService;
+
     private Long savedUserId;
     private Long approveUserId;
     private Long savedRoleId;
@@ -48,62 +53,57 @@ public class UserServiceIntegrationTest {
 
     @BeforeEach
     void init() {
-        Role role = roleRepository.findByRoleKey("ROLE_ADMIN")
-                .orElseGet(() -> roleRepository.save(
-                        Role.builder()
-                                .roleKey("ROLE_ADMIN")
-                                .roleName("일반관리자")
-                                .depth(0)
-                                .parent(null)
-                                .isAdmin(true)
-                                .build()
+        Role role = roleRepository.save(Role.builder()
+                .roleKey("ROLE_ADMIN_TEST")
+                .roleName("일반관리자")
+                .depth(0)
+                .parent(null)
+                .isAdmin(true)
+                .build()
+        );
 
-                ));
         savedRoleId = role.getId();
 
-        Dept dept = deptRepository.findByDeptCode("DEPT001")
-                .orElseGet(() -> deptRepository.save(
-                        Dept.builder()
-                                .deptCode("DEPT001")
-                                .deptName("개발팀")
-                                .upperDept(null)
-                                .sortOrder(1)
-                                .isActive(true)
-                                .depth(0)
-                                .build()
-                ));
+        Dept dept = deptRepository.save(
+                Dept.builder()
+                        .deptCode("DEPT_TEST_001")
+                        .deptName("개발팀")
+                        .upperDept(null)
+                        .sortOrder(1)
+                        .isActive(true)
+                        .depth(0)
+                        .build()
+        );
         savedDeptId = dept.getId();
 
-        User user = userRepository.findByEmailId("example@example.com")
-                .orElseGet(() -> userRepository.save(
-                        User.builder()
-                                .emailId("example@example.com")
-                                .name("테스트")
-                                .password("1234")
-                                .position("직원")
-                                .userCode("USER001")
-                                .gender(Gender.MALE)
-                                .userStatus(UserStatus.ACTIVE)
-                                .profilePath(null)
-                                .role(role)
-                                .build()
-                ));
+        User user = userRepository.save(User.builder()
+                .emailId("example@example.com")
+                .name("테스트")
+                .password("1234")
+                .position("직원")
+                .userCode("USER001")
+                .gender(Gender.MALE)
+                .userStatus(UserStatus.ACTIVE)
+                .profilePath(null)
+                .role(role)
+                .build()
+        );
+
         savedUserId = user.getId();
 
-        User user2 = userRepository.findByEmailId("example2@example.com")
-                .orElseGet(() -> userRepository.save(
-                        User.builder()
-                                .emailId("example2@example.com")
-                                .name("테스트2")
-                                .password("1234")
-                                .position("직원")
-                                .userCode("USER002")
-                                .gender(Gender.MALE)
-                                .userStatus(UserStatus.INACTIVE)
-                                .profilePath(null)
-                                .role(role)
-                                .build()
-                ));
+        User user2 = userRepository.save(
+                User.builder()
+                        .emailId("example2@example.com")
+                        .name("테스트2")
+                        .password("1234")
+                        .position("직원")
+                        .userCode("USER002")
+                        .gender(Gender.MALE)
+                        .userStatus(UserStatus.INACTIVE)
+                        .profilePath(null)
+                        .role(role)
+                        .build());
+
         approveUserId = user2.getId();
 
         em.flush();
