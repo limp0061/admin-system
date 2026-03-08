@@ -47,18 +47,19 @@ CREATE TABLE `roles` (
 );
 
 CREATE TABLE `login_history` (
-     `history_id` bigint PRIMARY KEY AUTO_INCREMENT,
-     `user_id` bigint,
-     `email_id` varchar(255) NOT NULL,
-     `client_ip` varchar(255) NOT NULL,
-     `user_agent` text,
-     `status` varchar(20) COMMENT 'SUCCESS, FAIL',
-     `failure_reason` varchar(255),
-     `created_at` timestamp,
-     `updated_at` timestamp,
-     `deleted_at` timestamp,
-     `created_by` varchar(255)
+    `history_id` bigint PRIMARY KEY AUTO_INCREMENT,
+    `user_id` bigint,
+    `email_id` varchar(100) NOT NULL,
+    `client_ip` varchar(100) NOT NULL,
+    `user_agent` text,
+    `status` varchar(20) COMMENT 'LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT_SUCCESS, LOGOUT_FAIL',
+    `failure_reason` text,
+    `created_at` timestamp,
+    `updated_at` timestamp,
+    `deleted_at` timestamp,
+    `created_by` varchar(255)
 );
+
 
 CREATE TABLE `notice` (
     `notice_id` bigint PRIMARY KEY AUTO_INCREMENT,
@@ -171,6 +172,19 @@ CREATE TABLE `audit_log_detail` (
     `details` text,
     `created_at` timestamp,
     `updated_at` timestamp
+);
+
+CREATE TABLE `password_history` (
+    `history_id` bigint PRIMARY KEY AUTO_INCREMENT,
+    `user_id` bigint NOT NULL,
+    `email_id` varchar(100) NOT NULL,
+    `client_ip` varchar(100) NOT NULL,
+    `password` varchar(100) NOT NULL,
+    `change_type` varchar(20) NOT NULL,
+    `created_at` timestamp,
+    `updated_at` timestamp,
+    `deleted_at` timestamp,
+    `created_by` varchar(100)
 );
 
 ALTER TABLE `user` ADD FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`);

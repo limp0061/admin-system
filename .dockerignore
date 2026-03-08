@@ -12,5 +12,4 @@ src/
 !build/libs/*.jar
 
 src/main/resources/application-secret.yml
-docker/redis/.env
 .github

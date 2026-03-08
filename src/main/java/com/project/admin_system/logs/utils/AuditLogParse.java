@@ -36,10 +36,14 @@ public class AuditLogParse {
     }
 
     private Map<String, Object> parseDetails(String detail) {
+        if (detail == null || detail.isBlank()) {
+            return Map.of();
+        }
+        
         try {
             return objectMapper.readValue(detail, Map.class);
         } catch (JsonProcessingException e) {
-            throw new BusinessException(ErrorCode.DEPT_CAN_NOT_DELETE);
+            throw new BusinessException(ErrorCode.INVALID_LOG_FORMAT);
         }
     }
 }

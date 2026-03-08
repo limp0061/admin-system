@@ -82,6 +82,12 @@ public class AuditLogService {
         saveAudit(targetEntity, AuditAction.DELETE, detailRequests);
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void logPasswordChange(AuditTarget targetEntity, List<AuditLogDetailRequest> detailRequests) {
+        saveAudit(targetEntity, AuditAction.UPDATE_PASSWORD, detailRequests);
+    }
+
+
     private void saveAudit(AuditTarget targetEntity, AuditAction action, List<AuditLogDetailRequest> dto) {
 
         if (dto == null || dto.isEmpty()) {
@@ -140,6 +146,7 @@ public class AuditLogService {
         List<AuditLogDetailItem> list = details.stream()
                 .map(detail -> new AuditLogDetailItem(detail.getTargetEntityName(),
                         auditLogParse.parse(detail.getDetails(), auditTarget)))
+                .filter(detail -> !detail.details().isEmpty())
                 .toList();
 
         return new AuditLogDetailResponse(
@@ -150,5 +157,4 @@ public class AuditLogService {
                 auditLog.getCreatedAt()
         );
     }
-
 }

@@ -35,6 +35,7 @@ public class LoginHistoryService {
 
     private final LoginHistoryRepository loginHistoryRepository;
 
+    @Transactional
     public void saveLoginHistory(LoginHistory loginHistory) {
         loginHistoryRepository.save(loginHistory);
     }

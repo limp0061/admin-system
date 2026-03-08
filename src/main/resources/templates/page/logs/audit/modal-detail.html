@@ -26,8 +26,8 @@
     </div>
     <div class="flex-1 min-h-0 flex flex-col overflow-y-auto">
         <span class="shrink-0 text-xs px-4 py-2.5 bg-slate-700 text-white rounded-md"
+              th:unless="${#lists.isEmpty(auditLog.details)}"
               th:text="${auditLog.action.label} + ' 이력'"></span>
-
         <div th:each="detailItem, iterStat : ${auditLog.details}"
              class="shrink-0 rounded-md border border-slate-100">
             <div class="divide-y divide-slate-100">

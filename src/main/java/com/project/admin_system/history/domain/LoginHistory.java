@@ -20,21 +20,23 @@ public class LoginHistory extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "history_id")
     private Long id;
-    
+
     private Long userId;
 
-    @Column(nullable = false)
+    @Column(length = 100, nullable = false)
     private String emailId;
 
-    @Column(nullable = false)
+    @Column(length = 100, nullable = false)
     private String clientIp;
 
     @Column(columnDefinition = "TEXT")
     private String userAgent;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 20, nullable = false)
     private LoginStatus status;
 
+    @Column(columnDefinition = "TEXT")
     private String failureReason;
 
     protected LoginHistory() {

@@ -147,6 +147,8 @@ public class UserService {
                     .build();
 
             passwordHistoryService.savePasswordHistory(passwordHistory);
+            auditLogService.logPasswordChange(AuditTarget.USER,
+                    List.of(new AuditLogDetailRequest(user.getId(), user.getEmailId(), null)));
         }
 
         if (profileImage != null && !profileImage.isEmpty()) {

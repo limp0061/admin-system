@@ -20,19 +20,20 @@ public class PasswordHistory extends BaseEntity {
     @Column(name = "history_id")
     private Long id;
 
+    @Column(nullable = false)
     private Long userId;
 
-    @Column(nullable = false)
+    @Column(length = 100, nullable = false)
     private String emailId;
 
-    @Column(nullable = false)
+    @Column(length = 100, nullable = false)
     private String clientIp;
 
-    @Column(nullable = false)
+    @Column(length = 100, nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(length = 20, nullable = false)
     private PasswordChangeType changeType;
 
     protected PasswordHistory() {

@@ -15,7 +15,7 @@ services:
         max-file: "7"
 
   admin-app:
-    image: limp0061/admin-system:1.0
+    image: limp0061/admin-system:1.1
     container_name: admin-app
     environment:
       - SERVER_PORT=9091
@@ -37,7 +37,7 @@ services:
         max-file: "7"
 
   redis:
-    image: redis:latest
+    image: redis:7.2-alpine
     container_name: redis-admin
     restart: always
     ports:
