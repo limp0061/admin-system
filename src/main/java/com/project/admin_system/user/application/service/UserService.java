@@ -133,6 +133,8 @@ public class UserService {
         user.update(dto, dept, role);
 
         if (dto.password() != null && !dto.password().isBlank()) {
+            userValidator.validatePasswordNotReused(user.getId(), dto.password());
+
             String encodedPassword = passwordEncoder.encode(dto.password());
             user.encPassword(encodedPassword);
 

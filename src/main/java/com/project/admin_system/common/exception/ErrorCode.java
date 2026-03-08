@@ -14,6 +14,7 @@ public enum ErrorCode {
     // 유저
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "아이디 또는 비밀번호가 일치하지 않습니다."),
+    DUPLICATE_PASSWORD(HttpStatus.BAD_REQUEST, "최근 3회 이내 사용한 비밀번호는 사용할 수 없습니다."),
     INVALID_IDS_CONTAIN(HttpStatus.BAD_REQUEST, "존재하지 않는 사용자가 포함되어 있습니다."),
     DUPLICATE_EMAIL_ID(HttpStatus.CONFLICT, "이미 사용 중인 이메일 주소입니다."),
     DUPLICATE_USER_CODE(HttpStatus.CONFLICT, "이미 사용 중인 사번입니다."),
@@ -68,7 +69,7 @@ public enum ErrorCode {
 
     INVALID_DATE_RANGE(HttpStatus.BAD_REQUEST, "시작일은 종료일보다 클 수 없습니다."),
     DATE_REQUIRED(HttpStatus.BAD_REQUEST, "검색 기간을 모두 선택해주세요."),
-    DATE_RANGE_EXCEEDED(HttpStatus.BAD_REQUEST, "조회 기간은 90일을 초과할 수 없습니다.");;
+    DATE_RANGE_EXCEEDED(HttpStatus.BAD_REQUEST, "조회 기간은 90일을 초과할 수 없습니다.");
 
     private final HttpStatus status;
     private final String message;
