@@ -2,8 +2,10 @@ package com.project.admin_system.security.handler;
 
 import static com.project.admin_system.security.utils.NetworkUtils.getClientIp;
 
-import com.project.admin_system.user.application.service.LoginHistoryService;
-import com.project.admin_system.user.domain.LoginHistory;
+import com.project.admin_system.history.application.service.LoginHistoryService;
+import com.project.admin_system.history.domain.LoginHistory;
+import com.project.admin_system.security.dto.AccountContext;
+import com.project.admin_system.security.dto.AccountDto;
 import com.project.admin_system.user.domain.LoginStatus;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,11 +30,14 @@ public class LogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
 
         String clientIp = getClientIp(request);
         if (authentication != null) {
-            String emailId = authentication.getName();
-            log.info("Logout Success. email : {}", emailId);
+            AccountContext accountContext = (AccountContext) authentication.getPrincipal();
+            AccountDto userDto = accountContext.getAccountDto();
+            String emailId = userDto.emailId();
 
+            log.info("Logout Success. email : {}", emailId);
             loginHistoryService.saveLoginHistory(LoginHistory
                     .builder()
+                    .userId(userDto.id())
                     .emailId(emailId)
                     .userAgent(request.getHeader("User-Agent"))
                     .status(LoginStatus.LOGOUT_SUCCESS)

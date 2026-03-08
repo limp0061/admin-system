@@ -20,6 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -112,23 +113,27 @@ public class UserServiceIntegrationTest {
     @Test
     @DisplayName("사용자 계정 추가")
     void createUser_success() {
-        String unique = String.valueOf(System.currentTimeMillis()).substring(8);
+
         // given
+        String unique = String.valueOf(System.currentTimeMillis()).substring(8);
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setRemoteAddr("127.0.0.1");
+
         String emailId = "test" + unique + "@example.com";
-        UserCreateRequest request = new UserCreateRequest(
+        UserCreateRequest createRequest = new UserCreateRequest(
                 "테스트", "1234", emailId,
                 savedDeptId, "직원", "USER" + unique, Gender.MALE,
                 UserStatus.ACTIVE, null, savedRoleId
         );
 
         //when
-        userService.createUser(request, null);
+        userService.createUser(request, createRequest, null);
 
         //then
         User savedUser = userRepository.findByEmailId(emailId).orElseThrow();
         assertThat(savedUser).isNotNull();
-        assertThat(savedUser.getEmailId()).isEqualTo(request.emailId());
-        assertThat(passwordEncoder.matches(request.password(), savedUser.getPassword())).isTrue();
+        assertThat(savedUser.getEmailId()).isEqualTo(createRequest.emailId());
+        assertThat(passwordEncoder.matches(createRequest.password(), savedUser.getPassword())).isTrue();
     }
 
     @Test
@@ -136,21 +141,24 @@ public class UserServiceIntegrationTest {
     void updateUser_success() {
 
         //given
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setRemoteAddr("127.0.0.1");
+
         String unique = String.valueOf(System.currentTimeMillis()).substring(8);
         String emailId = "test" + unique + "@example.com";
-        UserUpdateRequest request = new UserUpdateRequest(
+        UserUpdateRequest updateRequest = new UserUpdateRequest(
                 "테스트2", "12345", emailId,
                 savedDeptId, "", "USER" + unique, Gender.MALE,
                 UserStatus.ACTIVE, savedRoleId);
 
         //when
-        userService.updateUser(savedUserId, request, null);
+        userService.updateUser(request, savedUserId, updateRequest, null);
 
         //then
         User savedUser = userRepository.findByEmailId(emailId).orElseThrow();
         assertThat(savedUser).isNotNull();
-        assertThat(savedUser.getEmailId()).isEqualTo(request.emailId());
-        assertThat(passwordEncoder.matches(request.password(), savedUser.getPassword())).isTrue();
+        assertThat(savedUser.getEmailId()).isEqualTo(updateRequest.emailId());
+        assertThat(passwordEncoder.matches(updateRequest.password(), savedUser.getPassword())).isTrue();
     }
 
     @Test

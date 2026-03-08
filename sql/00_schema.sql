@@ -47,7 +47,8 @@ CREATE TABLE `roles` (
 );
 
 CREATE TABLE `login_history` (
-     `id` bigint PRIMARY KEY AUTO_INCREMENT,
+     `history_id` bigint PRIMARY KEY AUTO_INCREMENT,
+     `user_id` bigint,
      `email_id` varchar(255) NOT NULL,
      `client_ip` varchar(255) NOT NULL,
      `user_agent` text,
