@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" th:href="@{/css/output.css}">
     <title>관리자 | 로그</title>
 </head>
@@ -14,14 +14,19 @@
         <header th:replace="~{fragments/header :: header}"></header>
         <main class="vt-main flex flex-1 flex-col">
             <div id="list-wrapper" class="flex flex-col flex-1">
-                <div th:replace="~{components/prepare :: main}"></div>
+                <div th:replace="~{page/logs/history/history-main :: hisotryMain}"></div>
             </div>
         </main>
         <footer th:replace="~{fragments/footer :: footer}"></footer>
     </div>
 </div>
 
+<div th:replace="~{components/common-ui :: toast}"></div>
 <script type="module" th:src="@{/js/menu/menu.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
+<script type="module" th:src="@{/js/page/logs/history-list.js}"></script>
+<script type="module" th:src="@{/js/common/index.js}"></script>
 </body>
 
 </html>

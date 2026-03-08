@@ -4,10 +4,7 @@ import static com.project.admin_system.security.utils.NetworkUtils.getClientIp;
 
 import com.project.admin_system.common.exception.ErrorCode;
 import com.project.admin_system.common.exception.IpAddressRejectedException;
-import com.project.admin_system.user.application.service.LoginHistoryService;
-import com.project.admin_system.user.application.service.UserService;
-import com.project.admin_system.user.domain.LoginHistory;
-import com.project.admin_system.user.domain.LoginStatus;
+import com.project.admin_system.history.application.service.LoginHistoryService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,7 +28,6 @@ import org.springframework.stereotype.Component;
 public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
     private final LoginHistoryService loginHistoryService;
-    private final UserService userService;
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
@@ -39,18 +35,11 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
         String emailId = request.getParameter("username");
         String clientIp = getClientIp(request);
+        String userAgent = request.getHeader("User-Agent");
 
         ErrorCode errorCode = getErrorCode(exception);
 
-        userService.handleLoginFailure(emailId);
-
-        loginHistoryService.saveLoginHistory(LoginHistory.builder()
-                .emailId(emailId != null ? emailId : "UNKNOWN")
-                .userAgent(request.getHeader("User-Agent"))
-                .status(LoginStatus.LOGIN_FAIL)
-                .failureReason(errorCode.getMessage())
-                .clientIp(clientIp)
-                .build());
+        loginHistoryService.handleLoginFailure(emailId, clientIp, userAgent, errorCode);
 
         log.warn("Login Failed: User[{}] from IP[{}], Reason[{}]", emailId, clientIp, errorCode.getMessage());
 

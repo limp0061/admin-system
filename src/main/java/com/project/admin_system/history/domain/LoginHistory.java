@@ -1,6 +1,7 @@
-package com.project.admin_system.user.domain;
+package com.project.admin_system.history.domain;
 
 import com.project.admin_system.common.domain.BaseEntity;
+import com.project.admin_system.user.domain.LoginStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -17,7 +18,10 @@ public class LoginHistory extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "history_id")
     private Long id;
+    
+    private Long userId;
 
     @Column(nullable = false)
     private String emailId;
@@ -37,7 +41,9 @@ public class LoginHistory extends BaseEntity {
     }
 
     @Builder
-    public LoginHistory(String emailId, String clientIp, String userAgent, LoginStatus status, String failureReason) {
+    public LoginHistory(Long userId, String emailId, String clientIp, String userAgent, LoginStatus status,
+                        String failureReason) {
+        this.userId = userId;
         this.emailId = emailId;
         this.clientIp = clientIp;
         this.userAgent = userAgent;

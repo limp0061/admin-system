@@ -46,7 +46,7 @@ export const MENU: MenuItem[] = [
         collapsed: true,
         children: [
             {name: "감사 로그", url: "/logs/audit"},
-            {name: "활동 로그", url: "/logs/activity"}
+            {name: "활동 로그", url: "/logs/history/login"}
         ]
     },
     {

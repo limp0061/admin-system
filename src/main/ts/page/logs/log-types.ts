@@ -4,3 +4,9 @@ export interface AuditRequest {
     startAt?: string | null
     endAt?: string | null
 }
+
+export interface HistoryRequest {
+    startAt?: string | null
+    endAt?: string | null
+    emailId?: string | null
+}

@@ -37,9 +37,10 @@ public class UserApiController {
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<ApiResponse<Void>> saveUser(
             @RequestPart(name = "userData") @Valid UserCreateRequest userSaveRequest,
-            @RequestPart(name = "profileImage", required = false) MultipartFile profileImage
+            @RequestPart(name = "profileImage", required = false) MultipartFile profileImage,
+            HttpServletRequest request
     ) {
-        userService.createUser(userSaveRequest, profileImage);
+        userService.createUser(request, userSaveRequest, profileImage);
 
         String message = "사용자가 추가되었습니다";
         return ResponseEntity.ok(new ApiResponse<>(message));
@@ -50,9 +51,10 @@ public class UserApiController {
     public ResponseEntity<ApiResponse<Void>> updateUser(
             @PathVariable(name = "id") Long id,
             @RequestPart(name = "userData") @Valid UserUpdateRequest userUpdateRequest,
-            @RequestPart(name = "profileImage", required = false) MultipartFile profileImage
+            @RequestPart(name = "profileImage", required = false) MultipartFile profileImage,
+            HttpServletRequest request
     ) {
-        userService.updateUser(id, userUpdateRequest, profileImage);
+        userService.updateUser(request, id, userUpdateRequest, profileImage);
 
         String message = "사용자 정보가 수정되었습니다";
         return ResponseEntity.ok(new ApiResponse<>(message));

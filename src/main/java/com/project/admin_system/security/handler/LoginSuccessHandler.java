@@ -2,11 +2,10 @@ package com.project.admin_system.security.handler;
 
 import static com.project.admin_system.security.utils.NetworkUtils.getClientIp;
 
+import com.project.admin_system.history.application.service.LoginHistoryService;
+import com.project.admin_system.history.domain.LoginHistory;
 import com.project.admin_system.security.dto.AccountContext;
 import com.project.admin_system.security.dto.AccountDto;
-import com.project.admin_system.user.application.service.LoginHistoryService;
-import com.project.admin_system.user.application.service.UserService;
-import com.project.admin_system.user.domain.LoginHistory;
 import com.project.admin_system.user.domain.LoginStatus;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,7 +31,6 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
     private final LoginHistoryService loginHistoryService;
-    private final UserService userService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -42,9 +40,10 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         String username = authentication.getName();
         AccountContext accountContext = (AccountContext) authentication.getPrincipal();
         AccountDto userDto = accountContext.getAccountDto();
-        userService.successLoginHandle(userDto.emailId());
+        loginHistoryService.successLoginHandle(userDto.emailId());
 
         LoginHistory loginHistory = LoginHistory.builder()
+                .userId(userDto.id())
                 .emailId(userDto.emailId())
                 .userAgent(request.getHeader("User-Agent"))
                 .status(LoginStatus.LOGIN_SUCCESS)

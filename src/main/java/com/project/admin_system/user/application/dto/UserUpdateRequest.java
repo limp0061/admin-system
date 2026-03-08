@@ -1,11 +1,11 @@
 package com.project.admin_system.user.application.dto;
 
 import com.project.admin_system.user.domain.Gender;
-
 import com.project.admin_system.user.domain.UserStatus;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public record UserUpdateRequest(
@@ -13,6 +13,10 @@ public record UserUpdateRequest(
         @Size(min = 2, max = 20, message = "이름은 2자 이상 20자 이하로 입력해주세요.")
         String name,
 
+        @Pattern(
+                regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,16}$",
+                message = "비밀번호는 8~16자의 영문, 숫자, 특수문자를 포함해야 합니다."
+        )
         String password,
 
         @Email
