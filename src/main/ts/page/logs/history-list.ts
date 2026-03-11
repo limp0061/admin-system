@@ -25,6 +25,21 @@ const defaultHandler = async (url: string) => {
 
 PaginationUtils.setUpdateHandler(defaultHandler);
 
+document.addEventListener("dblclick", (e) => {
+    const target = e.target as HTMLElement;
+
+    const row = target.closest<HTMLElement>("[data-action]");
+    if (!row) return;
+
+    const action = row.dataset.action;
+    switch (action) {
+        case "clickRow": {
+            openDetailModal(row);
+            break;
+        }
+    }
+})
+
 document.addEventListener("click", (e) => {
     const target = e.target as HTMLElement;
 
@@ -113,3 +128,19 @@ document.addEventListener('keydown', (e: KeyboardEvent) => {
         (PaginationUtils as any).onUpdate(targetUrl);
     }
 }, true);
+
+const openDetailModal = async (btn: HTMLElement) => {
+    const id = btn.dataset.id;
+
+    try {
+        const html = await sendRequest(`/logs/history/modal/detail?id=${id}`, {method: 'GET'}, 'TEXT');
+
+        const root = document.getElementById("modal-root");
+        if (root) {
+            root.innerHTML = html;
+        }
+    } catch (error) {
+        const err = error as ErrorResponse;
+        showToast(err.message || "오류가 발생했습니다.", "error");
+    }
+}

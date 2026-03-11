@@ -10,7 +10,7 @@ import com.project.admin_system.dept.application.dto.DeptSaveRequest;
 import com.project.admin_system.dept.application.service.DeptService;
 import com.project.admin_system.dept.domain.Dept;
 import com.project.admin_system.dept.domain.DeptRepository;
-import com.project.admin_system.logs.application.service.AuditLogService;
+import com.project.admin_system.logs.audit.application.service.AuditLogService;
 import com.project.admin_system.user.domain.Gender;
 import com.project.admin_system.user.domain.User;
 import com.project.admin_system.user.domain.UserRepository;

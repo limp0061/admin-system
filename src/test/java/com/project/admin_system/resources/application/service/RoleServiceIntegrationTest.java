@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.project.admin_system.common.annotation.IntegrationTest;
 import com.project.admin_system.common.exception.BusinessException;
 import com.project.admin_system.common.exception.ErrorCode;
-import com.project.admin_system.logs.application.service.AuditLogService;
+import com.project.admin_system.logs.audit.application.service.AuditLogService;
 import com.project.admin_system.resources.application.dto.RoleSaveRequest;
 import com.project.admin_system.resources.domain.Role;
 import com.project.admin_system.resources.domain.RoleRepository;

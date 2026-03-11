@@ -1,6 +1,7 @@
 package com.project.admin_system.user.application.service;
 
-import static com.project.admin_system.security.utils.NetworkUtils.getClientIp;
+import static com.project.admin_system.security.utils.IpUtils.extractIp;
+import static com.project.admin_system.security.utils.IpUtils.normalize;
 
 import com.project.admin_system.common.exception.BusinessException;
 import com.project.admin_system.common.exception.ErrorCode;
@@ -8,13 +9,13 @@ import com.project.admin_system.dept.domain.Dept;
 import com.project.admin_system.dept.domain.DeptRepository;
 import com.project.admin_system.file.application.service.FileService;
 import com.project.admin_system.file.domain.DomainType;
-import com.project.admin_system.history.application.service.PasswordHistoryService;
-import com.project.admin_system.history.domain.PasswordChangeType;
-import com.project.admin_system.history.domain.PasswordHistory;
-import com.project.admin_system.logs.application.dto.AuditLogDetailRequest;
-import com.project.admin_system.logs.application.dto.AuditLogUpdateRequest;
-import com.project.admin_system.logs.application.service.AuditLogService;
-import com.project.admin_system.logs.domain.AuditTarget;
+import com.project.admin_system.logs.audit.application.dto.AuditLogDetailRequest;
+import com.project.admin_system.logs.audit.application.dto.AuditLogUpdateRequest;
+import com.project.admin_system.logs.audit.application.service.AuditLogService;
+import com.project.admin_system.logs.audit.domain.AuditTarget;
+import com.project.admin_system.logs.history.application.service.PasswordHistoryService;
+import com.project.admin_system.logs.history.domain.PasswordChangeType;
+import com.project.admin_system.logs.history.domain.PasswordHistory;
 import com.project.admin_system.resources.application.validate.RoleValidator;
 import com.project.admin_system.resources.domain.Role;
 import com.project.admin_system.user.application.dto.UserAuditLog;
@@ -86,10 +87,11 @@ public class UserService {
         user.encPassword(encodedPassword);
         userRepository.save(user);
 
+        String rawIp = extractIp(request);
         PasswordHistory passwordHistory = PasswordHistory.builder()
                 .userId(user.getId())
                 .emailId(dto.emailId())
-                .clientIp(getClientIp(request))
+                .clientIp(normalize(rawIp))
                 .password(encodedPassword)
                 .changeType(PasswordChangeType.INITIAL)
                 .build();
@@ -138,10 +140,11 @@ public class UserService {
             String encodedPassword = passwordEncoder.encode(dto.password());
             user.encPassword(encodedPassword);
 
+            String rawIp = extractIp(request);
             PasswordHistory passwordHistory = PasswordHistory.builder()
                     .userId(user.getId())
                     .emailId(dto.emailId())
-                    .clientIp(getClientIp(request))
+                    .clientIp(normalize(rawIp))
                     .password(encodedPassword)
                     .changeType(PasswordChangeType.ADMIN)
                     .build();

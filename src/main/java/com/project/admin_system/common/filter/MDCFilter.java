@@ -1,6 +1,6 @@
 package com.project.admin_system.common.filter;
 
-import com.project.admin_system.security.utils.NetworkUtils;
+import com.project.admin_system.security.utils.IpUtils;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -30,7 +30,7 @@ public class MDCFilter implements Filter {
         try {
             final UUID uuid = UUID.randomUUID();
             MDC.put(MDC_REQ_KEY, uuid.toString().substring(0, 8));
-            MDC.put(MDC_IP_KEY, NetworkUtils.getClientIp(httpRequest));
+            MDC.put(MDC_IP_KEY, IpUtils.extractIp(httpRequest));
 
             chain.doFilter(request, response);
         } finally {
