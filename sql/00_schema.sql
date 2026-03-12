@@ -47,17 +47,22 @@ CREATE TABLE `roles` (
 );
 
 CREATE TABLE `login_history` (
-    `history_id` bigint PRIMARY KEY AUTO_INCREMENT,
-    `user_id` bigint,
-    `email_id` varchar(100) NOT NULL,
-    `client_ip` varchar(100) NOT NULL,
-    `user_agent` text,
-    `status` varchar(20) COMMENT 'LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT_SUCCESS, LOGOUT_FAIL',
-    `failure_reason` text,
-    `created_at` timestamp,
-    `updated_at` timestamp,
-    `deleted_at` timestamp,
-    `created_by` varchar(255)
+     `history_id`     bigint PRIMARY KEY AUTO_INCREMENT,
+     `user_id`        bigint,
+     `email_id`       varchar(100) NOT NULL,
+     `raw_ip`         varchar(45)  NOT NULL,
+     `client_ip`      varchar(45),
+     `device_type`    varchar(20),
+     `device_name`    varchar(50),
+     `os`             varchar(50),
+     `browser`        varchar(50),
+     `user_agent`     text,
+     `status`         varchar(20),
+     `failure_reason` text,
+     `created_at`     timestamp    DEFAULT CURRENT_TIMESTAMP,
+     `updated_at`     timestamp    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+     `deleted_at`     timestamp    NULL,
+     `created_by`     varchar(255)
 );
 
 

@@ -2,8 +2,8 @@ package com.project.admin_system.user.application.validate;
 
 import com.project.admin_system.common.exception.BusinessException;
 import com.project.admin_system.common.exception.ErrorCode;
-import com.project.admin_system.history.domain.PasswordHistory;
-import com.project.admin_system.history.domain.PasswordHistoryRepository;
+import com.project.admin_system.logs.history.domain.PasswordHistory;
+import com.project.admin_system.logs.history.domain.PasswordHistoryRepository;
 import com.project.admin_system.user.domain.UserRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

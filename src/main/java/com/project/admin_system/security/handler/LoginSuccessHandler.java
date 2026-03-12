@@ -1,12 +1,10 @@
 package com.project.admin_system.security.handler;
 
-import static com.project.admin_system.security.utils.NetworkUtils.getClientIp;
+import static com.project.admin_system.security.utils.IpUtils.extractIp;
 
-import com.project.admin_system.history.application.service.LoginHistoryService;
-import com.project.admin_system.history.domain.LoginHistory;
+import com.project.admin_system.logs.history.application.service.LoginHandler;
 import com.project.admin_system.security.dto.AccountContext;
 import com.project.admin_system.security.dto.AccountDto;
-import com.project.admin_system.user.domain.LoginStatus;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -30,29 +28,21 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final RequestCache requestCache = new HttpSessionRequestCache();
     private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
-    private final LoginHistoryService loginHistoryService;
+    private final LoginHandler loginHandler;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
 
-        String clientIp = getClientIp(request);
+        String rawIp = extractIp(request);
         String username = authentication.getName();
         AccountContext accountContext = (AccountContext) authentication.getPrincipal();
         AccountDto userDto = accountContext.getAccountDto();
-        loginHistoryService.successLoginHandle(userDto.emailId());
 
-        LoginHistory loginHistory = LoginHistory.builder()
-                .userId(userDto.id())
-                .emailId(userDto.emailId())
-                .userAgent(request.getHeader("User-Agent"))
-                .status(LoginStatus.LOGIN_SUCCESS)
-                .clientIp(clientIp)
-                .build();
+        String userAgent = request.getHeader("User-Agent");
+        loginHandler.successLoginHandle(userDto, rawIp, userAgent);
 
-        loginHistoryService.saveLoginHistory(loginHistory);
-
-        log.info("Login Success: emailId [{}] from ip [{}]", username, clientIp);
+        log.info("Login Success: emailId [{}] from ip [{}]", username, rawIp);
         SavedRequest savedRequest = requestCache.getRequest(request, response);
         if (savedRequest != null) {
             String targetUrl = savedRequest.getRedirectUrl();

@@ -7,22 +7,32 @@
                     <span>이메일</span>
                 </div>
             </th>
-            <th class="w-[15%]">
+            <th class="w-[10%]">
                 <div class="flex items-center justify-between gap-2">
                     <span>접속 IP</span>
                 </div>
             </th>
-            <th class="w-[15%]">
+            <th class="w-[10%]">
                 <div class="flex items-center justify-between gap-2">
                     <span>결과</span>
                 </div>
             </th>
-            <th class="w-[25%]">
+            <th class="w-[10%]">
                 <div class="flex items-center justify-between gap-2">
-                    <span>원인</span>
+                    <span>OS</span>
                 </div>
             </th>
-            <th class="w-[20%]">
+            <th class="w-[10%]">
+                <div class="flex items-center justify-between gap-2">
+                    <span>Browser</span>
+                </div>
+            </th>
+            <th class="w-[10%]">
+                <div class="flex items-center justify-between gap-2">
+                    <span>접속 기기</span>
+                </div>
+            </th>
+            <th class="w-[15%]">
                 <div class="flex items-center justify-between gap-2">
                     <span>일시</span>
                     <button
@@ -46,18 +56,23 @@
         </thead>
         <tbody th:if="${#lists.isEmpty(list.content)}">
         <tr>
-            <td colspan="5" class="py-16 text-center text-gray-400">
+            <td colspan="7" class="py-16 text-center text-gray-400">
                 해당 기간에 로그인 이력이 없습니다.
             </td>
         </tr>
         </tbody>
 
         <tbody th:unless="${#lists.isEmpty(list.content)}">
-        <tr th:each="item : ${list.content}">
+        <tr th:each="item : ${list.content}"
+            th:data-id="${item.id}"
+            class="hover:bg-gray-50 hover:cursor-pointer"
+            data-action="clickRow">
             <td th:text="${item.emailId}"></td>
             <td th:text="${item.clientIp}"></td>
             <td th:text="${item.loginStatus.label}"></td>
-            <td th:text="${item.failureReason}"></td>
+            <td th:text="${item.os}"></td>
+            <td th:text="${item.browser}"></td>
+            <td th:text="${item.deviceType.label}"></td>
             <td th:text="${#temporals.format(item.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
         </tr>
         </tbody>

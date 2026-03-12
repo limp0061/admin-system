@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.project.admin_system.common.annotation.IntegrationTest;
 import com.project.admin_system.dept.domain.Dept;
 import com.project.admin_system.dept.domain.DeptRepository;
-import com.project.admin_system.logs.application.service.AuditLogService;
+import com.project.admin_system.logs.audit.application.service.AuditLogService;
 import com.project.admin_system.resources.domain.Role;
 import com.project.admin_system.resources.domain.RoleRepository;
 import com.project.admin_system.user.domain.Gender;
@@ -69,7 +69,7 @@ class UserDeptServiceIntegrationTest {
                         .depth(0)
                         .build()
         );
-        
+
         savedDeptId = dept.getId();
 
         User user = userRepository.findByEmailId("example@example.com")
