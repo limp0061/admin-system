@@ -140,14 +140,15 @@ public class User extends BaseEntity {
 
     private void updateUserDept(Dept newDept) {
         if (newDept == null) {
-            if (this.userDept != null) {
-                this.userDept = null;
-            }
+            this.userDept = null;
             return;
         }
 
         if (this.userDept == null) {
-            assignDepartment(new UserDept(this, newDept));
+            assignDepartment(UserDept.builder()
+                    .user(this)
+                    .dept(newDept)
+                    .build());
         } else {
             this.userDept.updateDept(newDept);
         }

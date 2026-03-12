@@ -32,7 +32,7 @@ public enum ErrorCode {
     DUPLICATE_DEPT_CODE(HttpStatus.CONFLICT, "이미 사용 중인 부서코드 입니다."),
     DEPT_CODE_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 부서입니다."),
     UPPER_DEPT_CODE_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 상위 부서입니다."),
-    USER_DEPT_NOT_FOUND(HttpStatus.BAD_REQUEST, "부서 구성원의 정보가 일치하지 았습니다."),
+    USER_DEPT_NOT_FOUND(HttpStatus.BAD_REQUEST, "부서 구성원의 정보가 일치하지 않습니다."),
     DEPT_CAN_NOT_DELETE(HttpStatus.BAD_REQUEST, "해당 부서를 삭제할 수 없습니다"),
 
     // 공지
