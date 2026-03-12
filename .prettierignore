@@ -1,1 +1,11 @@
+# 라이브러리 및 외부 소스
 src/main/resources/static/js/ckeditor5/**
+
+# 빌드 및 자동 생성 파일 (이걸 추가해야 output.css가 안 뜹니다!)
+src/main/resources/static/css/output.css
+node_modules
+dist
+build
+
+# 설정 파일들 (선택 사항)
+.prettierrc
