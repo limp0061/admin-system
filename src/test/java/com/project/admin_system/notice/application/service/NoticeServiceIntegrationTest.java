@@ -11,6 +11,7 @@ import com.project.admin_system.file.domain.DomainType;
 import com.project.admin_system.file.domain.File;
 import com.project.admin_system.file.domain.FileRepository;
 import com.project.admin_system.file.domain.FileStatus;
+import com.project.admin_system.logs.audit.application.service.AuditLogService;
 import com.project.admin_system.notice.application.dto.NoticeSaveRequest;
 import com.project.admin_system.notice.domain.Notice;
 import com.project.admin_system.notice.domain.NoticeRepository;
@@ -37,6 +38,9 @@ class NoticeServiceIntegrationTest {
     private FileRepository fileRepository;
     @Autowired
     private NoticeRepository noticeRepository;
+
+    @MockitoBean
+    private AuditLogService auditLogService;
 
     @Autowired
     private EntityManager em;

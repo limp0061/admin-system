@@ -1,22 +1,24 @@
 package com.project.admin_system.user.application.service;
 
-import static com.project.admin_system.common.dto.RedisConstants.USER_CONFIG_PREFIX;
+import static com.project.admin_system.security.utils.IpUtils.extractIp;
+import static com.project.admin_system.security.utils.IpUtils.normalize;
 
 import com.project.admin_system.common.exception.BusinessException;
 import com.project.admin_system.common.exception.ErrorCode;
-import com.project.admin_system.common.service.RedisManager;
 import com.project.admin_system.dept.domain.Dept;
 import com.project.admin_system.dept.domain.DeptRepository;
 import com.project.admin_system.file.application.service.FileService;
 import com.project.admin_system.file.domain.DomainType;
-import com.project.admin_system.logs.application.dto.AuditLogDetailRequest;
-import com.project.admin_system.logs.application.dto.AuditLogUpdateRequest;
-import com.project.admin_system.logs.application.service.AuditLogService;
-import com.project.admin_system.logs.domain.AuditTarget;
+import com.project.admin_system.logs.audit.application.dto.AuditLogDetailRequest;
+import com.project.admin_system.logs.audit.application.dto.AuditLogUpdateRequest;
+import com.project.admin_system.logs.audit.application.service.AuditLogService;
+import com.project.admin_system.logs.audit.domain.AuditTarget;
+import com.project.admin_system.logs.history.application.service.PasswordHistoryService;
+import com.project.admin_system.logs.history.domain.PasswordChangeType;
+import com.project.admin_system.logs.history.domain.PasswordHistory;
 import com.project.admin_system.resources.application.validate.RoleValidator;
 import com.project.admin_system.resources.domain.Role;
 import com.project.admin_system.user.application.dto.UserAuditLog;
-import com.project.admin_system.user.application.dto.UserConfigDto;
 import com.project.admin_system.user.application.dto.UserCreateRequest;
 import com.project.admin_system.user.application.dto.UserListResponse;
 import com.project.admin_system.user.application.dto.UserSearchResponse;
@@ -24,19 +26,17 @@ import com.project.admin_system.user.application.dto.UserStatusChangeRequest;
 import com.project.admin_system.user.application.dto.UserUpdateRequest;
 import com.project.admin_system.user.application.validate.UserValidator;
 import com.project.admin_system.user.domain.User;
-import com.project.admin_system.user.domain.UserConfig;
-import com.project.admin_system.user.domain.UserConfigRepository;
 import com.project.admin_system.user.domain.UserRepository;
 import com.project.admin_system.user.domain.UserStatus;
 import com.project.admin_system.user.domain.UserStatusMode;
 import com.project.admin_system.userdept.domain.UserDept;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,12 +54,11 @@ public class UserService {
     private final RoleValidator roleValidator;
     private final FileService fileService;
     private final PasswordEncoder passwordEncoder;
-    private final RedisManager redisManager;
-    private final UserConfigRepository userConfigRepository;
     private final AuditLogService auditLogService;
+    private final PasswordHistoryService passwordHistoryService;
 
     @Transactional
-    public void createUser(UserCreateRequest dto, MultipartFile profileImage) {
+    public void createUser(HttpServletRequest request, UserCreateRequest dto, MultipartFile profileImage) {
 
         // 이메일 중복 체크
         userValidator.validateDuplicateEmailId(dto.emailId());
@@ -88,6 +87,17 @@ public class UserService {
         user.encPassword(encodedPassword);
         userRepository.save(user);
 
+        String rawIp = extractIp(request);
+        PasswordHistory passwordHistory = PasswordHistory.builder()
+                .userId(user.getId())
+                .emailId(dto.emailId())
+                .clientIp(normalize(rawIp))
+                .password(encodedPassword)
+                .changeType(PasswordChangeType.INITIAL)
+                .build();
+
+        passwordHistoryService.savePasswordHistory(passwordHistory);
+
         if (profileImage != null && !profileImage.isEmpty()) {
             log.info("프로필 이미지 업로드 | userId: {}", user.getId());
             String profilePath = fileService.fileUpload(profileImage, DomainType.PROFILE, user.getId());
@@ -100,7 +110,7 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUser(Long id, UserUpdateRequest dto, MultipartFile profileImage) {
+    public void updateUser(HttpServletRequest request, Long id, UserUpdateRequest dto, MultipartFile profileImage) {
 
         // 값 비교를 위한 기존 데이터
         User user = userRepository.findById(id)
@@ -125,8 +135,23 @@ public class UserService {
         user.update(dto, dept, role);
 
         if (dto.password() != null && !dto.password().isBlank()) {
+            userValidator.validatePasswordNotReused(user.getId(), dto.password());
+
             String encodedPassword = passwordEncoder.encode(dto.password());
             user.encPassword(encodedPassword);
+
+            String rawIp = extractIp(request);
+            PasswordHistory passwordHistory = PasswordHistory.builder()
+                    .userId(user.getId())
+                    .emailId(dto.emailId())
+                    .clientIp(normalize(rawIp))
+                    .password(encodedPassword)
+                    .changeType(PasswordChangeType.ADMIN)
+                    .build();
+
+            passwordHistoryService.savePasswordHistory(passwordHistory);
+            auditLogService.logPasswordChange(AuditTarget.USER,
+                    List.of(new AuditLogDetailRequest(user.getId(), user.getEmailId(), null)));
         }
 
         if (profileImage != null && !profileImage.isEmpty()) {
@@ -213,25 +238,5 @@ public class UserService {
 
     public List<UserSearchResponse> searchAllActiveUsers(String keyword) {
         return userRepository.searchAllActiveUsers(keyword);
-    }
-
-    @Async
-    @Transactional
-    public void successLoginHandle(String emailId) {
-        User user = userRepository.findByEmailId(emailId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
-        user.loginSuccess();
-
-        UserConfig userConfig = userConfigRepository.findByUserId(user.getId());
-        UserConfigDto config = UserConfigDto.from(userConfig);
-        redisManager.setData(USER_CONFIG_PREFIX + user.getId(), config);
-    }
-
-    @Transactional
-    public void handleLoginFailure(String emailId) {
-        userRepository.findByEmailId(emailId).ifPresent(user -> {
-            user.loginFailure();
-            log.warn("Login failed for user: {}. fail count: {}", emailId, user.getPasswordFailCount());
-        });
     }
 }

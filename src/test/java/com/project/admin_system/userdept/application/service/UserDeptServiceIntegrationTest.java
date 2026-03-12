@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.project.admin_system.common.annotation.IntegrationTest;
 import com.project.admin_system.dept.domain.Dept;
 import com.project.admin_system.dept.domain.DeptRepository;
+import com.project.admin_system.logs.audit.application.service.AuditLogService;
 import com.project.admin_system.resources.domain.Role;
 import com.project.admin_system.resources.domain.RoleRepository;
 import com.project.admin_system.user.domain.Gender;
@@ -20,6 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 
 @IntegrationTest
@@ -32,9 +34,12 @@ class UserDeptServiceIntegrationTest {
     private UserRepository userRepository;
     @Autowired
     private DeptRepository deptRepository;
-
     @Autowired
     private RoleRepository roleRepository;
+
+    @MockitoBean
+    private AuditLogService auditLogService;
+
     @Autowired
     private EntityManager em;
 
@@ -43,29 +48,28 @@ class UserDeptServiceIntegrationTest {
 
     @BeforeEach
     void init() {
-        Role role = roleRepository.findByRoleKey("ROLE_ADMIN")
-                .orElseGet(() -> roleRepository.save(
-                        Role.builder()
-                                .roleKey("ROLE_ADMIN")
-                                .roleName("일반관리자")
-                                .depth(0)
-                                .parent(null)
-                                .isAdmin(true)
-                                .build()
+        Role role = roleRepository.save(
+                Role.builder()
+                        .roleKey("ROLE_TEST_ADMIN")
+                        .roleName("일반관리자")
+                        .depth(0)
+                        .parent(null)
+                        .isAdmin(true)
+                        .build()
 
-                ));
+        );
 
-        Dept dept = deptRepository.findByDeptCode("TEST-DEPT-001")
-                .orElseGet(() -> deptRepository.save(
-                        Dept.builder()
-                                .deptCode("TEST-DEPT-001")
-                                .deptName("개발팀")
-                                .upperDept(null)
-                                .sortOrder(1)
-                                .isActive(true)
-                                .depth(0)
-                                .build()
-                ));
+        Dept dept = deptRepository.save(
+                Dept.builder()
+                        .deptCode("TEST-DEPT-001")
+                        .deptName("개발팀")
+                        .upperDept(null)
+                        .sortOrder(1)
+                        .isActive(true)
+                        .depth(0)
+                        .build()
+        );
+
         savedDeptId = dept.getId();
 
         User user = userRepository.findByEmailId("example@example.com")

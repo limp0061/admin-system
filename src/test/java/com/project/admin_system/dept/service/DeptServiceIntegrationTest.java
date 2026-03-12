@@ -10,6 +10,7 @@ import com.project.admin_system.dept.application.dto.DeptSaveRequest;
 import com.project.admin_system.dept.application.service.DeptService;
 import com.project.admin_system.dept.domain.Dept;
 import com.project.admin_system.dept.domain.DeptRepository;
+import com.project.admin_system.logs.audit.application.service.AuditLogService;
 import com.project.admin_system.user.domain.Gender;
 import com.project.admin_system.user.domain.User;
 import com.project.admin_system.user.domain.UserRepository;
@@ -20,6 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 
 @IntegrationTest
@@ -32,6 +34,10 @@ public class DeptServiceIntegrationTest {
     private DeptRepository deptRepository;
     @Autowired
     private UserRepository userRepository;
+
+    @MockitoBean
+    private AuditLogService auditLogService;
+
     @Autowired
     private EntityManager em;
 
@@ -40,30 +46,28 @@ public class DeptServiceIntegrationTest {
 
     @BeforeEach
     void init() {
-        Dept dept1 = deptRepository.findByDeptCode("TEST-DEPT-001")
-                .orElseGet(() -> deptRepository.save(
-                        Dept.builder()
-                                .deptCode("TEST-DEPT-001")
-                                .deptName("상위부서")
-                                .upperDept(null)
-                                .sortOrder(0)
-                                .isActive(true)
-                                .depth(0)
-                                .build()
-                ));
+        Dept dept1 = deptRepository.save(
+                Dept.builder()
+                        .deptCode("TEST-DEPT-001")
+                        .deptName("상위부서")
+                        .upperDept(null)
+                        .sortOrder(0)
+                        .isActive(true)
+                        .depth(0)
+                        .build()
+        );
 
         upperDeptId = dept1.getId();
-        Dept dept2 = deptRepository.findByDeptCode("TEST-DEPT-002")
-                .orElseGet(() -> deptRepository.save(
-                        Dept.builder()
-                                .deptCode("TEST-DEPT-002")
-                                .deptName("하위부서")
-                                .upperDept(dept1)
-                                .sortOrder(0)
-                                .isActive(true)
-                                .depth(1)
-                                .build()
-                ));
+        Dept dept2 = deptRepository.save(
+                Dept.builder()
+                        .deptCode("TEST-DEPT-002")
+                        .deptName("하위부서")
+                        .upperDept(dept1)
+                        .sortOrder(0)
+                        .isActive(true)
+                        .depth(1)
+                        .build()
+        );
 
         savedDeptId = dept2.getId();
 

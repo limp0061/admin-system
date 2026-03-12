@@ -2,11 +2,16 @@ package com.project.admin_system.user.application.validate;
 
 import com.project.admin_system.common.exception.BusinessException;
 import com.project.admin_system.common.exception.ErrorCode;
+
+import com.project.admin_system.logs.history.domain.PasswordHistory;
+import com.project.admin_system.logs.history.domain.PasswordHistoryRepository;
+
 import com.project.admin_system.user.domain.UserRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.validator.routines.InetAddressValidator;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -16,6 +21,8 @@ import org.springframework.util.StringUtils;
 public class UserValidator {
 
     private final UserRepository userRepository;
+    private final PasswordHistoryRepository passwordHistoryRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public void validateDuplicateEmailId(String email) {
 
@@ -81,6 +88,18 @@ public class UserValidator {
         if (userRepository.existsAdminRole(id)) {
             log.warn("Duplicate role assignment. userId: {}", id);
             throw new BusinessException(ErrorCode.DUPLICATE_ROLE_ASSIGNMENT);
+        }
+    }
+
+    public void validatePasswordNotReused(Long userId, String rawPassword) {
+        List<PasswordHistory> recent3 = passwordHistoryRepository.findTop3ByUserIdOrderByCreatedAtDesc(
+                userId);
+
+        boolean isDuplicate = recent3.stream()
+                .anyMatch(password -> passwordEncoder.matches(rawPassword, password.getPassword()));
+
+        if (isDuplicate) {
+            throw new BusinessException(ErrorCode.DUPLICATE_PASSWORD);
         }
     }
 

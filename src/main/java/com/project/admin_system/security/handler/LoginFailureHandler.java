@@ -1,13 +1,10 @@
 package com.project.admin_system.security.handler;
 
-import static com.project.admin_system.security.utils.NetworkUtils.getClientIp;
+import static com.project.admin_system.security.utils.IpUtils.extractIp;
 
 import com.project.admin_system.common.exception.ErrorCode;
 import com.project.admin_system.common.exception.IpAddressRejectedException;
-import com.project.admin_system.user.application.service.LoginHistoryService;
-import com.project.admin_system.user.application.service.UserService;
-import com.project.admin_system.user.domain.LoginHistory;
-import com.project.admin_system.user.domain.LoginStatus;
+import com.project.admin_system.logs.history.application.service.LoginHandler;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -30,29 +27,21 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
-    private final LoginHistoryService loginHistoryService;
-    private final UserService userService;
+    private final LoginHandler loginHandler;
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
 
         String emailId = request.getParameter("username");
-        String clientIp = getClientIp(request);
+        String rawIp = extractIp(request);
+        String userAgent = request.getHeader("User-Agent");
 
         ErrorCode errorCode = getErrorCode(exception);
 
-        userService.handleLoginFailure(emailId);
+        loginHandler.handleLoginFailure(emailId, rawIp, userAgent, errorCode);
 
-        loginHistoryService.saveLoginHistory(LoginHistory.builder()
-                .emailId(emailId != null ? emailId : "UNKNOWN")
-                .userAgent(request.getHeader("User-Agent"))
-                .status(LoginStatus.LOGIN_FAIL)
-                .failureReason(errorCode.getMessage())
-                .clientIp(clientIp)
-                .build());
-
-        log.warn("Login Failed: User[{}] from IP[{}], Reason[{}]", emailId, clientIp, errorCode.getMessage());
+        log.warn("Login Failed: User[{}] from IP[{}], Reason[{}]", emailId, rawIp, errorCode.getMessage());
 
         setDefaultFailureUrl("/login?error=true&exception=" + errorCode.name());
         super.onAuthenticationFailure(request, response, exception);

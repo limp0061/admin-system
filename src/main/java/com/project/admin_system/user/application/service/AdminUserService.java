@@ -4,10 +4,10 @@ import static com.project.admin_system.user.application.validate.UserValidator.v
 
 import com.project.admin_system.common.exception.BusinessException;
 import com.project.admin_system.common.exception.ErrorCode;
-import com.project.admin_system.logs.application.dto.AuditLogDetailRequest;
-import com.project.admin_system.logs.application.dto.AuditLogUpdateRequest;
-import com.project.admin_system.logs.application.service.AuditLogService;
-import com.project.admin_system.logs.domain.AuditTarget;
+import com.project.admin_system.logs.audit.application.dto.AuditLogDetailRequest;
+import com.project.admin_system.logs.audit.application.dto.AuditLogUpdateRequest;
+import com.project.admin_system.logs.audit.application.service.AuditLogService;
+import com.project.admin_system.logs.audit.domain.AuditTarget;
 import com.project.admin_system.resources.application.validate.RoleValidator;
 import com.project.admin_system.resources.domain.Role;
 import com.project.admin_system.user.application.dto.AdminAuditLog;

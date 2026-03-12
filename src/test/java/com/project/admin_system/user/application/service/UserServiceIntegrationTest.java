@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.project.admin_system.common.annotation.IntegrationTest;
 import com.project.admin_system.dept.domain.Dept;
 import com.project.admin_system.dept.domain.DeptRepository;
+import com.project.admin_system.logs.audit.application.service.AuditLogService;
 import com.project.admin_system.resources.domain.Role;
 import com.project.admin_system.resources.domain.RoleRepository;
 import com.project.admin_system.user.application.dto.UserCreateRequest;
@@ -20,7 +21,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 
 @IntegrationTest
@@ -40,6 +43,9 @@ public class UserServiceIntegrationTest {
     @Autowired
     private EntityManager em;
 
+    @MockitoBean
+    private AuditLogService auditLogService;
+
     private Long savedUserId;
     private Long approveUserId;
     private Long savedRoleId;
@@ -47,62 +53,57 @@ public class UserServiceIntegrationTest {
 
     @BeforeEach
     void init() {
-        Role role = roleRepository.findByRoleKey("ROLE_ADMIN")
-                .orElseGet(() -> roleRepository.save(
-                        Role.builder()
-                                .roleKey("ROLE_ADMIN")
-                                .roleName("일반관리자")
-                                .depth(0)
-                                .parent(null)
-                                .isAdmin(true)
-                                .build()
+        Role role = roleRepository.save(Role.builder()
+                .roleKey("ROLE_ADMIN_TEST")
+                .roleName("일반관리자")
+                .depth(0)
+                .parent(null)
+                .isAdmin(true)
+                .build()
+        );
 
-                ));
         savedRoleId = role.getId();
 
-        Dept dept = deptRepository.findByDeptCode("DEPT001")
-                .orElseGet(() -> deptRepository.save(
-                        Dept.builder()
-                                .deptCode("DEPT001")
-                                .deptName("개발팀")
-                                .upperDept(null)
-                                .sortOrder(1)
-                                .isActive(true)
-                                .depth(0)
-                                .build()
-                ));
+        Dept dept = deptRepository.save(
+                Dept.builder()
+                        .deptCode("DEPT_TEST_001")
+                        .deptName("개발팀")
+                        .upperDept(null)
+                        .sortOrder(1)
+                        .isActive(true)
+                        .depth(0)
+                        .build()
+        );
         savedDeptId = dept.getId();
 
-        User user = userRepository.findByEmailId("example@example.com")
-                .orElseGet(() -> userRepository.save(
-                        User.builder()
-                                .emailId("example@example.com")
-                                .name("테스트")
-                                .password("1234")
-                                .position("직원")
-                                .userCode("USER001")
-                                .gender(Gender.MALE)
-                                .userStatus(UserStatus.ACTIVE)
-                                .profilePath(null)
-                                .role(role)
-                                .build()
-                ));
+        User user = userRepository.save(User.builder()
+                .emailId("example@example.com")
+                .name("테스트")
+                .password("1234")
+                .position("직원")
+                .userCode("USER001")
+                .gender(Gender.MALE)
+                .userStatus(UserStatus.ACTIVE)
+                .profilePath(null)
+                .role(role)
+                .build()
+        );
+
         savedUserId = user.getId();
 
-        User user2 = userRepository.findByEmailId("example2@example.com")
-                .orElseGet(() -> userRepository.save(
-                        User.builder()
-                                .emailId("example2@example.com")
-                                .name("테스트2")
-                                .password("1234")
-                                .position("직원")
-                                .userCode("USER002")
-                                .gender(Gender.MALE)
-                                .userStatus(UserStatus.INACTIVE)
-                                .profilePath(null)
-                                .role(role)
-                                .build()
-                ));
+        User user2 = userRepository.save(
+                User.builder()
+                        .emailId("example2@example.com")
+                        .name("테스트2")
+                        .password("1234")
+                        .position("직원")
+                        .userCode("USER002")
+                        .gender(Gender.MALE)
+                        .userStatus(UserStatus.INACTIVE)
+                        .profilePath(null)
+                        .role(role)
+                        .build());
+
         approveUserId = user2.getId();
 
         em.flush();
@@ -112,23 +113,27 @@ public class UserServiceIntegrationTest {
     @Test
     @DisplayName("사용자 계정 추가")
     void createUser_success() {
-        String unique = String.valueOf(System.currentTimeMillis()).substring(8);
+
         // given
+        String unique = String.valueOf(System.currentTimeMillis()).substring(8);
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setRemoteAddr("127.0.0.1");
+
         String emailId = "test" + unique + "@example.com";
-        UserCreateRequest request = new UserCreateRequest(
+        UserCreateRequest createRequest = new UserCreateRequest(
                 "테스트", "1234", emailId,
                 savedDeptId, "직원", "USER" + unique, Gender.MALE,
                 UserStatus.ACTIVE, null, savedRoleId
         );
 
         //when
-        userService.createUser(request, null);
+        userService.createUser(request, createRequest, null);
 
         //then
         User savedUser = userRepository.findByEmailId(emailId).orElseThrow();
         assertThat(savedUser).isNotNull();
-        assertThat(savedUser.getEmailId()).isEqualTo(request.emailId());
-        assertThat(passwordEncoder.matches(request.password(), savedUser.getPassword())).isTrue();
+        assertThat(savedUser.getEmailId()).isEqualTo(createRequest.emailId());
+        assertThat(passwordEncoder.matches(createRequest.password(), savedUser.getPassword())).isTrue();
     }
 
     @Test
@@ -136,21 +141,24 @@ public class UserServiceIntegrationTest {
     void updateUser_success() {
 
         //given
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setRemoteAddr("127.0.0.1");
+
         String unique = String.valueOf(System.currentTimeMillis()).substring(8);
         String emailId = "test" + unique + "@example.com";
-        UserUpdateRequest request = new UserUpdateRequest(
+        UserUpdateRequest updateRequest = new UserUpdateRequest(
                 "테스트2", "12345", emailId,
                 savedDeptId, "", "USER" + unique, Gender.MALE,
                 UserStatus.ACTIVE, savedRoleId);
 
         //when
-        userService.updateUser(savedUserId, request, null);
+        userService.updateUser(request, savedUserId, updateRequest, null);
 
         //then
         User savedUser = userRepository.findByEmailId(emailId).orElseThrow();
         assertThat(savedUser).isNotNull();
-        assertThat(savedUser.getEmailId()).isEqualTo(request.emailId());
-        assertThat(passwordEncoder.matches(request.password(), savedUser.getPassword())).isTrue();
+        assertThat(savedUser.getEmailId()).isEqualTo(updateRequest.emailId());
+        assertThat(passwordEncoder.matches(updateRequest.password(), savedUser.getPassword())).isTrue();
     }
 
     @Test

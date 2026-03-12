@@ -1,0 +1,75 @@
+<div th:fragment="historyHeader" class="flex items-center justify-between w-full">
+    <div class="items-end">
+        <input type="hidden" id="tabType" th:value="${currentMenu}">
+        <ul class="flex text-sm font-medium">
+            <li class="border-l border-t pr-1 whitespace-nowrap">
+                <a href="javascript:void(0)"
+                   th:classappend="${currentMenu == 'login'} ? 'text-blue-600 border-blue-600' : 'border-transparent'"
+                   class="inline-block p-4 border-b-2 rounded-t-lg"
+                   data-action="switchTab"
+                   data-url="/logs/history/login">
+                    로그인 기록
+                </a>
+            </li>
+            <li class="border-l border-t pr-1 whitespace-nowrap">
+                <a href="javascript:void(0)"
+                   th:classappend="${currentMenu == 'password'} ? 'text-blue-600 border-blue-600' : 'border-transparent'"
+                   class="inline-block p-4 border-b-2 rounded-t-lg"
+                   data-action="switchTab"
+                   data-url="/logs/history/password">
+                    비밀번호 변경 기록
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="flex items-center gap-2">
+        <div class="shrink-0 text-gray-500">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                 stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M6.75 2.994v2.25m10.5-2.25v2.25m-14.252 13.5V7.491a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v11.251m-18 0a2.25 2.25 0 0 0 2.25 2.25h13.5a2.25 2.25 0 0 0 2.25-2.25m-18 0v-7.5a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v7.5m-6.75-6h2.25m-9 2.25h4.5m.002-2.25h.005v.006H12v-.006Zm-.001 4.5h.006v.006h-.006v-.005Zm-2.25.001h.005v.006H9.75v-.006Zm-2.25 0h.005v.005h-.006v-.005Zm6.75-2.247h.005v.005h-.005v-.005Zm0 2.247h.006v.006h-.006v-.006Zm2.25-2.248h.006V15H16.5v-.005Z"/>
+            </svg>
+        </div>
+        <span class="text-sm font-medium text-gray-600 border-b whitespace-nowrap inline-flex items-center h-10">
+            검색 기간 설정
+        </span>
+        <div class="flex items-center gap-2">
+            <div class="relative w-40">
+                <input name="startAt" id="startAt" type="text"
+                       placeholder="시작 기간을 선택해주세요."
+                       class="w-full border rounded px-3 py-2 text-sm focus:border-gray-400 focus:ring-0 hover:bg-gray-50 focus:outline-none"
+                       th:value="${#temporals.format(params.startAt, 'yyyy-MM-dd')}"
+                />
+            </div>
+            <span class="text-gray-400 shrink-0"> ~ </span>
+            <div class="relative w-40">
+                <input name="endAt" id="endAt" type="text"
+                       placeholder="종료 기간을 선택해주세요."
+                       class="w-full border rounded px-3 py-2 text-sm focus:border-gray-400 focus:ring-0 hover:bg-gray-50 focus:outline-none"
+                       th:value="${#temporals.format(params.endAt, 'yyyy-MM-dd')}"
+                />
+            </div>
+        </div>
+        <div class="flex search-container gap-2">
+            <form class="relative">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                     stroke="currentColor"
+                     class="absolute left-3 top-1/2 -translate-y-1/2 w-3 h-3 text-gray-400">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/>
+                </svg>
+                <input
+                        type="text"
+                        id="emailId"
+                        name="emailId"
+                        placeholder="이메일 주소를 입력해주세요..."
+                        th:value="${params.emailId}"
+                        class="search-input w-64 h-9 pl-10 pr-4 py-3 rounded-md border border-gray-300 font-medium text-xs focus:outline-none focus:ring-1 focus:ring-gray-300"
+                />
+                <button type="button" class="btn btn-primary w-24 justify-center" data-action="search">조회</button>
+                <button type="button" class="btn btn-danger w-24 justify-center" data-action="clear">초기화</button>
+            </form>
+        </div>
+        <div th:replace="~{components/view-controller::viewController}"></div>
+    </div>
+</div>

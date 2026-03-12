@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.project.admin_system.common.annotation.IntegrationTest;
 import com.project.admin_system.common.exception.BusinessException;
 import com.project.admin_system.common.exception.ErrorCode;
+import com.project.admin_system.logs.audit.application.service.AuditLogService;
 import com.project.admin_system.resources.domain.Role;
 import com.project.admin_system.resources.domain.RoleRepository;
 import com.project.admin_system.user.application.dto.AdminRoleRequest;
@@ -19,6 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 
 @IntegrationTest
@@ -34,35 +36,36 @@ class AdminUserServiceIntegrationTest {
     @Autowired
     private UserRepository userRepository;
 
+    @MockitoBean
+    private AuditLogService auditLogService;
+
     private Long adminUserId;
 
     @BeforeEach
     void init() {
 
-        Role userRole = roleRepository.findByRoleKey("ROLE_USER")
-                .orElseGet(() -> Role.builder()
-                        .roleKey("ROLE_USER")
-                        .roleName("사용자")
-                        .depth(0)
-                        .parent(null)
-                        .build());
+        Role userRole = Role.builder()
+                .roleKey("ROLE_USER_TEST")
+                .roleName("사용자")
+                .depth(0)
+                .parent(null)
+                .build();
 
         roleRepository.save(userRole);
 
-        User user = userRepository.findByEmailId("example@example.com")
-                .orElseGet(() -> userRepository.save(
-                        User.builder()
-                                .emailId("example@example.com")
-                                .name("테스트")
-                                .password("1234")
-                                .position("직원")
-                                .userCode("USER001")
-                                .gender(Gender.MALE)
-                                .userStatus(UserStatus.ACTIVE)
-                                .profilePath(null)
-                                .role(userRole)
-                                .build()
-                ));
+        User user = userRepository.save(
+                User.builder()
+                        .emailId("example@example.com")
+                        .name("테스트")
+                        .password("1234")
+                        .position("직원")
+                        .userCode("USER001")
+                        .gender(Gender.MALE)
+                        .userStatus(UserStatus.ACTIVE)
+                        .profilePath(null)
+                        .role(userRole)
+                        .build());
+
         user.addIps(List.of("0.0.0.0", "192.168.1.0"));
 
         adminUserId = user.getId();
@@ -76,14 +79,13 @@ class AdminUserServiceIntegrationTest {
     void createAdminUser_success() {
 
         // given
-        Role adminRole = roleRepository.findByRoleKey("ROLE_ADMIN")
-                .orElseGet(() -> Role.builder()
-                        .roleKey("ROLE_ADMIN")
-                        .roleName("일반관리자")
-                        .depth(0)
-                        .parent(null)
-                        .isAdmin(true)
-                        .build());
+        Role adminRole = Role.builder()
+                .roleKey("ROLE_ADMIN_TEST")
+                .roleName("일반관리자")
+                .depth(0)
+                .parent(null)
+                .isAdmin(true)
+                .build();
 
         roleRepository.save(adminRole);
 
@@ -101,7 +103,7 @@ class AdminUserServiceIntegrationTest {
 
         // then
         User admin = userRepository.findById(adminUserId).orElseThrow();
-        assertThat(admin.getRole().getRoleKey()).isEqualTo("ROLE_ADMIN");
+        assertThat(admin.getRole().getRoleKey()).isEqualTo("ROLE_ADMIN_TEST");
         assertThat(admin.getAllowedIps()).hasSize(3);
     }
 
