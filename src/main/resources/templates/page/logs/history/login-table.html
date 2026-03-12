@@ -1,80 +1,67 @@
 <div th:fragment="loginHistoryTable" id="page-table" class="w-full flex-1">
-    <table class="table min-w-[900px]">
-        <thead class="border border-b-2">
-        <tr>
-            <th class="flex-1">
-                <div class="flex items-center justify-between gap-2">
-                    <span>이메일</span>
-                </div>
-            </th>
-            <th class="w-[10%]">
-                <div class="flex items-center justify-between gap-2">
-                    <span>접속 IP</span>
-                </div>
-            </th>
-            <th class="w-[10%]">
-                <div class="flex items-center justify-between gap-2">
-                    <span>결과</span>
-                </div>
-            </th>
-            <th class="w-[10%]">
-                <div class="flex items-center justify-between gap-2">
-                    <span>OS</span>
-                </div>
-            </th>
-            <th class="w-[10%]">
-                <div class="flex items-center justify-between gap-2">
-                    <span>Browser</span>
-                </div>
-            </th>
-            <th class="w-[10%]">
-                <div class="flex items-center justify-between gap-2">
-                    <span>접속 기기</span>
-                </div>
-            </th>
-            <th class="w-[15%]">
-                <div class="flex items-center justify-between gap-2">
-                    <span>일시</span>
-                    <button
-                            type="button"
-                            class="sort-btn p-1 rounded hover:bg-gray-100"
-                            data-action="sort"
-                            data-sort="updatedAt"
-                            th:data-order="${list.direction}"
-                            aria-label="정렬">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                             stroke-width="1.5" stroke="currentColor"
-                             class="h-4 w-4 inline-block transform transition-transform duration-200"
-                             th:classappend="${list.sortBy == 'createdAt' and list.direction == 'ASC'} ? 'rotate-180' : ''">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                  d="m19.5 8.25-7.5 7.5-7.5-7.5"/>
-                        </svg>
-                    </button>
-                </div>
-            </th>
-        </tr>
-        </thead>
-        <tbody th:if="${#lists.isEmpty(list.content)}">
-        <tr>
-            <td colspan="7" class="py-16 text-center text-gray-400">
-                해당 기간에 로그인 이력이 없습니다.
-            </td>
-        </tr>
-        </tbody>
-
-        <tbody th:unless="${#lists.isEmpty(list.content)}">
-        <tr th:each="item : ${list.content}"
-            th:data-id="${item.id}"
-            class="hover:bg-gray-50 hover:cursor-pointer"
-            data-action="clickRow">
-            <td th:text="${item.emailId}"></td>
-            <td th:text="${item.clientIp}"></td>
-            <td th:text="${item.loginStatus.label}"></td>
-            <td th:text="${item.os}"></td>
-            <td th:text="${item.browser}"></td>
-            <td th:text="${item.deviceType.label}"></td>
-            <td th:text="${#temporals.format(item.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
-        </tr>
-        </tbody>
-    </table>
+  <table class="table min-w-[900px]">
+    <thead class="border border-b-2">
+      <tr>
+        <th class="min-w-0 flex-1">이메일</th>
+        <th class="w-[10%]">접속 IP</th>
+        <th class="w-[10%]">결과</th>
+        <th class="w-[10%]">OS</th>
+        <th class="w-[10%]">Browser</th>
+        <th class="w-[10%]">접속 기기</th>
+        <th class="w-[15%]">
+          <div class="flex items-center justify-between gap-2">
+            <span>일시</span>
+            <button
+              type="button"
+              class="sort-btn rounded p-1 hover:bg-gray-100"
+              data-action="sort"
+              data-sort="updatedAt"
+              th:data-order="${list.direction}"
+              aria-label="정렬"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="inline-block h-4 w-4 transform transition-transform duration-200"
+                th:classappend="${list.sortBy == 'createdAt' and list.direction == 'ASC'} ? 'rotate-180' : ''"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                />
+              </svg>
+            </button>
+          </div>
+        </th>
+      </tr>
+    </thead>
+    <tbody class="divide-y dark:divide-zinc-800">
+      <tr th:if="${#lists.isEmpty(list.content)}">
+        <td colspan="7" class="py-16 text-center text-gray-400">
+          해당 기간에 로그인 이력이 없습니다.
+        </td>
+      </tr>
+      <tr
+        th:unless="${#lists.isEmpty(list.content)}"
+        th:each="item : ${list.content}"
+        th:data-id="${item.id}"
+        class="hover:cursor-pointer hover:bg-gray-50"
+        data-action="clickRow"
+      >
+        <td th:text="${item.emailId}"></td>
+        <td th:text="${item.clientIp}"></td>
+        <td th:text="${item.loginStatus.label}"></td>
+        <td th:text="${item.os}"></td>
+        <td th:text="${item.browser}"></td>
+        <td th:text="${item.deviceType.label}"></td>
+        <td
+          th:text="${#temporals.format(item.createdAt, 'yyyy-MM-dd HH:mm')}"
+        ></td>
+      </tr>
+    </tbody>
+  </table>
 </div>

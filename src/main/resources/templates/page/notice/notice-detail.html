@@ -1,37 +1,67 @@
-<div th:fragment="content" id="modal-form" class="modal-form min-w-[650px] z-10 font-normal text-sm overflow-y-hidden">
-    <div class="flex items-center justify-between border-b pb-3">
-        <span th:text="${notice.type.label}"></span>
-        <button onClick="closeModal()">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                 stroke="currentColor"
-                 class="size-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/>
-            </svg>
-        </button>
+<div
+  th:fragment="content"
+  id="modal-form"
+  class="modal-form z-10 min-w-[650px] overflow-y-hidden text-sm font-normal"
+>
+  <div class="flex items-center justify-between border-b pb-3">
+    <span th:text="${notice.type.label}"></span>
+    <button
+      onClick="closeModal()"
+      class="text-gray-400 transition-colors hover:text-gray-600 dark:hover:text-zinc-300"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="size-5"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M6 18 18 6M6 6l12 12"
+        />
+      </svg>
+    </button>
+  </div>
+  <div class="flex flex-1 flex-col gap-3">
+    <h3
+      class="text-lg font-bold text-gray-800 dark:text-slate-50"
+      th:text="${notice.title}"
+    ></h3>
+    <div
+      class="ck-content max-h-[50vh] min-h-[200px] overflow-y-auto whitespace-normal break-words leading-relaxed dark:text-slate-200"
+      th:utext="${notice.content}"
+    ></div>
+    <div class="border-y py-3 text-xs text-gray-600 dark:text-slate-400">
+      <span class="font-medium">기간 :</span>
+      <th:block th:if="${notice.startAt != null or notice.endAt != null}">
+        <span
+          th:text="${notice.startAt != null ? #temporals.format(notice.startAt, 'yyyy-MM-dd HH:mm') : ''}"
+        ></span>
+        <span class="mx-1">~</span>
+        <span
+          th:text="${notice.endAt != null ? #temporals.format(notice.endAt, 'yyyy-MM-dd HH:mm') : '상시'}"
+        ></span>
+      </th:block>
+      <th:block th:unless="${notice.startAt != null or notice.endAt != null}">
+        <span class="text-gray-400">기한 없음</span>
+      </th:block>
     </div>
-    <div class="flex flex-col flex-1 gap-3">
-        <h3 class="text-lg font-bold text-gray-800" th:text="${notice.title}"></h3>
-        <div class="ck-content whitespace-normal break-words leading-relaxed min-h-[200px] max-h-[50vh] overflow-y-auto"
-             th:utext="${notice.content}"></div>
-        <div class="border-y py-3 text-xs text-gray-600">
-            <span class="font-medium">기간 : </span>
-            <th:block th:if="${notice.startAt != null or notice.endAt != null}">
-                <span th:text="${notice.startAt != null ? #temporals.format(notice.startAt, 'yyyy-MM-dd HH:mm') : ''}"></span>
-                <span class="mx-1">~</span>
-                <span th:text="${notice.endAt != null ? #temporals.format(notice.endAt, 'yyyy-MM-dd HH:mm') : '상시'}"></span>
-            </th:block>
-            <th:block th:unless="${notice.startAt != null or notice.endAt != null}">
-                <span class="text-gray-400">기한 없음</span>
-            </th:block>
-        </div>
-    </div>
-    <div class="flex justify-end gap-2 w-full mt-2">
-        <button onclick="openUserNoticeModal()"
-                class="btn btn-primary px-4">
-            전체 목록
-        </button>
-        <button type="button" class="btn bg-gray-100 px-4" onClick="closeModal()">닫기</button>
-    </div>
+  </div>
+  <div class="mt-2 flex w-full justify-end gap-2">
+    <button onclick="openUserNoticeModal()" class="btn btn-primary px-4">
+      전체 목록
+    </button>
+    <button
+      type="button"
+      class="btn bg-gray-100 px-4 dark:bg-zinc-300 dark:hover:bg-zinc-400"
+      onClick="closeModal()"
+    >
+      닫기
+    </button>
+  </div>
 
-    <ul id="common-select-ul" class="select-ul hidden"></ul>
+  <ul id="common-select-ul" class="select-ul hidden"></ul>
 </div>

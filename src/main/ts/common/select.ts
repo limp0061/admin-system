@@ -1,132 +1,149 @@
 // select.ts
-import {showToast} from "./toast.js";
+import { showToast } from './toast.js';
 
 export const closeDropdown = (ownElement?: HTMLElement): void => {
-    // 1. 기존 공통 셀렉트 메뉴 닫기
-    const commonUl = document.getElementById('common-select-ul') as HTMLElement;
-    if (commonUl && commonUl != ownElement) {
-        commonUl.classList.add('hidden');
+  // 1. 기존 공통 셀렉트 메뉴 닫기
+  const commonUl = document.getElementById('common-select-ul') as HTMLElement;
+  if (commonUl && commonUl != ownElement) {
+    commonUl.classList.add('hidden');
 
-        document.querySelectorAll('[data-action="toggleSelect"] svg').forEach(svg => {
-            svg.classList.remove('rotate-180');
-        });
+    document
+      .querySelectorAll('[data-action="toggleSelect"] svg')
+      .forEach((svg) => {
+        svg.classList.remove('rotate-180');
+      });
+  }
+
+  // 2. 클래스 기반 드롭다운 메뉴(.btn-dropDown) 모두 닫기
+  const statusMenus = document.querySelectorAll('.btn-dropDown');
+  statusMenus.forEach((menu) => {
+    if (!ownElement) {
+      menu.classList.replace('flex', 'hidden');
+      return;
     }
 
-    // 2. 클래스 기반 드롭다운 메뉴(.btn-dropDown) 모두 닫기
-    const statusMenus = document.querySelectorAll('.btn-dropDown');
-    statusMenus.forEach(menu => {
-        if (!ownElement) {
-            menu.classList.replace('flex', 'hidden');
-            return;
-        }
+    if (menu === ownElement || menu.contains(ownElement)) {
+      return;
+    }
 
-        if (menu === ownElement || menu.contains(ownElement)) {
-            return;
-        }
-
-        menu.classList.replace('flex', 'hidden');
-        menu.classList.add('hidden');
-    });
+    menu.classList.replace('flex', 'hidden');
+    menu.classList.add('hidden');
+  });
 };
 
 /**
  * Select 메뉴 토글
  */
 export const toggleSelect = (btn: HTMLElement, e: Event): void => {
-    e.preventDefault();
-    e.stopPropagation();
+  e.preventDefault();
+  e.stopPropagation();
 
-    const commonUl = document.getElementById('common-select-ul') as HTMLElement;
-    const template = btn.parentElement?.querySelector(".data-template") as HTMLElement;
-    const svg = btn.querySelector('svg');
+  const commonUl = document.getElementById('common-select-ul') as HTMLElement;
+  const template = btn.parentElement?.querySelector(
+    '.data-template',
+  ) as HTMLElement;
+  const svg = btn.querySelector('svg');
 
-    if (!commonUl.classList.contains('hidden') && commonUl.dataset.owner === btn.id) {
-        commonUl.classList.add('hidden');
-        svg?.classList.remove('rotate-180');
-        return;
+  if (
+    !commonUl.classList.contains('hidden') &&
+    commonUl.dataset.owner === btn.id
+  ) {
+    commonUl.classList.add('hidden');
+    svg?.classList.remove('rotate-180');
+    return;
+  }
+  document
+    .querySelectorAll('[data-action="toggleSelect"] svg')
+    .forEach((s) => s.classList.remove('rotate-180'));
+
+  commonUl.innerHTML = template.innerHTML;
+  commonUl.dataset.owner = btn.id;
+
+  const rect = btn.getBoundingClientRect();
+
+  commonUl.style.top = `${rect.bottom}px`;
+  commonUl.style.left = `${rect.left}px`;
+  commonUl.style.width = `${rect.width}px`;
+
+  commonUl.classList.remove('hidden');
+  svg?.classList.add('rotate-180');
+
+  const isMulti = btn.dataset.multi;
+  const badgeContainerId = btn.dataset.target;
+  commonUl.onclick = (liEvent) => {
+    const li = (liEvent.target as HTMLElement).closest(
+      '.select-li',
+    ) as HTMLElement;
+    if (!li) return;
+
+    if (isMulti) {
+      const badgeContainer = document.getElementById(badgeContainerId);
+      addBadge(badgeContainer, li);
+    } else {
+      clickOption(li);
     }
-    document.querySelectorAll('[data-action="toggleSelect"] svg').forEach(s => s.classList.remove('rotate-180'));
-
-    commonUl.innerHTML = template.innerHTML;
-    commonUl.dataset.owner = btn.id;
-
-    const rect = btn.getBoundingClientRect();
-
-    commonUl.style.top = `${rect.bottom}px`;
-    commonUl.style.left = `${rect.left}px`;
-    commonUl.style.width = `${rect.width}px`;
-
-    commonUl.classList.remove('hidden');
-    svg?.classList.add('rotate-180');
-
-    const isMulti = btn.dataset.multi;
-    const badgeContainerId = btn.dataset.target;
-    commonUl.onclick = (liEvent) => {
-        const li = (liEvent.target as HTMLElement).closest('.select-li') as HTMLElement;
-        if (!li) return;
-
-        if (isMulti) {
-            const badgeContainer = document.getElementById(badgeContainerId);
-            addBadge(badgeContainer, li);
-        } else {
-            clickOption(li);
-        }
-    };
+  };
 };
 
 /**
  * 옵션 클릭 시 값 반영
  */
 export const clickOption = (li: HTMLElement): void => {
-    const val = li.dataset.value;
-    const text = li.textContent?.trim() || "";
+  const val = li.dataset.value;
+  const text = li.textContent?.trim() || '';
 
-    const commonUl = document.getElementById('common-select-ul') as HTMLElement;
-    const ownerId = commonUl.dataset.owner;
-    if (!ownerId) return;
+  const commonUl = document.getElementById('common-select-ul') as HTMLElement;
+  const ownerId = commonUl.dataset.owner;
+  if (!ownerId) return;
 
-    const displayBtn = document.getElementById(ownerId) as HTMLButtonElement;
-    if (!displayBtn) return;
+  const displayBtn = document.getElementById(ownerId) as HTMLButtonElement;
+  if (!displayBtn) return;
 
-    const parentField = displayBtn.parentElement;
-    const input = parentField?.querySelector('input[type="hidden"]') as HTMLInputElement;
+  const parentField = displayBtn.parentElement;
+  const input = parentField?.querySelector(
+    'input[type="hidden"]',
+  ) as HTMLInputElement;
 
-    if (input) input.value = val || "";
-    if (displayBtn) {
-        const span = displayBtn.querySelector('span');
-        const svg = displayBtn.querySelector('svg');
-        if (span) {
-            span.textContent = text;
-        } else {
-            displayBtn.innerText = text;
-        }
-
-        if (svg) {
-            svg.classList.remove('rotate-180');
-        }
-
-        if (val) {
-            displayBtn.removeAttribute('data-is-placeholder');
-        } else {
-            displayBtn.setAttribute('data-is-placeholder', 'true');
-        }
+  if (input) input.value = val || '';
+  if (displayBtn) {
+    const span = displayBtn.querySelector('span');
+    const svg = displayBtn.querySelector('svg');
+    if (span) {
+      span.textContent = text;
+    } else {
+      displayBtn.innerText = text;
     }
 
-    document.querySelectorAll('.select-ul').forEach(ul => ul.classList.add('hidden'));
+    if (svg) {
+      svg.classList.remove('rotate-180');
+    }
+
+    if (val) {
+      displayBtn.removeAttribute('data-is-placeholder');
+    } else {
+      displayBtn.setAttribute('data-is-placeholder', 'true');
+    }
+  }
+
+  document
+    .querySelectorAll('.select-ul')
+    .forEach((ul) => ul.classList.add('hidden'));
 };
 
 export const addBadge = (container: HTMLElement, li: HTMLElement) => {
-    const val = li.dataset.value;
-    const text = li.textContent?.trim() || "";
+  const val = li.dataset.value;
+  const text = li.textContent?.trim() || '';
 
-    const currentRoles = Array.from(container.querySelectorAll('.badge-value')).map(el => (el as HTMLInputElement).value);
-    if (currentRoles.includes(val)) {
-        showToast("이미 등록되어 있습니다.", "error");
-        return;
-    }
+  const currentRoles = Array.from(
+    container.querySelectorAll('.badge-value'),
+  ).map((el) => (el as HTMLInputElement).value);
+  if (currentRoles.includes(val)) {
+    showToast('이미 등록되어 있습니다.', 'error');
+    return;
+  }
 
-    const html = `
-         <div class="flex items-center gap-1.5 w-fit bg-white text-slate-700 px-2.5 py-1.5 rounded-md border border-gray-200 shadow-sm">
+  const html = `
+         <div class="flex items-center gap-1.5 w-fit bg-white text-slate-700 px-2.5 py-1.5 rounded-md border border-gray-200 shadow-sm dark:bg-zinc-800 dark:border-zinc-700 dark:text-slate-50">
             <input type="hidden" class="badge-value" value="${val}">
             <span class="badge-text text-xs font-semibold">${text}</span>
             <button type="button" class="text-gray-400 hover:text-red-500 transition-colors"
@@ -138,27 +155,27 @@ export const addBadge = (container: HTMLElement, li: HTMLElement) => {
                 </svg>
             </button>
         </div>
-    `
-    container.insertAdjacentHTML('beforeend', html);
-}
+    `;
+  container.insertAdjacentHTML('beforeend', html);
+};
 
 export const btnDropDown = (btn: HTMLElement, e: MouseEvent) => {
-    e.stopPropagation();
+  e.stopPropagation();
 
-    const dropDown = btn.nextElementSibling as HTMLElement;
-    if (!dropDown || !dropDown.classList.contains('btn-dropDown')) return;
+  const dropDown = btn.nextElementSibling as HTMLElement;
+  if (!dropDown || !dropDown.classList.contains('btn-dropDown')) return;
 
-    const isHidden = dropDown.classList.contains('hidden');
+  const isHidden = dropDown.classList.contains('hidden');
 
-    const isNested = btn.closest('.btn-dropDown') !== null;
-    closeDropdown(isNested ? dropDown : undefined);
+  const isNested = btn.closest('.btn-dropDown') !== null;
+  closeDropdown(isNested ? dropDown : undefined);
 
-    if (isHidden) {
-        closeDropdown(dropDown);
-        dropDown.classList.replace('hidden', 'flex');
-        dropDown.classList.remove('hidden');
-    } else {
-        dropDown.classList.replace('flex', 'hidden');
-        dropDown.classList.add('hidden');
-    }
-}
+  if (isHidden) {
+    closeDropdown(dropDown);
+    dropDown.classList.replace('hidden', 'flex');
+    dropDown.classList.remove('hidden');
+  } else {
+    dropDown.classList.replace('flex', 'hidden');
+    dropDown.classList.add('hidden');
+  }
+};

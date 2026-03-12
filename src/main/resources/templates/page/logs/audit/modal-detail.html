@@ -1,78 +1,153 @@
-<div th:fragment="content" class="modal-form w-[650px] max-h-[80vh] z-10 bg-white p-6 rounded-2xl shadow-xl">
-    <div class="shrink-0 flex items-center justify-between border-b pb-4">
-        <span class="text-xl font-bold text-slate-800" th:text="${auditLog.targetEntity}"></span>
-        <button onClick="closeModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                 stroke="currentColor" class="size-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/>
-            </svg>
-        </button>
+<div
+  th:fragment="content"
+  class="modal-form z-10 max-h-[80vh] w-[650px] rounded-2xl bg-white p-6 shadow-xl dark:bg-[#1a1a1a]"
+>
+  <div class="flex shrink-0 items-center justify-between border-b pb-4">
+    <span
+      class="text-xl font-bold text-slate-800 dark:text-zinc-100"
+      th:text="${auditLog.targetEntity}"
+    ></span>
+    <button
+      onClick="closeModal()"
+      class="text-gray-400 transition-colors hover:text-gray-600 dark:hover:text-zinc-300"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="2"
+        stroke="currentColor"
+        class="size-6"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M6 18 18 6M6 6l12 12"
+        />
+      </svg>
+    </button>
+  </div>
+
+  <div
+    class="mt-4 flex shrink-0 flex-col gap-2 rounded-md border border-slate-200 p-2 text-sm text-slate-600 dark:border-zinc-800 dark:bg-zinc-900"
+  >
+    <div class="flex justify-between p-2">
+      <span class="font-semibold text-slate-400 dark:text-zinc-500">
+        수행자
+      </span>
+      <span
+        class="dark:text-zinc-300"
+        th:text="${auditLog.actorUsername}"
+      ></span>
     </div>
-
-
-    <div class="shrink-0 flex flex-col gap-2 text-sm text-slate-600 border border-slate-200 rounded-md p-2">
-        <div class="flex justify-between p-2">
-            <span class="font-semibold text-slate-400 ">수행자</span>
-            <span th:text="${auditLog.actorUsername}"></span>
-        </div>
-        <div class="flex justify-between p-2">
-            <span class="font-semibold text-slate-400">일시</span>
-            <span th:text="${#temporals.format(auditLog.createdAt,'yyyy-MM-dd HH:mm')}"></span>
-        </div>
-        <div class="flex justify-between p-2">
-            <span class="font-semibold text-slate-400">액션</span>
-            <span th:text="${auditLog.action.label}"></span>
-        </div>
+    <div class="flex justify-between p-2">
+      <span class="font-semibold text-slate-400 dark:text-zinc-500">일시</span>
+      <span
+        class="dark:text-zinc-300"
+        th:text="${#temporals.format(auditLog.createdAt,'yyyy-MM-dd HH:mm')}"
+      ></span>
     </div>
-    <div class="flex-1 min-h-0 flex flex-col overflow-y-auto">
-        <span class="shrink-0 text-xs px-4 py-2.5 bg-slate-700 text-white rounded-md"
-              th:unless="${#lists.isEmpty(auditLog.details)}"
-              th:text="${auditLog.action.label} + ' 이력'"></span>
-        <div th:each="detailItem, iterStat : ${auditLog.details}"
-             class="shrink-0 rounded-md border border-slate-100">
-            <div class="divide-y divide-slate-100">
-                <div class="px-4 py-2 bg-slate-50 border-b border-slate-200">
-                <span class="text-xs font-semibold text-slate-500"
-                      th:text="'#' + ${iterStat.index + 1}"></span>
-                </div>
-                <div th:if="${auditLog.action.name() == 'UPDATE'}"
-                     th:each="entry  : ${detailItem.details}"
-                     class="flex flex-col px-4 py-3 gap-2">
+    <div class="flex justify-between p-2">
+      <span class="font-semibold text-slate-400 dark:text-zinc-500">액션</span>
+      <span
+        class="font-bold dark:text-blue-400"
+        th:text="${auditLog.action.label}"
+      ></span>
+    </div>
+  </div>
 
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs text-slate-400 truncate max-w-[60%]"
-                              th:text="${detailItem.targetEntityName}"></span>
-                        <span class="text-xs font-semibold text-slate-600" th:text="${entry.key}"></span>
-                    </div>
+  <div class="mt-4 flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto">
+    <span
+      class="shrink-0 rounded-md bg-slate-700 px-4 py-2.5 text-xs text-white dark:bg-zinc-800 dark:text-zinc-300"
+      th:unless="${#lists.isEmpty(auditLog.details)}"
+      th:text="${auditLog.action.label} + ' 이력'"
+    ></span>
 
-                    <div class="flex flex-col gap-1.5">
-                        <div class="flex items-start gap-2">
-                            <span class="shrink-0 text-xs px-2 py-0.5 bg-red-50 text-red-400 rounded-md">기존</span>
-                            <span class="text-xs text-slate-400 break-all truncate"
-                                  th:text="${entry.value['old']}"></span>
-                        </div>
-                        <div class="flex items-start gap-2">
-                            <span class="shrink-0 text-xs px-2 py-0.5 bg-emerald-50 text-emerald-500 rounded-md">변경</span>
-                            <span class="text-xs text-slate-700 font-medium break-all"
-                                  th:text="${entry.value['new']}"></span>
-                        </div>
-                    </div>
-                </div>
+    <div
+      th:each="detailItem, iterStat : ${auditLog.details}"
+      class="shrink-0 overflow-hidden rounded-md border border-slate-100 dark:border-zinc-800"
+    >
+      <div class="divide-y divide-slate-100 dark:divide-zinc-800">
+        <div
+          class="border-b border-slate-200 bg-slate-50 px-4 py-2 dark:border-zinc-800 dark:bg-zinc-700/60"
+        >
+          <span
+            class="text-xs font-semibold text-slate-500 dark:text-zinc-200"
+            th:text="'#' + ${iterStat.index + 1}"
+          ></span>
+        </div>
 
-                <div th:unless="${auditLog.action.name() == 'UPDATE'}"
-                     th:each="entry : ${detailItem.details}"
-                     class="flex justify-between items-center px-4 py-2.5">
-                    <span class="text-xs text-slate-500 shrink-0 w-24" th:text="${entry.key}"></span>
-                    <span class="text-sm text-slate-700 text-right break-all" th:text="${entry.value}"></span>
-                </div>
+        <div
+          th:if="${auditLog.action.name() == 'UPDATE'}"
+          th:each="entry  : ${detailItem.details}"
+          class="flex flex-col gap-2 px-4 py-3 dark:bg-zinc-900/20"
+        >
+          <div class="flex items-center justify-between">
+            <span
+              class="max-w-[60%] truncate text-xs text-slate-400 dark:text-slate-200"
+              th:text="${detailItem.targetEntityName}"
+            ></span>
+            <span
+              class="text-xs font-semibold text-slate-600 dark:text-slate-200"
+              th:text="${entry.key}"
+            ></span>
+          </div>
 
+          <div class="flex flex-col gap-1.5">
+            <div class="flex items-center gap-2 rounded p-2 dark:bg-black/20">
+              <span
+                class="shrink-0 rounded-md bg-red-50 px-2 py-0.5 text-xs text-red-400 dark:bg-red-900/20 dark:text-red-500/80"
+              >
+                기존
+              </span>
+              <span
+                class="truncate break-all text-xs text-slate-400 dark:text-zinc-500"
+                th:text="${entry.value['old']}"
+              ></span>
             </div>
+            <div
+              class="flex items-center gap-2 rounded border p-2 dark:border-blue-900/30 dark:bg-blue-900/10"
+            >
+              <span
+                class="shrink-0 rounded-md bg-emerald-50 px-2 py-0.5 text-xs text-emerald-500 dark:bg-blue-500/20 dark:text-blue-400"
+              >
+                변경
+              </span>
+              <span
+                class="break-all text-xs font-medium text-slate-700 dark:font-bold dark:text-zinc-100"
+                th:text="${entry.value['new']}"
+              ></span>
+            </div>
+          </div>
         </div>
-    </div>
 
-    <div class="shrink-0 flex justify-end gap-2 pt-4 border-t">
-        <button type="button" onClick="closeModal()" class="btn bg-gray-100 px-4">
-            닫기
-        </button>
+        <div
+          th:unless="${auditLog.action.name() == 'UPDATE'}"
+          th:each="entry : ${detailItem.details}"
+          class="flex items-center justify-between px-4 py-2.5"
+        >
+          <span
+            class="w-24 shrink-0 text-xs text-slate-500 dark:text-slate-200"
+            th:text="${entry.key}"
+          ></span>
+          <span
+            class="break-all text-right text-sm text-slate-700 dark:text-slate-50"
+            th:text="${entry.value}"
+          ></span>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <div
+    class="flex shrink-0 justify-end gap-2 border-t pt-4 dark:border-zinc-800"
+  >
+    <button
+      type="button"
+      onClick="closeModal()"
+      class="btn rounded bg-gray-100 px-4 py-2 transition-colors dark:bg-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-600"
+    >
+      닫기
+    </button>
+  </div>
 </div>
