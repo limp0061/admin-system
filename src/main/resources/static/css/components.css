@@ -1,320 +1,380 @@
 @layer components {
-    :root {
-        --table-font-size: 14px;
+  :root {
+    --table-font-size: 14px;
+  }
+
+  .sidebar {
+    @apply w-[250px] bg-[#383F51] px-3 text-[#FFFFFF] dark:bg-[#121212];
+
+    li {
+      @apply min-h-[50px] align-middle;
     }
 
-    .sidebar {
-        @apply w-[250px] px-3 bg-[#383F51] text-[#FFFFFF]
-        dark:bg-[#111827];
-
-        li {
-            @apply min-h-[50px] align-middle;
-        }
-
-
-        li.active {
-            @apply bg-[#1E2333] dark:bg-blue-600/20;
-        }
+    li.active {
+      @apply bg-[#1E2333] dark:bg-blue-600/20;
     }
+  }
 
-    .btn {
-        @apply inline-flex items-center gap-2
-        px-1 py-1 h-[34px] rounded-md text-sm font-medium text-gray-800
-        bg-transparent hover:bg-gray-100 transition;
-    }
+  .btn {
+    @apply inline-flex h-[34px] items-center gap-2 rounded-md bg-transparent px-1 py-1 text-sm font-medium text-gray-800 transition hover:bg-gray-100;
+  }
 
-    .btn-primary {
-        @apply bg-[#383F51] text-white hover:bg-[#1E2333] px-4;
-    }
+  .btn-primary {
+    @apply bg-[#383F51] px-4 text-white hover:bg-[#1E2333] dark:bg-blue-900 dark:hover:bg-blue-950;
+  }
 
-    .btn-danger {
-        @apply border border-[#960909] text-[#960909] hover:bg-[#960909] hover:text-white px-4;
-    }
+  .btn-danger {
+    @apply border border-[#960909] px-4 text-[#960909] hover:bg-[#960909] hover:text-white dark:border-red-900 dark:bg-red-950/20 dark:text-red-400 dark:hover:bg-red-900 dark:hover:text-white;
+  }
 
-    .btn-status {
-        @apply font-medium text-xs bg-gray-50 hover:bg-gray-100 border-[#D1D5DB] text-[#374151] p-3.5 h-9;
-    }
+  .btn-status {
+    @apply h-9 border-[#D1D5DB] bg-gray-50 p-3.5 text-xs font-medium text-[#374151] hover:bg-gray-100 dark:border-gray-700 dark:bg-[#1e1e1e] dark:text-slate-300 dark:hover:bg-[#2a2a2a];
+  }
 
-    .table {
-        @apply w-full;
-    }
+  .table {
+    @apply w-full border-separate border-spacing-0 overflow-hidden rounded-lg border dark:border-zinc-800 dark:bg-[#1e1e1e] dark:text-zinc-300;
+  }
 
-    .table thead th,
-    .table tbody td {
-        @apply border-b border-r border-gray-200 p-3 font-medium
-        dark:border-slate-700 dark:text-slate-300;
+  .table th,
+  .table td {
+    @apply border-b border-r border-gray-200 px-4 py-3 font-medium dark:border-zinc-800/50 dark:text-slate-300;
 
-        font-size: var(--table-font-size) !important;
-        line-height: 1.5 !important;
-    }
+    font-size: var(--table-font-size, 0.75rem) !important;
+    line-height: 1.5 !important;
+  }
 
-    .table thead th:last-child,
-    .table tbody td:last-child {
-        @apply border-r-0
-    }
+  .table thead th {
+    @apply bg-gray-50 text-left font-semibold text-gray-600 dark:bg-zinc-800/80 dark:text-zinc-400;
+  }
 
-    .form-row {
-        @apply flex gap-4 w-full px-6 py-3 rounded-lg;
-    }
+  .table th:last-child,
+  .table td:last-child {
+    @apply border-r-0;
+  }
 
-    .form-row-bg {
-        @apply bg-gray-50;
-    }
+  .table tbody tr:last-child td {
+    @apply border-b-0;
+  }
 
-    .form-row:focus-within {
-        @apply bg-blue-50;
-    }
+  .table tbody tr:hover {
+    @apply cursor-pointer bg-gray-50/50 transition-colors dark:bg-zinc-800/40;
+  }
 
-    .form-label {
-        @apply w-16 mt-2 text-sm font-bold text-gray-700 shrink-0;
-    }
+  .form-row {
+    @apply flex w-full gap-4 rounded-lg px-6 py-3;
+  }
 
-    .form-field {
-        @apply flex flex-col flex-1 gap-2;
-    }
+  .form-row-bg {
+    @apply border border-transparent bg-gray-50 dark:border-zinc-700/50 dark:bg-zinc-800/40;
+  }
 
-    .form-input {
-        @apply w-full px-3 py-2 text-sm bg-white h-9
-        border border-gray-300 rounded-md shadow-sm
-        placeholder-gray-400
-        hover:cursor-pointer
-        dark:bg-slate-900 dark:border-slate-700 dark:text-white dark:placeholder-slate-500;
-    }
+  .form-row:focus-within {
+    @apply bg-blue-50 dark:bg-blue-900/20;
+  }
 
-    .form-input:focus {
-        @apply outline-none border-blue-500 ring-4 focus:ring-blue-100
-    }
+  .form-label {
+    @apply mt-2 w-16 shrink-0 text-sm font-bold text-gray-700 dark:text-zinc-400;
+  }
 
-    .select-ul {
-        @apply fixed z-[9999] mt-1 max-h-[250px]
-        overflow-y-auto overflow-x-hidden
-        text-sm bg-white border border-gray-300 rounded-md shadow-lg;
-    }
+  .form-field {
+    @apply flex flex-1 flex-col gap-2;
+  }
 
-    .select-li {
-        @apply w-full px-3 py-2 mt-1 text-sm bg-white
-        hover:bg-blue-50
-        hover:border-blue-500
-        hover:cursor-pointer
-    }
+  .form-input {
+    @apply h-9 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder-gray-400 shadow-sm hover:cursor-pointer dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:placeholder:text-zinc-600;
+  }
 
-    .data-template {
-        @apply hidden
-    }
+  .form-input:focus {
+    @apply border-blue-500 outline-none ring-4 focus:ring-blue-100 dark:ring-blue-900/30;
+  }
 
+  .select-ul {
+    @apply fixed z-[9999] mt-1 max-h-[250px] overflow-y-auto overflow-x-hidden rounded-md border border-gray-300 bg-white text-sm shadow-lg dark:border-zinc-700 dark:bg-[#2a2a2a];
+  }
 
-    .modal-form {
-        @apply flex flex-col w-[480px] min-h-[300px] bg-white rounded p-4 gap-3 max-h-[85vh] overflow-hidden
-        dark:text-slate-200;
-    }
+  .select-li {
+    @apply mt-1 w-full bg-white px-3 py-2 text-sm hover:cursor-pointer hover:border-blue-500 hover:bg-blue-50 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700 dark:hover:text-white;
+  }
 
-    .modal-confirm {
-        @apply flex flex-col w-[360px] bg-white min-h-[150px] rounded shadow-xl overflow-hidden p-4 gap-4
-        dark:text-slate-200;
-    }
+  .data-template {
+    @apply hidden;
+  }
 
-    .toast {
-        @apply flex items-center justify-center
-        min-w-[200px] max-w-[320px] px-6 py-4
-        rounded-xl shadow-lg bg-white
-        text-sm font-medium text-gray-700
-        animate-slide-in;
-    }
+  .modal-form {
+    @apply flex max-h-[85vh] min-h-[300px] w-[480px] flex-col gap-3 overflow-hidden rounded bg-white p-4 dark:bg-[#1e1e1e] dark:text-slate-200;
+  }
 
-    .toast-success {
-        @apply border-l-4 border-[#26472d] text-[#26472d];
-    }
+  .modal-confirm {
+    @apply flex min-h-[150px] w-[360px] flex-col gap-4 overflow-hidden rounded bg-white p-4 shadow-xl dark:bg-[#1e1e1e] dark:text-slate-200;
+  }
 
-    .toast-error {
-        @apply border-l-4 border-[#c40808] text-[#c40808];
+  .toast {
+    @apply animate-slide-in flex min-w-[200px] max-w-[320px] items-center justify-center rounded-xl bg-white px-6 py-4 text-sm font-medium text-gray-700 shadow-lg dark:bg-zinc-800;
+  }
 
-    }
+  .toast-success {
+    @apply border-l-4 border-[#26472d] text-[#26472d] dark:border-green-900 dark:bg-green-950 dark:text-slate-200;
+  }
 
-    .page-btn {
-        @apply flex items-center justify-center border border-gray-200
-        bg-gray-50 p-1 font-medium w-7 h-7
-        hover:bg-gray-100
-        disabled:opacity-20
-        disabled:cursor-not-allowed
-        disabled:hover:bg-transparent
-        ;
-    }
+  .toast-error {
+    @apply border-l-4 border-[#c40808] text-[#c40808] dark:border-red-900 dark:bg-red-950 dark:text-slate-200;
+  }
 
-    .animate-slide-in {
-        animation: slideIn 0.3s ease-out forwards;
-    }
+  .page-btn {
+    @apply flex h-7 w-7 items-center justify-center border border-gray-200 bg-gray-50 p-1 font-medium hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-20 disabled:hover:bg-transparent dark:border-gray-700 dark:bg-zinc-800 dark:text-slate-300 dark:hover:bg-[#2a2a2a];
+  }
 
-    [data-is-placeholder="true"] {
-        @apply text-gray-400;
-    }
+  .search-input {
+    @apply dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:placeholder:text-zinc-600;
+  }
 
-    .table-modal {
-        @apply w-full border-collapse;
-    }
+  .sort-btn,
+  .filter-btn {
+    @apply dark:hover:bg-[#2a2a2a];
+  }
 
-    .table-modal thead th {
-        @apply border-b-2 border-gray-200 p-3 font-semibold text-gray-600 bg-gray-50;
-    }
+  .animate-slide-in {
+    animation: slideIn 0.3s ease-out forwards;
+  }
 
-    .table-modal tbody td {
-        @apply border-b border-gray-100 p-3 font-normal text-gray-700;
-    }
+  [data-is-placeholder='true'] {
+    @apply text-gray-400;
+  }
 
-    .table-modal tbody tr:hover {
-        @apply bg-blue-50/50;
-    }
+  .table-modal {
+    @apply w-full border-collapse;
+  }
+
+  .table-modal thead th {
+    @apply border-b-2 border-gray-200 bg-gray-50 p-3 font-semibold text-gray-600;
+  }
+
+  .table-modal tbody td {
+    @apply border-b border-gray-100 p-3 font-normal text-gray-700;
+  }
+
+  .table-modal tbody tr:hover {
+    @apply bg-blue-50/50;
+  }
 }
 
 /* 1. 헤더 전체 정렬 및 버튼(< >) 중앙 배치 */
 .flatpickr-calendar .flatpickr-months {
-    height: 50px !important;
-    display: flex !important;
-    align-items: center !important;
+  height: 50px !important;
+  display: flex !important;
+  align-items: center !important;
 }
 
 .flatpickr .cur-month {
-    font-weight: 300 !important;
+  font-weight: 300 !important;
 }
 
 /* 월 이동 버튼(< >) 수직 중앙 정렬 및 커서 */
 .flatpickr-calendar .flatpickr-prev-month,
 .flatpickr-calendar .flatpickr-next-month {
-    height: 50px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    cursor: pointer !important;
+  height: 50px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
 }
 
 .flatpickr-calendar .flatpickr-current-month {
-    display: flex !important;
-    flex-direction: row-reverse !important;
-    align-items: center !important;
-    justify-content: center !important;
-    font-size: 14px !important;
-    font-weight: 300 !important;
-    gap: 12px !important;
+  display: flex !important;
+  flex-direction: row-reverse !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 14px !important;
+  font-weight: 300 !important;
+  gap: 12px !important;
+  padding: 0px !important;
+}
+
+/* arrowDown 위치 조정 */
+.flatpickr-calendar .numInputWrapper .arrowDown {
+  top: 60% !important; /* 숫자 높여서 아래로 내리기 */
+}
+
+.flatpickr-calendar .numInputWrapper .arrowUp {
+  top: 10% !important;
 }
 
 /* 2. 년도 숫자 박스 패딩 및 화살표 간격 */
 .flatpickr-calendar .numInputWrapper {
-    background: transparent !important;
-    width: 100px !important; /* 공간을 넉넉히 확보 */
-    display: inline-flex !important;
-    align-items: center !important;
-    padding: 5px;
+  background: transparent !important;
+  width: 100px !important; /* 공간을 넉넉히 확보 */
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 5px;
+  font-weight: 500 !important;
 }
 
 .flatpickr-calendar .numInputWrapper:hover {
-    background: #f9fafb !important;
+  background: #f9fafb !important;
 }
 
-
 .flatpickr-calendar .numInputWrapper input.cur-year {
-    padding: 2px 35px 2px 8px !important; /* 내부 상하좌우 여백(Padding) 확보 */
-    border-radius: 4px !important;
-    font-size: 14px !important;
-    font-weight: 300 !important;
-    cursor: text !important;
+  padding: 2px 35px 2px 8px !important; /* 내부 상하좌우 여백(Padding) 확보 */
+  border-radius: 4px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  cursor: text !important;
 }
 
 /* 년도 숫자 옆 화살표 위치 고정 */
 .flatpickr-calendar .numInputWrapper span {
-    right: 22px !important;
-    height: 40% !important;
-    border: none;
+  right: 22px !important;
+  height: 40% !important;
+  border: none;
 }
 
 .flatpickr-calendar .cur-month {
-    font-weight: normal !important; /* 또는 400 !important */
+  font-weight: normal !important; /* 또는 400 !important */
 }
 
 /* 헤더에만 "년" 글자 추가 */
 .flatpickr-current-month .numInputWrapper::after {
-    content: "년";
-    position: absolute;
-    right: 5px;
-    font-size: 14px;
-    font-weight: 300;
+  content: '년';
+  position: absolute;
+  right: 5px;
+  font-size: 14px;
+  font-weight: 300;
 }
 
 /* 3. 색상 원상복구 (파란색 -> #383F51) 및 사각형 유지 */
 .flatpickr-calendar .flatpickr-day.selected,
 .flatpickr-calendar .flatpickr-day.startRange,
 .flatpickr-calendar .flatpickr-day.endRange {
-    background: #383F51 !important;
-    border-color: #383F51 !important;
-    border-radius: 4px !important;
+  background: #383f51 !important;
+  border-color: #383f51 !important;
+  border-radius: 4px !important;
 }
 
 .flatpickr-calendar .flatpickr-day.today.selected {
-    color: #f3f4f6 !important;
+  color: #f3f4f6 !important;
 }
 
 .flatpickr-calendar .flatpickr-day:hover {
-    border-radius: 4px !important;
+  border-radius: 4px !important;
 }
 
 .flatpickr-calendar .flatpickr-day.today {
-    border-color: #383F51 !important;
-    color: #383F51 !important;
-    border-radius: 4px !important;
+  border-color: #383f51 !important;
+  color: #383f51 !important;
+  border-radius: 4px !important;
 }
 
 /* 4. 시간 선택 영역 커서 및 포커스 수정 */
 .flatpickr-calendar .flatpickr-time {
-    height: 45px !important;
-    line-height: 45px !important;
+  height: 45px !important;
+  line-height: 45px !important;
 }
 
 .flatpickr-calendar .flatpickr-time input,
 .flatpickr-calendar .flatpickr-time .flatpickr-am-pm {
-    cursor: pointer !important; /* 12:00 영역에 손가락 커서 추가 */
-    font-weight: 300 !important;
+  cursor: pointer !important; /* 12:00 영역에 손가락 커서 추가 */
+  font-weight: 300 !important;
+}
+
+.flatpickr-calendar .flatpickr-time input.numInput:focus {
+  background: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
 }
 
 .flatpickr-calendar .flatpickr-time input:hover {
-    background: #f3f4f6 !important;
+  background: #f3f4f6 !important;
 }
 
 /* 하단 유령 "년" 글자 삭제 */
 .flatpickr-time .numInputWrapper::after {
-    display: none !important;
+  display: none !important;
+}
+
+html.dark .flatpickr-calendar .numInputWrapper:hover {
+  background: #3f3f46 !important;
+}
+
+html.dark .flatpickr-calendar .flatpickr-time input:hover {
+  background: #3f3f46 !important;
 }
 
 .ck-editor__editable_inline {
-    font-size: 14px !important;
-    line-height: 1.6 !important;
-    height: 30vh !important;
-    min-height: 300px !important;
-    overflow-y: auto;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+  height: 30vh !important;
+  min-height: 300px !important;
+  overflow-y: auto;
 }
 
 .ck-editor__editable_inline ul {
-    list-style-type: disc !important;
-    padding-left: 1.5rem !important;
+  list-style-type: disc !important;
+  padding-left: 1.5rem !important;
 }
 
 .ck-editor__editable_inline ol {
-    list-style-type: decimal !important;
-    padding-left: 1.5rem !important;
+  list-style-type: decimal !important;
+  padding-left: 1.5rem !important;
 }
 
 .ck-editor__editable_inline h1 {
-    font-size: 1.6em !important;
-    font-weight: bold !important;
+  font-size: 1.6em !important;
+  font-weight: bold !important;
 }
 
 .ck-editor__editable_inline h2 {
-    font-size: 1.4em !important;
-    font-weight: bold !important;
+  font-size: 1.4em !important;
+  font-weight: bold !important;
 }
 
 .ck-editor__editable_inline h3 {
-    font-size: 1.2em !important;
-    font-weight: bold !important;
+  font-size: 1.2em !important;
+  font-weight: bold !important;
 }
 
 .ck-content img {
-    display: inline-block !important;
+  display: inline-block !important;
+}
+
+.overflow-y-auto::-webkit-scrollbar {
+  width: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  @apply rounded-full bg-zinc-700 hover:bg-zinc-600;
+}
+
+html.dark {
+  --ck-color-base-background: hsl(270, 1%, 15%);
+  --ck-color-base-foreground: hsl(255, 3%, 18%);
+  --ck-color-base-border: hsl(240, 4%, 24%);
+  --ck-color-text: hsl(0, 0%, 98%);
+  --ck-color-toolbar-background: hsl(270, 1%, 18%);
+  --ck-color-toolbar-border: hsl(240, 4%, 24%);
+  --ck-color-dropdown-panel-background: hsl(270, 1%, 18%);
+  --ck-color-dropdown-panel-border: hsl(270, 1%, 22%);
+  --ck-color-list-background: hsl(270, 1%, 18%);
+  --ck-color-button-default-hover-background: hsl(270, 1%, 22%);
+  --ck-color-input-background: hsl(270, 1%, 15%);
+  --ck-color-input-border: hsl(257, 3%, 43%);
+  --ck-color-input-text: hsl(0, 0%, 98%);
+  --ck-color-shadow-drop: hsla(0, 0%, 0%, 0.2);
+  --ck-color-panel-border: hsl(240, 4%, 24%);
+  --ck-color-tooltip-background: hsl(252, 7%, 14%);
+  --ck-color-tooltip-text: hsl(0, 0%, 93%);
+
+  --ck-content-font-color: hsl(0, 0%, 90%);
+
+  --ck-color-list-button-on-background: hsl(208, 88%, 52%);
+  --ck-color-list-button-on-text: hsl(0, 0%, 100%);
+}
+
+html.dark .ck-fullscreen__editable .ck.ck-editor__editable {
+  background-color: hsl(270, 1%, 15%) !important;
+  color: hsl(0, 0%, 90%) !important;
 }

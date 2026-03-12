@@ -9,10 +9,10 @@ services:
       - admin-app
     restart: always
     logging:
-      driver: "json-file"
+      driver: 'json-file'
       options:
-        max-size: "100m"
-        max-file: "7"
+        max-size: '100m'
+        max-file: '7'
 
   admin-app:
     image: limp0061/admin-system:1.2
@@ -31,10 +31,10 @@ services:
         condition: service_healthy
     restart: always
     logging:
-      driver: "json-file"
+      driver: 'json-file'
       options:
-        max-size: "100m"
-        max-file: "7"
+        max-size: '100m'
+        max-file: '7'
 
   redis:
     image: redis:7.2-alpine
@@ -45,9 +45,9 @@ services:
     volumes:
       - redis_data:/data
       - ./conf/redis.conf:/usr/local/etc/redis/redis.conf
-    command: [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
+    command: ['redis-server', '/usr/local/etc/redis/redis.conf']
     healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
+      test: ['CMD', 'redis-cli', 'ping']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -67,7 +67,7 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
       interval: 10s
       timeout: 5s
       retries: 5
