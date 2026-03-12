@@ -1,8 +1,11 @@
 {
-  "plugins": ["prettier-plugin-tailwindcss"],
+  "plugins": [
+    "prettier-plugin-tailwindcss"
+  ],
   "printWidth": 80,
   "singleQuote": true,
   "tabWidth": 2,
   "semi": true,
-  "htmlWhitespaceSensitivity": "ignore"
+  "htmlWhitespaceSensitivity": "ignore",
+  "endOfLine": "lf"
 }
