@@ -2,9 +2,9 @@
   th:fragment="deptHeader"
   id="page-header"
   class="flex flex-col gap-2 pb-4 pt-6"
-  th:with="selectedDept=${params?.deptId != null ? tree.?[id == #root.params.deptId] : null}"
+  th:with="selectedDept=${params?.deptId != null ? flatten.?[id == #root.params.deptId] : null}"
 >
-  <div class="flex items-center justify-between px-1">
+  <div id="dept-controller" class="flex items-center justify-between">
     <div class="hidden min-w-[50px] items-center gap-2 md:flex">
       <span
         th:text="${!#lists.isEmpty(selectedDept) ? selectedDept[0].deptName : '전체'}"
@@ -13,6 +13,29 @@
         class="min-w-[40px] rounded bg-gray-200/50 p-2 text-center font-medium dark:bg-white/10"
         th:text="|${list.totalCount ?: 0} 명|"
       ></span>
+    </div>
+    <div class="w-full md:hidden">
+      <input
+        type="hidden"
+        id="dept-mobile-input"
+        th:value="${params?.deptId}"
+      />
+      <button
+        type="button"
+        class="form-input ignore-close text-left hover:bg-gray-50 focus:border-gray-400 focus:ring-0 dark:hover:bg-zinc-800/30"
+        id="dept-btn"
+        data-action="toggleSelect"
+        th:text="${!#lists.isEmpty(selectedDept) ? selectedDept[0].deptName : '전체'}"
+      ></button>
+      <ul class="data-template">
+        <li
+          class="select-li"
+          th:each="item : ${flatten}"
+          th:data-value="${item.id}"
+          th:text="${item.deptName}"
+          data-action="selectMobileDept"
+        ></li>
+      </ul>
     </div>
   </div>
   <div class="mt-1 flex items-center gap-2">
@@ -62,7 +85,7 @@
     </div>
     <div class="flex justify-end gap-2">
       <div class="btn-list">
-        <button class="btn btn-primary" data-action="openAddDeptUserModal">
+        <button class="btn btn-primary hidden md:inline-flex" data-action="openAddDeptUserModal">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

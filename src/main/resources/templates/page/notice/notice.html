@@ -1,45 +1,45 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <th:block th:replace="~{fragments/common-head :: commonHead}"></th:block>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
-    />
-    <link
-      id="flatpickr-dark-theme"
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css"
-      disabled
-    />
-    <script>
-      document.getElementById('flatpickr-dark-theme').disabled =
-        !document.documentElement.classList.contains('dark');
-    </script>
-    <link rel="stylesheet" href="/js/ckeditor5/ckeditor5.css" />
-    <title>관리자 | 공지 관리</title>
-  </head>
-  <body class="min-h-screen">
-    <div class="flex min-h-screen">
-      <nav th:replace="~{fragments/nav :: nav}"></nav>
-      <div class="flex flex-1 flex-col">
-        <header th:replace="~{fragments/header :: header}"></header>
-        <div id="list-wrapper" class="flex flex-1 flex-col">
-          <div th:replace="~{page/notice/notice-main :: noticeMain}"></div>
-        </div>
-        <footer th:replace="~{fragments/footer :: footer}"></footer>
-      </div>
+<head>
+  <th:block th:replace="~{fragments/common-head :: commonHead}"></th:block>
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+  />
+  <link
+    id="flatpickr-dark-theme"
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css"
+    disabled
+  />
+  <script>
+    document.getElementById('flatpickr-dark-theme').disabled =
+      !document.documentElement.classList.contains('dark');
+  </script>
+  <link rel="stylesheet" href="/js/ckeditor5/ckeditor5.css" />
+  <title>관리자 | 공지 관리</title>
+</head>
+<body class="min-h-screen">
+<div class="flex min-h-screen">
+  <nav th:replace="~{fragments/nav :: nav}"></nav>
+  <div class="flex flex-1 flex-col min-w-0">
+    <header th:replace="~{fragments/header :: header}"></header>
+    <div id="list-wrapper" class="flex flex-1 flex-col">
+      <div th:replace="~{page/notice/notice-main :: noticeMain}"></div>
     </div>
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+  </div>
+</div>
 
-    <div id="modal-root"></div>
-    <ul id="common-select-ul" class="select-ul hidden"></ul>
-    <div th:replace="~{components/common-ui :: toast}"></div>
-    <script type="module" th:src="@{/js/ckeditor5/ckeditor5.js}"></script>
-    <script type="module" th:src="@{/js/ckeditor5/translations/ko.js}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
-    <script type="module" th:src="@{/js/menu/menu.js}"></script>
-    <script type="module" th:src="@{/js/page/notice/notice-list.js}"></script>
-    <script type="module" th:src="@{/js/common/index.js}"></script>
-  </body>
+<div id="modal-root" class="relative z-[9999]"></div>
+<ul id="common-select-ul" class="select-ul hidden"></ul>
+<div th:replace="~{components/common-ui :: toast}"></div>
+<script type="module" th:src="@{/js/ckeditor5/ckeditor5.js}"></script>
+<script type="module" th:src="@{/js/ckeditor5/translations/ko.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
+<script type="module" th:src="@{/js/menu/menu.js}"></script>
+<script type="module" th:src="@{/js/page/notice/notice-list.js}"></script>
+<script type="module" th:src="@{/js/common/index.js}"></script>
+</body>
 </html>

@@ -1,7 +1,7 @@
 <div
   th:fragment="userHeader(pageType)"
   id="page-header"
-  class="flex items-center gap-2 px-7 py-3"
+  class="flex items-center gap-2 px-5 py-3"
 >
   <div class="mr-2 hidden min-w-[60px] gap-1 text-sm font-medium md:flex">
     <div th:switch="${pageType.name()}">
@@ -16,7 +16,7 @@
     <span th:text="|(${list.totalCount ?: 0})|"></span>
   </div>
   <div class="btn-list flex flex-1 items-center gap-1.5">
-    <div class="search-container mr-2 flex">
+    <div class="search-container flex">
       <form class="relative" id="search-form">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -37,7 +37,7 @@
           name="keyword"
           placeholder="이메일 또는 이름을 입력해주세요..."
           th:value="${params.keyword}"
-          class="search-input h-9 w-64 rounded-xl border border-gray-300 py-3 pl-10 pr-4 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-gray-300"
+          class="search-input h-9 w-64 rounded-xl border border-gray-300 py-3 pl-10 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-gray-300"
           autocomplete="off"
         />
         <button
@@ -121,14 +121,14 @@
           class="btn-dropDown absolute top-full z-50 mt-1 hidden w-full flex-col rounded border border-gray-300 shadow-md"
         >
           <button
-            class="btn btn-status w-full justify-center text-emerald-600 transition-colors duration-300 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:bg-emerald-900/30"
+            class="btn btn-status w-full justify-center text-emerald-600 transition-colors duration-300 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:bg-emerald-900"
             data-action="status"
             data-mode="ACTIVE"
           >
             정상
           </button>
           <button
-            class="btn btn-status w-full justify-center text-red-600 transition-colors duration-300 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/30"
+            class="btn btn-status w-full justify-center text-red-600 transition-colors duration-300 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900"
             data-action="status"
             data-mode="BLOCKED"
           >
@@ -220,7 +220,7 @@
       </button>
     </th:block>
   </div>
-  <div class="flex-col justify-end">
+  <div class="flex-col justify-end shrink-0">
     <div th:replace="~{components/view-controller::viewController}"></div>
   </div>
 </div>

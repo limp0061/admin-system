@@ -84,6 +84,29 @@ export const initGlobalEvents = (): void => {
       return;
     }
 
+    const toggleMenuBar = target.closest<HTMLElement>('#toggleMenuBar');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    if (toggleMenuBar) {
+      if (sidebar) {
+        sidebar.classList.toggle('-translate-x-full');
+        if (overlay) {
+          overlay.classList.toggle('hidden');
+        }
+      }
+      return;
+    }
+
+    if (target === overlay) {
+      if (sidebar) {
+        sidebar.classList.add('-translate-x-full');
+      }
+      if (overlay) {
+        overlay.classList.add('hidden');
+      }
+      return;
+    }
+
     const isIgnore = target.closest('.ignore-close') || themeBtn;
 
     if (!isIgnore) {

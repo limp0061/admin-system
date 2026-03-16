@@ -1,61 +1,61 @@
 <div th:fragment="deptTable" class="w-full flex-1">
-  <table class="table">
+  <table class="table w-full">
     <thead class="border border-b-2">
-      <tr>
-        <th class="w-12 !text-center">
-          <input
-            type="checkbox"
-            data-action="checkToggle"
-            class="check-all size-3"
-          />
-        </th>
-        <th class="min-w-0 flex-1">이름</th>
-        <th class="w-[15%]">사번</th>
-        <th class="w-[15%]">직급</th>
-        <th class="w-[20%]">부서</th>
-        <th class="w-[15%]">계정 상태</th>
-      </tr>
+    <tr>
+      <th class="w-12 !text-center">
+        <input
+          type="checkbox"
+          data-action="checkToggle"
+          class="check-all size-3"
+        />
+      </th>
+      <th class="min-w-0 flex-1">이름</th>
+      <th class="w-[30%] md:w-[15%]">사번</th>
+      <th class="w-[15%] hidden md:table-cell">직급</th>
+      <th class="w-[30%] md:w-[20%]">부서</th>
+      <th class="w-[15%] hidden md:table-cell">계정 상태</th>
+    </tr>
     </thead>
     <tbody class="divide-y dark:divide-zinc-800">
-      <tr th:if="${#lists.isEmpty(list.content)}">
-        <td colspan="6" class="py-16 text-center text-gray-400">
-          부서에 소속된 사용자가 없습니다
-        </td>
-      </tr>
+    <tr th:if="${#lists.isEmpty(list.content)}">
+      <td colspan="6" class="py-16 text-center text-gray-400">
+        부서에 소속된 사용자가 없습니다
+      </td>
+    </tr>
     </tbody>
 
     <tbody th:unless="${#lists.isEmpty(list.content)}">
-      <tr
-        th:each="item : ${list.content}"
-        th:data-id="${item.id}"
-        class="hover:cursor-pointer hover:bg-gray-50"
-        data-action="clickRow"
-      >
-        <td class="text-center align-middle">
-          <input
-            type="checkbox"
-            class="check-box size-3"
-            th:value="${item.id}"
-          />
-        </td>
-        <td class="overflow-visible whitespace-nowrap px-6 py-4">
-          <div class="group relative inline-flex items-center">
-            <span th:text="${item.name}" class="mr-2 cursor-pointer"></span>
+    <tr
+      th:each="item : ${list.content}"
+      th:data-id="${item.id}"
+      class="hover:cursor-pointer hover:bg-gray-50"
+      data-action="clickRow"
+    >
+      <td class="text-center align-middle">
+        <input
+          type="checkbox"
+          class="check-box size-3"
+          th:value="${item.id}"
+        />
+      </td>
+      <td class="overflow-visible whitespace-nowrap px-6 py-4">
+        <div class="group relative inline-flex items-center">
+          <span th:text="${item.name}" class="mr-2 cursor-pointer"></span>
+          <div
+            class="invisible absolute left-full z-[100] whitespace-nowrap rounded bg-slate-800 px-2 py-1 text-white opacity-0 shadow-xl transition-all duration-200 md:group-hover:visible md:group-hover:opacity-100"
+          >
+            <span th:text="${item.emailId}"></span>
             <div
-              class="invisible absolute left-full z-[100] whitespace-nowrap rounded bg-slate-800 px-2 py-1 text-white opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:opacity-100"
-            >
-              <span th:text="${item.emailId}"></span>
-              <div
-                class="absolute right-full top-1/2 -translate-y-1/2 border-[4px] border-transparent border-r-slate-800"
-              ></div>
-            </div>
+              class="absolute right-full top-1/2 -translate-y-1/2 border-[4px] border-transparent border-r-slate-800"
+            ></div>
           </div>
-        </td>
-        <td th:text="${item.userCode}"></td>
-        <td th:text="${item.position}"></td>
-        <td th:data-dept-id="${item.deptId}" th:text="${item.deptName}"></td>
-        <td th:text="${item.userStatus.label}"></td>
-      </tr>
+        </div>
+      </td>
+      <td th:text="${item.userCode}"></td>
+      <td class="hidden md:table-cell" th:text="${item.position}"></td>
+      <td th:data-dept-id="${item.deptId}" th:text="${item.deptName}"></td>
+      <td class="hidden md:table-cell" th:text="${item.userStatus.label}"></td>
+    </tr>
     </tbody>
   </table>
 </div>

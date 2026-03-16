@@ -1,35 +1,36 @@
-<div th:fragment="content" class="modal-confirm" th:with="mName=${mode.name()}">
-  <div class="p-2 text-center">
-    <div
-      class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full"
-      th:classappend="${mName.matches('APPROVE|UNLOCKED|ACTIVE') ? 'bg-blue-50' : 'bg-red-50'}"
-    >
-      <svg
-        class="h-8 w-8"
-        th:classappend="${mName.matches('APPROVE|UNLOCKED|ACTIVE') ? 'text-blue-500' : 'text-red-500'}"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
+<div th:fragment="content" class="fixed inset-0 flex items-start justify-center pt-[10vh] bg-black/50">
+  <div class="modal-confirm" th:with="mName=${mode.name()}">
+    <div class="p-2 text-center">
+      <div
+        class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full"
+        th:classappend="${mName.matches('APPROVE|UNLOCKED|ACTIVE') ? 'bg-blue-50' : 'bg-red-50'}"
       >
-        <path
-          th:if="${mName.matches('APPROVE|UNLOCKED|ACTIVE')}"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M5 13l4 4L19 7"
-        />
-        <path
-          th:unless="${mName.matches('APPROVE|UNLOCKED|ACTIVE')}"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-        />
-      </svg>
-    </div>
+        <svg
+          class="h-8 w-8"
+          th:classappend="${mName.matches('APPROVE|UNLOCKED|ACTIVE') ? 'text-blue-500' : 'text-red-500'}"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            th:if="${mName.matches('APPROVE|UNLOCKED|ACTIVE')}"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M5 13l4 4L19 7"
+          />
+          <path
+            th:unless="${mName.matches('APPROVE|UNLOCKED|ACTIVE')}"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+          />
+        </svg>
+      </div>
 
-    <p class="text-sm leading-relaxed text-gray-500">
-      <th:block th:if="${count > 0}">
+      <p class="text-sm leading-relaxed text-gray-500">
+        <th:block th:if="${count > 0}">
         <span class="font-medium text-gray-700 dark:text-slate-200">
           <th:block
             th:if="${mName == 'DELETED' or mName == 'REMOVE'}"
@@ -58,36 +59,37 @@
             ></th:block>
           </th:block>
         </span>
-      </th:block>
-    </p>
-  </div>
+        </th:block>
+      </p>
+    </div>
 
-  <div class="btn-list mt-4 flex justify-end gap-3">
-    <button
-      th:if="${count > 0}"
-      type="button"
-      data-action="changeStatus"
-      th:data-ids="${#strings.listJoin(ids, ',')}"
-      th:data-mode="${mName}"
-      th:classappend="${mName.matches('DELETED|REMOVE|REJECT') ? 'btn-danger' : 'btn-primary'}"
-      class="btn"
-    >
-      <th:block th:switch="${mName}">
-        <th:block th:case="'DELETED'">삭제</th:block>
-        <th:block th:case="'REMOVE'">삭제</th:block>
-        <th:block th:case="'REJECT'">반려</th:block>
-        <th:block th:case="'APPROVE'">승인</th:block>
-        <th:block th:case="'UNLOCKED'">잠금 해제</th:block>
+    <div class="btn-list mt-4 flex justify-end gap-3">
+      <button
+        th:if="${count > 0}"
+        type="button"
+        data-action="changeStatus"
+        th:data-ids="${#strings.listJoin(ids, ',')}"
+        th:data-mode="${mName}"
+        th:classappend="${mName.matches('DELETED|REMOVE|REJECT') ? 'btn-danger' : 'btn-primary'}"
+        class="btn"
+      >
+        <th:block th:switch="${mName}">
+          <th:block th:case="'DELETED'">삭제</th:block>
+          <th:block th:case="'REMOVE'">삭제</th:block>
+          <th:block th:case="'REJECT'">반려</th:block>
+          <th:block th:case="'APPROVE'">승인</th:block>
+          <th:block th:case="'UNLOCKED'">잠금 해제</th:block>
 
-        <th:block th:case="*">변경</th:block>
-      </th:block>
-    </button>
-    <button
-      type="button"
-      onClick="closeModal()"
-      class="btn btn-white px-4 dark:bg-zinc-300 dark:hover:bg-zinc-400"
-    >
-      닫기
-    </button>
+          <th:block th:case="*">변경</th:block>
+        </th:block>
+      </button>
+      <button
+        type="button"
+        onClick="closeModal()"
+        class="btn btn-white px-4 dark:bg-zinc-300 dark:hover:bg-zinc-400"
+      >
+        닫기
+      </button>
+    </div>
   </div>
 </div>

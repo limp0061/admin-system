@@ -1,27 +1,30 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <th:block th:replace="~{fragments/common-head :: commonHead}"></th:block>
-    <title>관리자 | 부서별 리스트</title>
-  </head>
-  <body class="min-h-screen">
-    <div class="flex min-h-screen">
-      <nav th:replace="~{fragments/nav :: nav}"></nav>
-      <div class="flex flex-1 flex-col">
-        <header th:replace="~{fragments/header :: header}"></header>
-        <main class="vt-main flex flex-1 px-7 py-3">
-          <div th:replace="~{page/dept/dept-tree::deptTree}"></div>
-          <div id="list-wrapper" class="basis-2/3">
-            <div th:replace="~{page/dept/dept-main::deptMain}"></div>
-          </div>
-        </main>
-        <footer th:replace="~{fragments/footer :: footer}"></footer>
+<head>
+  <th:block th:replace="~{fragments/common-head :: commonHead}"></th:block>
+  <title>관리자 | 부서별 리스트</title>
+</head>
+<body class="min-h-screen">
+<div class="flex min-h-screen">
+  <nav th:replace="~{fragments/nav :: nav}"></nav>
+  <div class="flex flex-1 flex-col min-w-0">
+    <header th:replace="~{fragments/header :: header}"></header>
+    <main class="vt-main flex flex-1 px-5 py-3">
+      <div class="hidden md:block w-1/3 shrink-0 h-80vh">
+        <div th:replace="~{page/dept/dept-tree::deptTree}"></div>
       </div>
-    </div>
-    <div id="modal-root"></div>
-    <div th:replace="~{components/common-ui :: toast}"></div>
-    <script type="module" th:src="@{/js/menu/menu.js}"></script>
-    <script type="module" th:src="@{/js/page/dept/dept-list.js}"></script>
-    <script type="module" th:src="@{/js/common/index.js}"></script>
-  </body>
+      <div id="list-wrapper" class="flex-1 min-w-0">
+        <div th:replace="~{page/dept/dept-main::deptMain}"></div>
+      </div>
+    </main>
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+  </div>
+</div>
+<div id="modal-root" class="relative z-[9999]"></div>
+<ul id="common-select-ul" class="select-ul hidden"></ul>
+<div th:replace="~{components/common-ui :: toast}"></div>
+<script type="module" th:src="@{/js/menu/menu.js}"></script>
+<script type="module" th:src="@{/js/page/dept/dept-list.js}"></script>
+<script type="module" th:src="@{/js/common/index.js}"></script>
+</body>
 </html>

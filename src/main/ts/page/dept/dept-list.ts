@@ -1,13 +1,10 @@
 import { PaginationUtils } from '../../common/pagination.js';
 import { showToast } from '../../common/toast.js';
-import { initGlobalEvents } from '../../common/event.js';
 import { checkRow, checkToggle } from '../../common/checkbox.js';
 import { btnDropDown, toggleSelect } from '../../common/select.js';
 
 import { sendRequest } from '../../common/request.js';
 import { ErrorResponse } from '../../common/type';
-
-initGlobalEvents();
 
 const defaultHandler = async (url: string) => {
   const html = await sendRequest(
@@ -93,6 +90,9 @@ document.addEventListener('click', (e) => {
       break;
     case 'removeOne':
       removeOne(btn);
+      break;
+    case 'selectMobileDept':
+      selectMobileDept(btn);
       break;
   }
 });
@@ -332,13 +332,12 @@ const userRemoveDept = async (btn: HTMLElement): Promise<void> => {
   }
 };
 
-const selectModalDept = (li: HTMLElement) => {
+const applyDeptSelection = (li: HTMLElement): void => {
   const val = li.dataset.value;
   const text = li.textContent?.trim() || '';
 
   const commonUl = document.getElementById('common-select-ul') as HTMLElement;
   const ownerId = commonUl.dataset.owner;
-
   if (!ownerId) return;
 
   const displayBtn = document.getElementById(ownerId) as HTMLButtonElement;
@@ -350,13 +349,15 @@ const selectModalDept = (li: HTMLElement) => {
   ) as HTMLInputElement;
 
   if (input) input.value = val || '';
-  if (displayBtn) {
-    displayBtn.innerText = text;
-  }
+  if (displayBtn) displayBtn.innerText = text;
+
   document
     .querySelectorAll('.select-ul')
     .forEach((ul) => ul.classList.add('hidden'));
+};
 
+const selectModalDept = (li: HTMLElement) => {
+  applyDeptSelection(li);
   searchModal();
 };
 
@@ -460,4 +461,24 @@ const removeOne = (btn: HTMLElement) => {
       document.getElementById('empty-msg')?.classList.remove('hidden');
     }
   }
+};
+
+const selectMobileDept = (li: HTMLElement) => {
+  applyDeptSelection(li);
+  searchMobile();
+};
+
+const searchMobile = (): void => {
+  const deptContainer = document.getElementById('dept-controller');
+  const deptId = (
+    deptContainer.querySelector('#dept-mobile-input') as HTMLInputElement
+  )?.value;
+  const keyword = (
+    deptContainer.querySelector('input[name="keyword"]') as HTMLInputElement
+  )?.value;
+
+  PaginationUtils.applyFilter({
+    deptId: deptId,
+    keyword: keyword,
+  });
 };

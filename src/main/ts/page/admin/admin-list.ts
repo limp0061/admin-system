@@ -2,15 +2,12 @@ import { showToast } from '../../common/toast.js';
 import { PaginationUtils } from '../../common/pagination.js';
 import { btnDropDown, toggleSelect } from '../../common/select.js';
 import { checkRow, checkToggle } from '../../common/checkbox.js';
-import { initGlobalEvents } from '../../common/event.js';
 
 import { sendRequest } from '../../common/request.js';
 import { ErrorResponse, ModalConfig } from '../../common/type';
 import { UserSearchResponse } from '../user/user-types';
 import { AdminRoleRequest } from './admin-type';
 import { closeModal } from '../../common/modal.js';
-
-initGlobalEvents();
 
 PaginationUtils.setUpdateHandler(async (url) => {
   const html = await sendRequest(
@@ -23,31 +20,8 @@ PaginationUtils.setUpdateHandler(async (url) => {
   window.history.pushState({}, '', url);
 });
 
-document.addEventListener('dblclick', (e) => {
-  const target = e.target as HTMLElement;
-
-  const td = target.closest('td');
-  if (
-    target.classList.contains('check-box') ||
-    (td && td.querySelector('.check-box'))
-  ) {
-    return;
-  }
-
-  const row = target.closest<HTMLElement>('[data-action]');
-  if (!row || row.dataset.action !== 'clickRow') return;
-
-  const checkbox = row.querySelector<HTMLInputElement>('.check-box');
-  if (checkbox) checkbox.checked = true;
-
-  const action = row.dataset.action;
-  switch (action) {
-    case 'clickRow': {
-      openAdminModal('EDIT', row);
-    }
-  }
-});
-
+let lastClickTime = 0;
+let lastClickTarget: HTMLElement | null = null;
 document.addEventListener('click', (e) => {
   const target = e.target as HTMLElement;
 
@@ -59,6 +33,11 @@ document.addEventListener('click', (e) => {
   if (!btn) {
     return;
   }
+
+  const now = Date.now();
+  const isDouble = lastClickTarget === btn && now - lastClickTime < 300;
+  lastClickTime = now;
+  lastClickTarget = btn;
 
   const action = btn.dataset.action;
   switch (action) {
@@ -78,7 +57,11 @@ document.addEventListener('click', (e) => {
       checkToggle(btn);
       break;
     case 'clickRow':
-      checkRow(btn);
+      if (isDouble) {
+        openAdminModal('EDIT', btn);
+      } else {
+        checkRow(btn);
+      }
       break;
     case 'btnDropDown':
       btnDropDown(btn, e);

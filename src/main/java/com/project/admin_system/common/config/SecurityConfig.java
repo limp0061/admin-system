@@ -38,6 +38,7 @@ public class SecurityConfig {
             throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/.well-known/**").permitAll()
                         .requestMatchers("/login", "/api/login", "/logout").permitAll()
                         .requestMatchers("/error/**").permitAll()
                         .anyRequest().access(dynamicAuthorizationManager)

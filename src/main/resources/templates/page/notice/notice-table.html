@@ -3,62 +3,62 @@
   class="flex h-full w-full flex-1 flex-col text-xs"
 >
   <div class="flex-1 overflow-y-auto">
-    <table class="table">
+    <table class="table w-full">
       <thead class="border border-b-2">
-        <tr>
-          <th class="w-12 !text-center">
-            <input
-              type="checkbox"
-              data-action="checkToggle"
-              class="check-all size-3 cursor-pointer"
-            />
-          </th>
-          <th class="w-[10%]">유형</th>
-          <th class="min-w-0 flex-1">제목</th>
-          <th class="w-[25%]">공지 기간</th>
-          <th class="w-[15%]">수정 일시</th>
-        </tr>
+      <tr>
+        <th class="w-12 !text-center">
+          <input
+            type="checkbox"
+            data-action="checkToggle"
+            class="check-all size-3 cursor-pointer"
+          />
+        </th>
+        <th class="w-[15%] md:w-[10%]">유형</th>
+        <th class="min-w-0 flex-1">제목</th>
+        <th class="w-[35%] md:w-[25%]">공지 기간</th>
+        <th class="w-[15%] hidden md:table-cell">수정 일시</th>
+      </tr>
       </thead>
       <tbody class="divide-y dark:divide-zinc-800">
-        <tr th:if="${#lists.isEmpty(list.content)}">
-          <td colspan="6" class="py-16 text-center text-gray-400">
-            작성된 공지가 없습니다
-          </td>
-        </tr>
-        <tr
-          th:unless="${#lists.isEmpty(list.content)}"
-          th:each="item : ${list.content}"
-          th:data-id="${item.id}"
-          class="hover:cursor-pointer hover:bg-gray-50"
-          data-action="clickRow"
-        >
-          <td class="text-center align-middle">
-            <input
-              type="checkbox"
-              class="check-box size-3"
-              th:value="${item.id}"
-            />
-          </td>
-          <td th:text="${item.type.label}"></td>
-          <td class="truncate" th:text="${item.title}"></td>
-          <td>
-            <th:block th:if="${item.startAt != null or item.endAt != null}">
+      <tr th:if="${#lists.isEmpty(list.content)}">
+        <td colspan="6" class="py-16 text-center text-gray-400">
+          작성된 공지가 없습니다
+        </td>
+      </tr>
+      <tr
+        th:unless="${#lists.isEmpty(list.content)}"
+        th:each="item : ${list.content}"
+        th:data-id="${item.id}"
+        class="hover:cursor-pointer hover:bg-gray-50"
+        data-action="clickRow"
+      >
+        <td class="text-center align-middle">
+          <input
+            type="checkbox"
+            class="check-box size-3"
+            th:value="${item.id}"
+          />
+        </td>
+        <td th:text="${item.type.label}"></td>
+        <td class="max-w-0 truncate" th:text="${item.title}"></td>
+        <td class="max-w-0 truncate">
+          <th:block th:if="${item.startAt != null or item.endAt != null}">
               <span
-                th:text="${item.startAt != null ? #temporals.format(item.startAt, 'yyyy-MM-dd HH') : ''}"
+                th:text="${item.startAt != null ? #temporals.format(item.startAt, 'yyyy-MM-dd') : ''}"
               ></span>
-              <span class="mx-1">~</span>
-              <span
-                th:text="${item.endAt != null ? #temporals.format(item.endAt, 'yyyy-MM-dd HH') : '상시'}"
-              ></span>
-            </th:block>
-            <th:block th:unless="${item.startAt != null or item.endAt != null}">
-              <span class="text-gray-400">기한 없음</span>
-            </th:block>
-          </td>
-          <td
+            <span class="mx-1">~</span>
+            <span
+              th:text="${item.endAt != null ? #temporals.format(item.endAt, 'yyyy-MM-dd') : '상시'}"
+            ></span>
+          </th:block>
+          <th:block th:unless="${item.startAt != null or item.endAt != null}">
+            <span class="text-gray-400">기한 없음</span>
+          </th:block>
+        </td>
+        <td class="hidden md:table-cell"
             th:text="${#temporals.format(item.updatedAt, 'yyyy-MM-dd HH:mm')}"
-          ></td>
-        </tr>
+        ></td>
+      </tr>
       </tbody>
     </table>
   </div>
