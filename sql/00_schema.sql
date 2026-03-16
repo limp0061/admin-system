@@ -148,8 +148,9 @@ CREATE TABLE `user_config` (
 );
 
 CREATE TABLE `user_dept` (
-    `user_id` bigint PRIMARY KEY,
-    `dept_id` bigint
+     `user_dept_id` bigint PRIMARY KEY AUTO_INCREMENT,
+     `user_id` bigint,
+     `dept_id` bigint
 );
 
 CREATE TABLE `user_allowed_ips` (
