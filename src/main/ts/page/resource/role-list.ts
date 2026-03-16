@@ -1,5 +1,4 @@
 import { showToast } from '../../common/toast.js';
-import { initGlobalEvents } from '../../common/event.js';
 
 import { sendRequest } from '../../common/request.js';
 import { ErrorResponse, ModalConfig } from '../../common/type';
@@ -8,8 +7,6 @@ import { toggleSelect } from '../../common/select.js';
 import { RoleSaveRequest } from './resource-types';
 import { validator } from '../../common/validation.js';
 import { closeModal } from '../../common/modal.js';
-
-initGlobalEvents();
 
 document.addEventListener('click', (e) => {
   const target = e.target as HTMLElement;

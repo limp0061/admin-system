@@ -25,7 +25,7 @@ export function renderMenu(targetId: string) {
       ? 'bg-[#3E6187] dark:bg-[#324D6B]'
       : 'hover:bg-[#2C3245] dark:hover:bg-[#363C54] text-gray-400';
 
-    topDiv.className = `flex justify-between items-center px-4 py-3 cursor-pointer transition-colors ${activeStyles} ${bgStyles}`;
+    topDiv.className = `flex justify-between items-center whitespace-nowrap px-4 py-3 cursor-pointer transition-colors ${activeStyles} ${bgStyles}`;
 
     // 아이콘 + 이름
     const leftDiv = document.createElement('div');

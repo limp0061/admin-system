@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
         ErrorCode errorCode = e.getErrorCode();
 
         log.warn("[BusinessException] code: {}, message: {}", errorCode.name(), errorCode.getMessage());
-        return new ResponseEntity<>(ErrorResponse.of(errorCode), errorCode.getStatus());
+        return new ResponseEntity<>(ErrorResponse.from(errorCode), errorCode.getStatus());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -92,7 +92,7 @@ public class GlobalExceptionHandler {
     ) {
         log.error("[UnhandledException] {}", e.getMessage(), e);
         return new ResponseEntity<>(
-                ErrorResponse.of(ErrorCode.INTERNAL_SERVER_ERROR),
+                ErrorResponse.from(ErrorCode.INTERNAL_SERVER_ERROR),
                 HttpStatus.INTERNAL_SERVER_ERROR
         );
     }

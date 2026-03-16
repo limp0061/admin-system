@@ -1,15 +1,21 @@
-<nav th:fragment="nav" id="sidebar" class="sidebar">
-  <div class="flex flex-col">
-    <div class="flex h-[70px] items-center px-6 text-xl font-semibold">
-      <span>
-        <a href="/static">ADMIN</a>
-      </span>
-    </div>
-    <div
-      class="flex h-[35px] items-center px-4 py-2 text-[12px] font-semibold text-gray-400 dark:text-slate-200"
-    >
-      <span id="nav-section-title"></span>
-    </div>
-    <ul id="sidebar-menu" class="flex flex-col"></ul>
+<th:block th:fragment="nav">
+  <div id="sidebar-overlay"
+       class="fixed inset-0 z-10 bg-black/50 hidden md:hidden">
   </div>
-</nav>
+  <nav id="sidebar"
+       class="sidebar fixed top-0 bottom-0 left-0 z-50 transition-transform duration-300 transform -translate-x-full md:static md:translate-x-0">
+    <div class="flex flex-col">
+      <div class="flex h-[70px] items-center px-6 text-xl font-semibold">
+      <span>
+        <a href="/dashboard">ADMIN</a>
+      </span>
+      </div>
+      <div
+        class="flex h-[35px] items-center px-4 py-2 text-[12px] font-semibold text-gray-400 dark:text-slate-200"
+      >
+        <span id="nav-section-title"></span>
+      </div>
+      <ul id="sidebar-menu" class="flex flex-col"></ul>
+    </div>
+  </nav>
+</th:block>

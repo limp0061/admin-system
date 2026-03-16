@@ -1,107 +1,107 @@
 <div th:fragment="pageTable" id="page-table" class="w-full flex-1 px-5">
-  <table class="table min-w-[900px]">
+  <table class="table w-full">
     <thead class="border border-b-2">
-      <tr>
-        <th class="w-12 !text-center">
-          <input
-            type="checkbox"
-            data-action="checkToggle"
-            class="check-all size-3 cursor-pointer"
-          />
-        </th>
-        <th class="w-[20%]">리소스 명</th>
-        <th class="min-w-0 flex-1">
-          <div class="flex items-center justify-between gap-2">
-            <span>URL Pattern</span>
-            <button
-              type="button"
-              class="sort-btn rounded p-1 hover:bg-gray-100"
-              data-action="sort"
-              data-sort="urlPattern"
-              th:data-order="${list.direction}"
-              aria-label="정렬"
+    <tr>
+      <th class="w-12 !text-center">
+        <input
+          type="checkbox"
+          data-action="checkToggle"
+          class="check-all size-3 cursor-pointer"
+        />
+      </th>
+      <th class="w-[20%]">리소스 명</th>
+      <th class="min-w-0 flex-1">
+        <div class="flex items-center justify-between gap-2">
+          <span>URL Pattern</span>
+          <button
+            type="button"
+            class="sort-btn rounded p-1 hover:bg-gray-100"
+            data-action="sort"
+            data-sort="urlPattern"
+            th:data-order="${list.direction}"
+            aria-label="정렬"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="inline-block h-4 w-4 transform transition-transform duration-200"
+              th:classappend="${list.sortBy == 'urlPattern' and list.direction == 'ASC'} ? 'rotate-180' : ''"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="inline-block h-4 w-4 transform transition-transform duration-200"
-                th:classappend="${list.sortBy == 'urlPattern' and list.direction == 'ASC'} ? 'rotate-180' : ''"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                />
-              </svg>
-            </button>
-          </div>
-        </th>
-        <th class="w-[15%]">Method</th>
-        <th class="w-[15%]">권한</th>
-        <th class="w-[15%]">
-          <div class="flex items-center justify-between gap-2">
-            <span>수정 일시</span>
-            <button
-              type="button"
-              class="sort-btn rounded p-1 hover:bg-gray-100"
-              data-action="sort"
-              data-sort="updatedAt"
-              th:data-order="${list.direction}"
-              aria-label="정렬"
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m19.5 8.25-7.5 7.5-7.5-7.5"
+              />
+            </svg>
+          </button>
+        </div>
+      </th>
+      <th class="w-[15%]">Method</th>
+      <th class="w-[20%] md:w-[15%]">권한</th>
+      <th class="md:w-[15%] hidden md:table-cell">
+        <div class="flex items-center justify-between gap-2">
+          <span>수정 일시</span>
+          <button
+            type="button"
+            class="sort-btn rounded p-1 hover:bg-gray-100"
+            data-action="sort"
+            data-sort="updatedAt"
+            th:data-order="${list.direction}"
+            aria-label="정렬"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="inline-block h-4 w-4 transform transition-transform duration-200"
+              th:classappend="${list.sortBy == 'updatedAt' and list.direction == 'ASC'} ? 'rotate-180' : ''"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="inline-block h-4 w-4 transform transition-transform duration-200"
-                th:classappend="${list.sortBy == 'updatedAt' and list.direction == 'ASC'} ? 'rotate-180' : ''"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                />
-              </svg>
-            </button>
-          </div>
-        </th>
-      </tr>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m19.5 8.25-7.5 7.5-7.5-7.5"
+              />
+            </svg>
+          </button>
+        </div>
+      </th>
+    </tr>
     </thead>
     <tbody class="divide-y dark:divide-zinc-800">
-      <tr th:if="${#lists.isEmpty(list.content)}">
-        <td colspan="6" class="py-16 text-center text-gray-400">
-          등록된 리소스 가 없습니다.
-        </td>
-      </tr>
-      <tr
-        th:unless="${#lists.isEmpty(list.content)}"
-        th:each="item : ${list.content}"
-        th:data-id="${item.id}"
-        class="hover:cursor-pointer hover:bg-gray-50"
-        data-action="clickRow"
-      >
-        <td class="text-center align-middle">
-          <input
-            type="checkbox"
-            class="check-box size-3"
-            th:value="${item.id}"
-          />
-        </td>
-        <td th:text="${item.name}"></td>
-        <td th:text="${item.urlPattern}"></td>
-        <td
-          th:text="${item.method.name() == 'ALL' ? '전체' : item.method.name()}"
-        ></td>
-        <td th:text="${item.displayRole}"></td>
-        <td
+    <tr th:if="${#lists.isEmpty(list.content)}">
+      <td colspan="6" class="py-16 text-center text-gray-400">
+        등록된 리소스 가 없습니다.
+      </td>
+    </tr>
+    <tr
+      th:unless="${#lists.isEmpty(list.content)}"
+      th:each="item : ${list.content}"
+      th:data-id="${item.id}"
+      class="hover:cursor-pointer hover:bg-gray-50"
+      data-action="clickRow"
+    >
+      <td class="text-center align-middle">
+        <input
+          type="checkbox"
+          class="check-box size-3"
+          th:value="${item.id}"
+        />
+      </td>
+      <td class="max-w-0 truncate" th:text="${item.name}"></td>
+      <td class="max-w-0 truncate" th:text="${item.urlPattern}"></td>
+      <td
+        th:text="${item.method.name() == 'ALL' ? '전체' : item.method.name()}"
+      ></td>
+      <td class="max-w-0 truncate" th:text="${item.displayRole}"></td>
+      <td class="hidden md:table-cell"
           th:text="${#temporals.format(item.updatedAt, 'yyyy-MM-dd HH:mm')}"
-        ></td>
-      </tr>
+      ></td>
+    </tr>
     </tbody>
   </table>
 </div>

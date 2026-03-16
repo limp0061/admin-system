@@ -1,13 +1,10 @@
 import { PaginationUtils } from '../../common/pagination.js';
-import { initGlobalEvents } from '../../common/event.js';
 import { sendRequest } from '../../common/request.js';
 import { initDateTimePicker } from '../../common/datepicker.js';
 import { btnDropDown } from '../../common/select.js';
 import { ErrorResponse } from '../../common/type';
 import { showToast } from '../../common/toast.js';
 import { HistoryRequest } from './log-types';
-
-initGlobalEvents();
 
 const defaultHandler = async (url: string) => {
   try {
@@ -29,21 +26,8 @@ const defaultHandler = async (url: string) => {
 
 PaginationUtils.setUpdateHandler(defaultHandler);
 
-document.addEventListener('dblclick', (e) => {
-  const target = e.target as HTMLElement;
-
-  const row = target.closest<HTMLElement>('[data-action]');
-  if (!row) return;
-
-  const action = row.dataset.action;
-  switch (action) {
-    case 'clickRow': {
-      openDetailModal(row);
-      break;
-    }
-  }
-});
-
+let lastClickTime = 0;
+let lastClickTarget: HTMLElement | null = null;
 document.addEventListener('click', (e) => {
   const target = e.target as HTMLElement;
 
@@ -51,6 +35,10 @@ document.addEventListener('click', (e) => {
   if (!btn) {
     return;
   }
+  const now = Date.now();
+  const isDouble = lastClickTarget === btn && now - lastClickTime < 300;
+  lastClickTime = now;
+  lastClickTarget = btn;
 
   const action = btn.dataset.action;
   switch (action) {
@@ -66,6 +54,12 @@ document.addEventListener('click', (e) => {
     case 'switchTab':
       switchTab(btn);
       break;
+    case 'clickRow': {
+      if (isDouble) {
+        openDetailModal(btn);
+      }
+      break;
+    }
   }
 });
 

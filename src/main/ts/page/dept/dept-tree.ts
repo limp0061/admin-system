@@ -1,13 +1,10 @@
 import { showToast } from '../../common/toast.js';
 import { closeModal } from '../../common/modal.js';
-import { initGlobalEvents } from '../../common/event.js';
 import { toggleSelect } from '../../common/select.js';
 import { validator } from '../../common/validation.js';
 import { sendRequest } from '../../common/request.js';
 import { ErrorResponse, ModalConfig } from '../../common/type';
 import { DeptSaveRequest } from './dept-types.js';
-
-initGlobalEvents();
 
 document.addEventListener('click', (e: MouseEvent) => {
   const target = e.target as HTMLElement;

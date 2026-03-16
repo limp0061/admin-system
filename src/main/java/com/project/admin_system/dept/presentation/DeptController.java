@@ -6,13 +6,11 @@ import static com.project.admin_system.common.dto.CustomConstants.XML_HTTP_REQUE
 import com.project.admin_system.common.dto.PageResponse;
 import com.project.admin_system.dept.application.dto.DeptNode;
 import com.project.admin_system.dept.application.dto.DeptResponse;
-import com.project.admin_system.userdept.application.dto.DeptSearchRequest;
 import com.project.admin_system.dept.application.dto.DeptTreeMode;
 import com.project.admin_system.dept.application.dto.DeptValidResponse;
 import com.project.admin_system.dept.application.service.DeptService;
 import com.project.admin_system.dept.application.validate.DeptValidator;
-import com.project.admin_system.dept.domain.Dept;
-import com.project.admin_system.user.application.dto.UserListResponse;
+import com.project.admin_system.userdept.application.dto.DeptSearchRequest;
 import com.project.admin_system.userdept.application.dto.UserDeptResponse;
 import com.project.admin_system.userdept.application.service.UserDeptService;
 import java.util.ArrayList;
@@ -54,7 +52,9 @@ public class DeptController {
 
         Page<UserDeptResponse> list = userDeptService.findAllByDeptId(pageable, ids, deptSearchRequest.keyword());
         List<DeptNode> deptNodes = deptService.findDeptNodes();
+        List<DeptNode> flatten = deptService.flatten(deptNodes);
         model.addAttribute("tree", deptNodes);
+        model.addAttribute("flatten", flatten);
         model.addAttribute("mode", DeptTreeMode.VIEW);
         model.addAttribute("list", PageResponse.of(list));
         model.addAttribute("params", deptSearchRequest);

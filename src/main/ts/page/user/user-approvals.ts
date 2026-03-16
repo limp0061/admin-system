@@ -1,7 +1,6 @@
 import { PaginationUtils } from '../../common/pagination.js';
 import { showToast } from '../../common/toast.js';
 import { closeModal } from '../../common/modal.js';
-import { initGlobalEvents } from '../../common/event.js';
 import { checkRow, checkToggle } from '../../common/checkbox.js';
 import {
   btnDropDown,
@@ -11,8 +10,6 @@ import {
 
 import { sendRequest } from '../../common/request.js';
 import { ErrorResponse } from '../../common/type';
-
-initGlobalEvents();
 
 PaginationUtils.setUpdateHandler(async (url) => {
   const html = await sendRequest(

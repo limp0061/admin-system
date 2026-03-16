@@ -4,7 +4,6 @@ import { closeModal } from './modal.js';
 import { btnDropDown, toggleSelect } from './select.js';
 import { showToast } from './toast.js';
 import { checkRow, checkToggle } from './checkbox.js';
-import { initGlobalEvents } from './event.js';
 import {
   changeTab,
   closeNotification,
@@ -16,6 +15,7 @@ import {
 } from './notification.js';
 
 import { previewImage } from './upload.js';
+import { initGlobalEvents } from './event.js';
 
 const exposeToWindow = () => {
   const w = window as any;
@@ -54,7 +54,6 @@ const exposeToWindow = () => {
 
 const initEventListeners = () => {
   initGlobalEvents();
-
   initNotificationSSE();
 
   document.addEventListener('click', (event: MouseEvent) => {

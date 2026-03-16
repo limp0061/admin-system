@@ -1,7 +1,4 @@
-<div
-  th:fragment="deptTree"
-  class="min-h-[500px] basis-1/3 border dark:border-zinc-700"
->
+<div th:fragment="deptTree" class="h-full w-full border dark:border-zinc-700">
   <div
     class="flex items-center justify-between border p-7 dark:border-zinc-700"
   >
@@ -28,7 +25,7 @@
         th:classappend="${!node.isActive}
                 ? 'opacity-50 pointer-events-none'
                 : 'hover:bg-gray-100 cursor-pointer dark:hover:bg-zinc-800 dark:border-gray-700'"
-        class="flex items-center gap-2 px-3 py-2"
+        class="flex items-center gap-2 px-3 py-2 whitespace-nowrap"
       >
         <button
           th:classappend="${node.children.isEmpty()} ? 'invisible pointer-events-none' : ''"

@@ -1,55 +1,57 @@
-<div th:fragment="content" class="modal-confirm">
-  <div class="p-2 text-center">
-    <div
-      class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-50"
-    >
-      <svg
-        class="h-8 w-8 text-red-500"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
+<div th:fragment="content" class="fixed inset-0 flex items-start justify-center pt-[10vh] bg-black/50">
+  <div class="modal-confirm mx-4">
+    <div class="p-2 text-center">
+      <div
+        class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-50"
       >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-        />
-      </svg>
+        <svg
+          class="h-8 w-8 text-red-500"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+          />
+        </svg>
+      </div>
+      <div class="flex flex-col gap-1 text-center">
+        <th:block th:if="${result.isDeletable}">
+          <p>
+            선택한
+            <span class="font-bold" th:text="${result.role.roleName}"></span>
+            을 삭제하시겠습니까?
+          </p>
+          <p class="mt-1 text-sm text-gray-500">
+            <span class="font-semibold text-red-500">주의:</span>
+            삭제 시 해당 경로의 접근 권한이 사라져 서비스 이용이 차단될 수
+            있습니다.
+          </p>
+        </th:block>
+        <th:block th:unless="${result.isDeletable}">
+          <p th:text="${result.message}"></p>
+        </th:block>
+      </div>
     </div>
-    <div class="flex flex-col gap-1 text-center">
-      <th:block th:if="${result.isDeletable}">
-        <p>
-          선택한
-          <span class="font-bold" th:text="${result.role.roleName}"></span>
-          을 삭제하시겠습니까?
-        </p>
-        <p class="mt-1 text-sm text-gray-500">
-          <span class="font-semibold text-red-500">주의:</span>
-          삭제 시 해당 경로의 접근 권한이 사라져 서비스 이용이 차단될 수
-          있습니다.
-        </p>
-      </th:block>
-      <th:block th:unless="${result.isDeletable}">
-        <p th:text="${result.message}"></p>
-      </th:block>
+    <div class="btn-list flex justify-end gap-3">
+      <button
+        data-action="deleteRole"
+        th:if="${result.isDeletable}"
+        th:data-id="${result.role?.id}"
+        class="btn btn-danger"
+      >
+        삭제
+      </button>
+      <button
+        type="button"
+        onClick="closeModal()"
+        class="btn px-4 dark:bg-zinc-300 dark:hover:bg-zinc-400"
+      >
+        닫기
+      </button>
     </div>
-  </div>
-  <div class="btn-list flex justify-end gap-3">
-    <button
-      data-action="deleteRole"
-      th:if="${result.isDeletable}"
-      th:data-id="${result.role?.id}"
-      class="btn btn-danger"
-    >
-      삭제
-    </button>
-    <button
-      type="button"
-      onClick="closeModal()"
-      class="btn px-4 dark:bg-zinc-300 dark:hover:bg-zinc-400"
-    >
-      닫기
-    </button>
   </div>
 </div>

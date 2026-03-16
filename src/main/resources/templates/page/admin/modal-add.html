@@ -1,142 +1,143 @@
 <div
   th:fragment="content"
-  class="modal-form z-10 max-h-[80vh] w-[450px] rounded-2xl bg-white p-6 shadow-xl"
->
-  <div class="flex items-center justify-between border-b pb-4">
+  class="fixed inset-0 flex items-start justify-center px-6 pt-[10vh] bg-black/50">
+  <div class="modal-form max-h-[80vh] w-[450px] rounded-2xl bg-white  shadow-xl">
+    <div class="flex items-center justify-between border-b pb-4">
     <span class="text-xl font-bold text-slate-800 dark:text-slate-50">
       관리자 추가
     </span>
-    <button
-      onClick="closeModal()"
-      class="text-gray-400 transition-colors hover:text-gray-600 dark:hover:text-zinc-300"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="2"
-        stroke="currentColor"
-        class="size-6"
+      <button
+        onClick="closeModal()"
+        class="text-gray-400 transition-colors hover:text-gray-600 dark:hover:text-zinc-300"
       >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M6 18 18 6M6 6l12 12"
-        />
-      </svg>
-    </button>
-  </div>
-
-  <form id="admin-form" class="flex flex-1 flex-col overflow-y-auto">
-    <div class="flex flex-1 flex-col gap-4">
-      <div class="search-container relative">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
           stroke-width="2"
           stroke="currentColor"
-          class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"
+          class="size-6"
         >
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
-            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+            d="M6 18 18 6M6 6l12 12"
           />
         </svg>
-        <input
-          type="text"
-          name="keyword"
-          placeholder="이메일 또는 이름을 입력해주세요..."
-          class="search-input h-10 w-full rounded-lg border border-gray-200 py-2 pl-10 pr-10 text-sm focus:border-slate-500 focus:outline-none focus:ring-slate-500"
-          autocomplete="off"
-        />
-        <button
-          type="button"
-          class="clear-btn z-5 absolute right-2 top-1/2 hidden -translate-y-1/2"
-          data-action="clearInput"
-        >
+      </button>
+    </div>
+
+    <form id="admin-form" class="flex flex-1 flex-col overflow-y-auto">
+      <div class="flex flex-1 flex-col gap-4">
+        <div class="search-container relative">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
-            stroke-width="1.5"
+            stroke-width="2"
             stroke="currentColor"
-            class="size-3"
+            class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"
           >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
-              d="M6 18 18 6M6 6l12 12"
+              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
             />
           </svg>
-        </button>
-      </div>
-      <div id="second-step" class="hidden flex-col gap-4">
-        <div
-          id="selected-user-card"
-          class="relative flex w-full flex-col gap-1.5 rounded-lg border-2 border-slate-800 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-900"
-        ></div>
-
-        <div class="flex gap-1 dark:border-zinc-700">
           <input
-            type="hidden"
-            id="role"
-            name="role"
-            th:value="${defaultRole.id}"
+            type="text"
+            name="keyword"
+            placeholder="이메일 또는 이름을 입력해주세요..."
+            class="search-input h-10 w-full rounded-lg border border-gray-200 py-2 pl-10 pr-10 text-sm focus:border-slate-500 focus:outline-none focus:ring-slate-500"
+            autocomplete="off"
           />
           <button
             type="button"
-            id="role-btn"
-            class="ignore-close flex h-10 w-full items-center justify-between rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm transition-all hover:border-slate-400 dark:border-zinc-700 dark:bg-zinc-800"
-            data-action="toggleSelect"
-            th:text="${defaultRole.roleName}"
-          ></button>
-          <ul class="data-template">
-            <li
-              class="select-li"
-              th:each="role : ${roles}"
-              th:data-value="${role.id()}"
-              th:text="${role.roleName}"
-            ></li>
-          </ul>
+            class="clear-btn z-5 absolute right-2 top-1/2 hidden -translate-y-1/2"
+            data-action="clearInput"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-3"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 18 18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
         </div>
-        <div
-          class="b flex flex-col gap-3 rounded-xl bg-gray-50 py-4 dark:bg-zinc-800/40"
-        >
-          <div class="flex items-center gap-2 p-2">
+        <div id="second-step" class="hidden flex-col gap-4">
+          <div
+            id="selected-user-card"
+            class="relative flex w-full flex-col gap-1.5 rounded-lg border-2 border-slate-800 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-900"
+          ></div>
+
+          <div class="flex gap-1 dark:border-zinc-700">
             <input
-              type="text"
-              id="ip-input"
-              class="h-10 flex-1 rounded-lg border border-gray-200 bg-white px-3 text-sm focus:border-slate-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800"
-              placeholder="접근 허용 IP (예: 192.168.1.1)"
-              autocomplete="off"
+              type="hidden"
+              id="role"
+              name="role"
+              th:value="${defaultRole.id}"
             />
             <button
               type="button"
-              class="h-10 shrink-0 rounded-lg bg-slate-700 px-4 text-sm font-semibold text-white transition-colors hover:bg-slate-800 dark:bg-blue-800 dark:hover:bg-blue-950"
-              data-action="addIps"
-            >
-              추가
-            </button>
+              id="role-btn"
+              class="ignore-close flex h-10 w-full items-center justify-between rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm transition-all hover:border-slate-400 dark:border-zinc-700 dark:bg-zinc-800"
+              data-action="toggleSelect"
+              th:text="${defaultRole.roleName}"
+            ></button>
+            <ul class="data-template">
+              <li
+                class="select-li"
+                th:each="role : ${roles}"
+                th:data-value="${role.id()}"
+                th:text="${role.roleName}"
+              ></li>
+            </ul>
           </div>
+          <div
+            class="b flex flex-col gap-3 rounded-xl bg-gray-50 py-4 dark:bg-zinc-800/40"
+          >
+            <div class="flex items-center gap-2 p-2">
+              <input
+                type="text"
+                id="ip-input"
+                class="h-10 flex-1 rounded-lg border border-gray-200 bg-white px-3 text-sm focus:border-slate-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800"
+                placeholder="접근 허용 IP (예: 192.168.1.1)"
+                autocomplete="off"
+              />
+              <button
+                type="button"
+                class="h-10 shrink-0 rounded-lg bg-slate-700 px-4 text-sm font-semibold text-white transition-colors hover:bg-slate-800 dark:bg-blue-800 dark:hover:bg-blue-950"
+                data-action="addIps"
+              >
+                추가
+              </button>
+            </div>
 
-          <div id="ip-list" class="flex flex-wrap gap-2 p-2"></div>
+            <div id="ip-list" class="flex flex-wrap gap-2 p-2"></div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="mt-4 flex justify-end gap-2 border-t pt-4 dark:border-zinc-700">
-      <button type="button" class="btn btn-primary" data-action="saveAdmin">
-        저장
-      </button>
-      <button
-        type="button"
-        onClick="closeModal()"
-        class="btn bg-gray-100 px-4 dark:bg-zinc-300 dark:hover:bg-zinc-400"
-      >
-        닫기
-      </button>
-    </div>
-  </form>
+      <div class="mt-4 flex justify-end gap-2 border-t pt-4 dark:border-zinc-700">
+        <button type="button" class="btn btn-primary" data-action="saveAdmin">
+          저장
+        </button>
+        <button
+          type="button"
+          onClick="closeModal()"
+          class="btn bg-gray-100 px-4 dark:bg-zinc-300 dark:hover:bg-zinc-400"
+        >
+          닫기
+        </button>
+      </div>
+    </form>
+  </div>
 </div>

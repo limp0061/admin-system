@@ -98,7 +98,7 @@ public class DeptService {
         return flatten(tree);
     }
 
-    private List<DeptNode> flatten(List<DeptNode> nodes) {
+    public List<DeptNode> flatten(List<DeptNode> nodes) {
         List<DeptNode> selectNodes = new ArrayList<>();
         if (nodes == null || nodes.isEmpty()) {
             return selectNodes;
