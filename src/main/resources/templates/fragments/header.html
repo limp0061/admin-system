@@ -1,6 +1,6 @@
 <!doctype html>
 <html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<header class="flex h-[70px] w-full items-center gap-2 px-5 shadow-lg">
+<header class="flex h-[70px] w-full items-center gap-2 pl-5 pr-3 sm:pr-5 m shadow-lg">
   <!-- Page Title -->
   <div class="flex items-center gap-3 flex-1 min-w-0">
     <button id="toggleMenuBar" class="md:hidden">
@@ -86,7 +86,7 @@
         ></span>
         <div
           id="notificationDropdown"
-          class="btn-notification absolute left-1/2 top-full z-50 mt-2 hidden w-72 -translate-x-1/2 flex-col gap-2 rounded-md border border-gray-200 bg-gray-50 p-3 shadow-xl dark:border-gray-700 dark:bg-[#1e1e1e]"
+          class="btn-notification absolute sm:left-1/2 top-full z-50 mt-2 hidden w-56 sm:w-72 -translate-x-1/2 flex-col gap-2 rounded-md border border-gray-200 bg-gray-50 p-3 shadow-xl dark:border-gray-700 dark:bg-[#1e1e1e]"
         >
           <div class="flex flex-col dark:bg-[#1e1e1e]">
             <div
@@ -188,7 +188,7 @@
       </form>
       <button
         id="userInfo"
-        class="ml-2 flex items-center gap-2 border-l border-gray-200 pl-3"
+        class="ml-2 sm:flex hidden items-center gap-2 border-l border-gray-200 pl-3"
         data-login-user-id="1"
       >
           <span

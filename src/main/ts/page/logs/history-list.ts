@@ -5,6 +5,7 @@ import { btnDropDown } from '../../common/select.js';
 import { ErrorResponse } from '../../common/type';
 import { showToast } from '../../common/toast.js';
 import { HistoryRequest } from './log-types';
+import { checkRow } from '../../common/checkbox.js';
 
 const defaultHandler = async (url: string) => {
   try {
@@ -60,6 +61,17 @@ document.addEventListener('click', (e) => {
       }
       break;
     }
+    case 'clickCard':
+      checkRow(btn);
+      const checkbox = btn.querySelector('.check-box') as HTMLInputElement;
+      if (checkbox) {
+        btn.classList.toggle('is-selected', checkbox.checked);
+      }
+      break;
+    case 'openMobileDetail':
+      e.stopPropagation();
+      openDetailModal(btn);
+      break;
   }
 });
 

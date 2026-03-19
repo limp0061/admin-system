@@ -1,5 +1,10 @@
 <div th:fragment="accessMain" class="flex h-full flex-col py-3">
   <div th:replace="~{page/resource/access/access-header :: accessHeader}"></div>
-  <div th:replace="~{page/resource/access/access-table :: pageTable}"></div>
+  <div class="hidden sm:block flex-1 overflow-auto">
+    <div th:replace="~{page/resource/access/access-table :: pageTable}"></div>
+  </div>
+  <div class="block sm:hidden flex-1 overflow-y-auto px-3">
+    <div th:replace="~{page/resource/access/access-card-list :: pageCardList}"></div>
+  </div>
   <div th:replace="~{components/pagination :: pageNation}"></div>
 </div>

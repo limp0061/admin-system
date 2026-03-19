@@ -15,7 +15,7 @@ services:
         max-file: '7'
 
   admin-app:
-    image: limp0061/admin-system:1.3
+    image: limp0061/admin-system:1.4
     container_name: admin-app
     environment:
       - SERVER_PORT=9091

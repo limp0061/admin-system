@@ -1,9 +1,9 @@
 <div
   th:fragment="content"
-  class="fixed inset-0 flex items-start justify-center px-6 pt-[10vh] bg-black/50">
-  <div class="modal-form max-h-[80vh] w-[450px] rounded-2xl bg-white  shadow-xl">
+  class="fixed inset-0 flex items-start justify-center px-4 pt-[10vh] bg-black/50">
+  <div class="modal-form max-h-[80vh] w-[450px] rounded-2xl bg-white shadow-xl">
     <div class="flex items-center justify-between border-b pb-4">
-    <span class="text-xl font-bold text-slate-800 dark:text-slate-50">
+    <span class="text-xs sm:text-xl font-bold text-slate-800 dark:text-slate-50">
       관리자 추가
     </span>
       <button
@@ -47,8 +47,8 @@
           <input
             type="text"
             name="keyword"
-            placeholder="이메일 또는 이름을 입력해주세요..."
-            class="search-input h-10 w-full rounded-lg border border-gray-200 py-2 pl-10 pr-10 text-sm focus:border-slate-500 focus:outline-none focus:ring-slate-500"
+            placeholder="이메일, 이름"
+            class="search-input h-10 w-full rounded-lg border border-gray-200 py-2 pl-10 pr-10 text-xs sm:text-sm focus:border-slate-500 focus:outline-none focus:ring-slate-500"
             autocomplete="off"
           />
           <button
@@ -75,7 +75,7 @@
         <div id="second-step" class="hidden flex-col gap-4">
           <div
             id="selected-user-card"
-            class="relative flex w-full flex-col gap-1.5 rounded-lg border-2 border-slate-800 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-900"
+            class="relative flex w-full flex-col gap-1.5 rounded-lg border-2 border-slate-800 bg-white p-4 pr-3 shadow-sm dark:border-zinc-700 dark:bg-zinc-900"
           ></div>
 
           <div class="flex gap-1 dark:border-zinc-700">
@@ -88,7 +88,7 @@
             <button
               type="button"
               id="role-btn"
-              class="ignore-close flex h-10 w-full items-center justify-between rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm transition-all hover:border-slate-400 dark:border-zinc-700 dark:bg-zinc-800"
+              class="ignore-close flex h-10 w-full items-center justify-between rounded-md border border-slate-300 bg-white px-3 py-2 text-xs sm:text-sm shadow-sm transition-all hover:border-slate-400 dark:border-zinc-700 dark:bg-zinc-800"
               data-action="toggleSelect"
               th:text="${defaultRole.roleName}"
             ></button>
@@ -102,19 +102,19 @@
             </ul>
           </div>
           <div
-            class="b flex flex-col gap-3 rounded-xl bg-gray-50 py-4 dark:bg-zinc-800/40"
+            class="flex flex-col gap-1 sm:gap-3 rounded-xl bg-gray-50 py-2 sm:py-4 dark:bg-zinc-800/40"
           >
-            <div class="flex items-center gap-2 p-2">
+            <div class="flex flex-1 items-center gap-2 p-2">
               <input
                 type="text"
                 id="ip-input"
-                class="h-10 flex-1 rounded-lg border border-gray-200 bg-white px-3 text-sm focus:border-slate-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800"
-                placeholder="접근 허용 IP (예: 192.168.1.1)"
+                class="h-10 w-full rounded-lg border border-gray-200 bg-white px-3 text-xs sm:text-sm focus:border-slate-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800"
+                placeholder="예: 192.168.1.1"
                 autocomplete="off"
               />
               <button
                 type="button"
-                class="h-10 shrink-0 rounded-lg bg-slate-700 px-4 text-sm font-semibold text-white transition-colors hover:bg-slate-800 dark:bg-blue-800 dark:hover:bg-blue-950"
+                class="h-10 shrink-0 rounded-lg bg-slate-700 px-4 text-xs sm:text-sm font-semibold text-white transition-colors hover:bg-slate-800 dark:bg-blue-800 dark:hover:bg-blue-950"
                 data-action="addIps"
               >
                 추가

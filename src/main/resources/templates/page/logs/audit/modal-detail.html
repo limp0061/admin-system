@@ -4,7 +4,7 @@
 >
   <div class="flex shrink-0 items-center justify-between border-b pb-4">
     <span
-      class="text-xl font-bold text-slate-800 dark:text-zinc-100"
+      class="text-xs sm:text-xl font-bold text-slate-800 dark:text-zinc-100"
       th:text="${auditLog.targetEntity}"
     ></span>
     <button
@@ -29,7 +29,7 @@
   </div>
 
   <div
-    class="mt-4 flex shrink-0 flex-col gap-2 rounded-md border border-slate-200 p-2 text-sm text-slate-600 dark:border-zinc-800 dark:bg-zinc-900"
+    class="mt-4 flex shrink-0 flex-col gap-2 rounded-md border border-slate-200 p-2 text-xs sm:text-sm text-slate-600 dark:border-zinc-800 dark:bg-zinc-900"
   >
     <div class="flex justify-between p-2">
       <span class="font-semibold text-slate-400 dark:text-zinc-500">
@@ -131,7 +131,7 @@
             th:text="${entry.key}"
           ></span>
           <span
-            class="break-all text-right text-sm text-slate-700 dark:text-slate-50"
+            class="break-all text-right text-xs sm:text-sm text-slate-700 dark:text-slate-50"
             th:text="${entry.value}"
           ></span>
         </div>

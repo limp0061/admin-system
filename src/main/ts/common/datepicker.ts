@@ -12,6 +12,25 @@ export const defaultFlatpickrOptions = {
   disableMobile: true,
   minDate: 'today',
   monthSelectorType: 'static',
+  appendTo: document.body,
+  onOpen: (selectedDates: any, dateStr: any, instance: any) => {
+    const inputEl = (
+      instance.altInput || instance.element
+    ).getBoundingClientRect();
+    const cal = instance.calendarContainer;
+    const calHeight = cal.offsetHeight;
+    const spaceBelow = window.innerHeight - inputEl.bottom;
+
+    cal.style.position = 'fixed';
+    cal.style.left = `${inputEl.left}px`;
+
+    // 아래 공간 부족하면 위로
+    if (spaceBelow < calHeight) {
+      cal.style.top = `${inputEl.top - calHeight - 5}px`;
+    } else {
+      cal.style.top = `${inputEl.bottom + 5}px`;
+    }
+  },
 };
 
 export const initDateTimePicker = (selector: string, options: any = {}) => {

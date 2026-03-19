@@ -1,5 +1,5 @@
 <div th:fragment="pageTable" id="page-table" class="w-full flex-1 px-5">
-  <table class="table w-fuable">
+  <table class="table w-full">
     <thead class="border border-b-2">
     <tr>
       <th class="w-12 !text-center">
@@ -71,7 +71,7 @@
             <span
               th:each="ip : ${item.allowedIps}"
               th:text="${ip}"
-              class="inline-flex items-center rounded border border-slate-200 bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-800 dark:border-zinc-700 dark:bg-zinc-800 dark:text-slate-50"
+              class="inline-flex items-center rounded border border-slate-200 bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-800 dark:border-zinc-700 dark:bg-zinc-800 dark:text-slate-50 self-end"
             ></span>
         </div>
       </td>
