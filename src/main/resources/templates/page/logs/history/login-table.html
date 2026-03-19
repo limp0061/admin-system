@@ -1,67 +1,105 @@
 <div th:fragment="loginHistoryTable" id="page-table" class="w-full flex-1">
-  <table class="table w-full">
-    <thead class="border border-b-2">
-    <tr>
-      <th class="min-w-0 flex-1">이메일</th>
-      <th class="w-[20%] md:w-[10%]">접속 IP</th>
-      <th class="w-[20%] md:w-[10%]">결과</th>
-      <th class="w-[10%] hidden md:table-cell">OS</th>
-      <th class="w-[10%] hidden md:table-cell">Browser</th>
-      <th class="w-[20%] md:w-[10%] ">접속 기기</th>
-      <th class="w-[15%] hidden md:table-cell">
-        <div class="flex items-center justify-between gap-2">
-          <span>일시</span>
-          <button
-            type="button"
-            class="sort-btn rounded p-1 hover:bg-gray-100"
-            data-action="sort"
-            data-sort="updatedAt"
-            th:data-order="${list.direction}"
-            aria-label="정렬"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="inline-block h-4 w-4 transform transition-transform duration-200"
-              th:classappend="${list.sortBy == 'createdAt' and list.direction == 'ASC'} ? 'rotate-180' : ''"
+  <div class="hidden sm:block overflow-auto flex-1">
+    <table class="table w-full">
+      <thead class="border border-b-2">
+      <tr>
+        <th class="min-w-0 flex-1">이메일</th>
+        <th class="w-[20%] md:w-[10%]">접속 IP</th>
+        <th class="w-[20%] md:w-[10%]">결과</th>
+        <th class="w-[10%] hidden md:table-cell">OS</th>
+        <th class="w-[10%] hidden md:table-cell">Browser</th>
+        <th class="w-[20%] md:w-[10%] ">접속 기기</th>
+        <th class="w-[15%] hidden md:table-cell">
+          <div class="flex items-center justify-between gap-2">
+            <span>일시</span>
+            <button
+              type="button"
+              class="sort-btn rounded p-1 hover:bg-gray-100"
+              data-action="sort"
+              data-sort="updatedAt"
+              th:data-order="${list.direction}"
+              aria-label="정렬"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="m19.5 8.25-7.5 7.5-7.5-7.5"
-              />
-            </svg>
-          </button>
-        </div>
-      </th>
-    </tr>
-    </thead>
-    <tbody class="divide-y dark:divide-zinc-800">
-    <tr th:if="${#lists.isEmpty(list.content)}">
-      <td colspan="7" class="py-16 text-center text-gray-400">
-        해당 기간에 로그인 이력이 없습니다.
-      </td>
-    </tr>
-    <tr
-      th:unless="${#lists.isEmpty(list.content)}"
-      th:each="item : ${list.content}"
-      th:data-id="${item.id}"
-      class="hover:cursor-pointer hover:bg-gray-50"
-      data-action="clickRow"
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="inline-block h-4 w-4 transform transition-transform duration-200"
+                th:classappend="${list.sortBy == 'createdAt' and list.direction == 'ASC'} ? 'rotate-180' : ''"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                />
+              </svg>
+            </button>
+          </div>
+        </th>
+      </tr>
+      </thead>
+      <tbody class="divide-y dark:divide-zinc-800">
+      <tr th:if="${#lists.isEmpty(list.content)}">
+        <td colspan="7" class="py-16 text-center text-gray-400">
+          해당 기간에 로그인 이력이 없습니다.
+        </td>
+      </tr>
+      <tr
+        th:unless="${#lists.isEmpty(list.content)}"
+        th:each="item : ${list.content}"
+        th:data-id="${item.id}"
+        class="hover:cursor-pointer hover:bg-gray-50"
+        data-action="clickRow"
+      >
+        <td class="w-max-0 truncate" th:text="${item.emailId}"></td>
+        <td class="w-max-0 truncate" th:text="${item.clientIp}"></td>
+        <td class="w-max-0 truncate" th:text="${item.loginStatus.label}"></td>
+        <td class="hidden md:table-cell" th:text="${item.os}"></td>
+        <td class="hidden md:table-cell" th:text="${item.browser}"></td>
+        <td class="w-max-0 truncate" th:text="${item.deviceType.label}"></td>
+        <td class="hidden md:table-cell"
+            th:text="${#temporals.format(item.createdAt, 'yyyy-MM-dd HH:mm')}"
+        ></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="flex flex-col gap-2 sm:hidden">
+    <div th:if="${#lists.isEmpty(list.content)}"
+         class="flex justify-center text-gray-400 pt-7"
     >
-      <td class="w-max-0 truncate" th:text="${item.emailId}"></td>
-      <td class="w-max-0 truncate" th:text="${item.clientIp}"></td>
-      <td class="w-max-0 truncate" th:text="${item.loginStatus.label}"></td>
-      <td class="hidden md:table-cell" th:text="${item.os}"></td>
-      <td class="hidden md:table-cell" th:text="${item.browser}"></td>
-      <td class="w-max-0 truncate" th:text="${item.deviceType.label}"></td>
-      <td class="hidden md:table-cell"
-          th:text="${#temporals.format(item.createdAt, 'yyyy-MM-dd HH:mm')}"
-      ></td>
-    </tr>
-    </tbody>
-  </table>
+      해당 기간에 로그인 이력이 없습니다.
+    </div>
+    <div th:unless="${#lists.isEmpty(list.content)}"
+         th:each="item : ${list.content}"
+         th:data-id="${item.id}"
+         class="flex justify-between rounded-lg border border-gray-300 bg-white p-2 shadow-sm cursor-pointer transition-colors
+       dark:border-zinc-800 dark:bg-zinc-800/80 dark:text-zinc-400
+       [&.is-selected]:bg-blue-300/20 [&.is-selected]:dark:bg-zinc-700/50"
+         data-action="clickCard">
+      <div class="flex flex-col justify-between gap-2 p-2">
+        <div class="flex items-center gap-2">
+          <span class="font-bold text-sm" th:text="${item.emailId}"></span>
+        </div>
+        <div class="flex items-center gap-1 text-xs">
+          <span th:text="${item.clientIp}"></span>
+        </div>
+      </div>
+      <div class="flex flex-col items-center justify-between gap-2">
+        <span class="text-xs p-2" th:text="${item.loginStatus.label}"></span>
+        <button type="button"
+                class="flex h-8 w-8 items-center justify-center rounded-full bg-transparent dark:bg-zinc-800 dark:text-gray-300 transition-colors self-end"
+                data-action="openMobileDetail"
+                th:data-id="${item.id}"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+               class="size-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

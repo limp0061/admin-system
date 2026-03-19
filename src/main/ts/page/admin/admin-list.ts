@@ -84,6 +84,17 @@ document.addEventListener('click', (e) => {
     case 'deleteAdmin':
       deleteAdmin(btn);
       break;
+    case 'clickCard':
+      checkRow(btn);
+      const checkbox = btn.querySelector('.check-box') as HTMLInputElement;
+      if (checkbox) {
+        btn.classList.toggle('is-selected', checkbox.checked);
+      }
+      break;
+    case 'openMobileDetail':
+      e.stopPropagation();
+      openAdminModal('EDIT', btn);
+      break;
   }
 });
 
@@ -201,17 +212,17 @@ const selectAutoComplete = (li: HTMLElement) => {
   const dept = li.dataset.dept;
   const html = `
             <input type="hidden" name="id" value="${id}">
-            <div class="flex items-baseline gap-2">
-                 <span class="text-base font-bold text-slate-900 dark:text-slate-200">${name}</span>
+            <div class="flex items-center gap-2">
+                 <span class="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-200">${name}</span>
                  <span class="text-xs font-medium text-slate-500 dark:text-slate-400">${dept}</span>
-            </div>
-            <span class="text-sm text-gray-500 dark:text-slate-400">${email}</span>
-                <div class="absolute top-3 right-3 text-slate-800 dark:text-slate-50">
+                 <div class="text-slate-800 dark:text-slate-50 ml-auto">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
                         <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z"
                         clip-rule="evenodd"/>
                     </svg>
                 </div>
+            </div>
+            <span class="text-sm text-gray-500 dark:text-slate-400">${email}</span>
             `;
   selectedContainer.innerHTML = html;
   const secondContainer = document.getElementById('second-step');

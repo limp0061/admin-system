@@ -1,7 +1,7 @@
 <div th:fragment="content" class="fixed inset-0 flex items-center justify-center bg-black/50">
   <div class="modal-form w-full max-w-[550px] mx-4">
     <div class="flex items-center justify-between border-b pb-3">
-      <span class="text-xl font-semibold">리소스 추가</span>
+      <span class="text-xs sm:text-xl font-semibold">리소스 추가</span>
       <button
         onClick="closeModal()"
         class="text-gray-400 transition-colors hover:text-gray-600 dark:hover:text-zinc-300"
@@ -24,7 +24,7 @@
     </div>
     <form id="resource-form" class="overflow-y-auto">
       <div class="flex flex-col gap-2">
-        <div class="flex w-full rounded-lg px-6">
+        <div class="flex w-full rounded-lg px-1 sm:px-6">
           <div class="form-row form-row-bg">
             <label for="name" class="form-label">리소스 명</label>
             <div class="form-field">
@@ -32,14 +32,14 @@
                 id="name"
                 name="name"
                 type="text"
-                placeholder="리소스 이름을 입력해주세요."
+                placeholder="리소스 이름"
                 class="form-input"
                 autocomplete="off"
               />
             </div>
           </div>
         </div>
-        <div class="flex w-full rounded-lg px-6">
+        <div class="flex w-full rounded-lg px-1 sm:px-6">
           <div class="form-row form-row-bg">
             <label for="url-pattern" class="form-label">URL Pattern</label>
             <div class="form-field">
@@ -58,10 +58,10 @@
             </div>
           </div>
         </div>
-        <div class="flex w-full rounded-lg px-6">
+        <div class="flex w-full rounded-lg px-1 sm:px-6">
           <div class="form-row form-row-bg">
             <label for="modal-method" class="form-label">Method</label>
-            <div class="form-field relative gap-1">
+            <div class="form-field relative gap-2 sm:gap-1">
               <input type="hidden" name="method" id="method-input" value="ALL" />
               <button
                 type="button"
@@ -82,7 +82,7 @@
             </div>
           </div>
         </div>
-        <div class="flex w-full rounded-lg px-6">
+        <div class="flex w-full rounded-lg px-1 sm:px-6">
           <div class="form-row form-row-bg">
             <label for="role" class="form-label">권한</label>
             <div class="flex flex-1 flex-col gap-2">
@@ -111,7 +111,7 @@
             </div>
           </div>
         </div>
-        <div class="flex w-full rounded-lg px-6">
+        <div class="flex w-full rounded-lg px-1 sm:px-6">
         <textarea
           name="description"
           class="min-h-32 w-full resize-none rounded-lg border-none bg-gray-50 p-5 text-sm text-gray-700 focus:outline-none focus:ring-0 dark:border-zinc-700 dark:bg-zinc-800/40 dark:text-slate-50"
@@ -119,7 +119,7 @@
         ></textarea>
         </div>
       </div>
-      <div class="mt-4 flex w-full justify-end gap-2 px-6">
+      <div class="mt-4 flex w-full justify-end gap-2 px-1 sm:px-6">
         <button type="button" class="btn btn-primary" data-action="saveResource">
           저장
         </button>

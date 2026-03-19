@@ -1,5 +1,5 @@
 <div
-  class="flex items-center justify-center gap-1 py-2"
+  class="flex items-center justify-center gap-1 py-2 overflow-x-auto"
   id="pageNation"
   th:fragment="pageNation"
   th:with="start=${(list.pageNumber /10)*10},
@@ -50,9 +50,15 @@
     </svg>
   </a>
 
+  <div class="flex items-center justify-center px-3 text-sm font-medium sm:hidden">
+    <span th:text="${list.pageNumber + 1}"></span>
+    <span class="mx-1">/</span>
+    <span th:text="${list.totalPages > 0 ? list.totalPages : 1}"></span>
+  </div>
+
   <a
     href="javascript:void(0)"
-    class="page-btn"
+    class="page-btn hidden sm:flex items-center justify-center"
     th:classappend="${pageIdx == list.pageNumber} ? 'border-[#383F51] dark:border-white' : ''"
     th:each="pageIdx : ${#numbers.sequence(start, end)}"
     th:text="${pageIdx + 1}"

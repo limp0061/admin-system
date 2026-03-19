@@ -1,0 +1,41 @@
+<div th:fragment="pageCardList(pageType)" class="flex flex-col gap-2">
+  <div th:if="${#lists.isEmpty(list.content)}"
+       class="flex justify-center text-gray-400 pt-7"
+  >
+    등록된 사용자가 없습니다.
+  </div>
+  <div th:unless="${#lists.isEmpty(list.content)}"
+       th:each="item : ${list.content}"
+       th:data-id="${item.id}"
+       class="flex justify-between rounded-lg border border-gray-300 bg-white p-2 shadow-sm cursor-pointer transition-colors
+       dark:border-zinc-800 dark:bg-zinc-800/80 dark:text-zinc-400
+       [&.is-selected]:bg-blue-300/20 [&.is-selected]:dark:bg-zinc-700/50"
+       data-action="clickCard">
+    <div class="flex flex-col justify-between gap-2 p-2">
+      <div class="flex items-center gap-2">
+        <input type="checkbox"
+               class="check-box size-3 sr-only"
+               th:value="${item.id}"
+        />
+        <span class="font-bold text-sm" th:text="${item.name}"></span>
+      </div>
+      <div class="text-xs">
+        <p th:text="${item.emailId}"></p>
+        <p th:text="${item.userCode}"></p>
+      </div>
+    </div>
+    <div class="flex flex-col items-center justify-between gap-2">
+      <span class="text-xs p-2" th:text="${item.userStatus.label}"></span>
+      <button th:if="${pageType.name() =='LIST'}"
+              type="button"
+              class="flex h-8 w-8 items-center justify-center rounded-full bg-transparent dark:bg-zinc-800 dark:text-gray-300 transition-colors"
+              data-action="openMobileDetail"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+             class="size-4">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,8 +1,8 @@
 <div
   th:fragment="roleHeader"
-  class="flex items-center justify-end border-b py-5 dark:border-zinc-700"
+  class="flex items-center justify-end border-b pb-3 sm:py-5 dark:border-zinc-700"
 >
-  <button class="btn btn-primary" data-action="openAddRoleModal">
+  <button class="btn btn-primary flex-1 sm:flex-none p-4 sm:px-4 justify-center" data-action="openAddRoleModal">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
@@ -17,6 +17,6 @@
         d="M12 4.5v15m7.5-7.5h-15"
       />
     </svg>
-    <span>권한 추가</span>
+    <span class="text-sm sm:text-base">권한 추가</span>
   </button>
 </div>

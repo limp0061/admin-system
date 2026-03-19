@@ -1,5 +1,10 @@
-<div th:fragment="deptMain" class="flex h-full min-w-0 flex-col px-6">
+<div th:fragment="deptMain" class="flex h-full min-w-0 flex-col px-1 sm:px-6">
   <div th:replace="~{page/dept/dept-header :: deptHeader}"></div>
-  <div th:replace="~{page/dept/dept-table :: deptTable}"></div>
+  <div class="hidden sm:block flex-1 overflow-auto">
+    <div th:replace="~{page/dept/dept-table :: deptTable}"></div>
+  </div>
+  <div class="block sm:hidden flex-1 overflow-y-auto px-0 sm:px-3">
+    <div th:replace="~{page/dept/dept-card-list :: pageCardList}"></div>
+  </div>
   <div th:replace="~{components/pagination :: pageNation}"></div>
 </div>

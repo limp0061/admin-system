@@ -1,14 +1,14 @@
 <div th:fragment="deptTree" class="h-full w-full border dark:border-zinc-700">
   <div
-    class="flex items-center justify-between border p-7 dark:border-zinc-700"
+    class="flex items-center justify-between border p-5 sm:p-7 dark:border-zinc-700"
   >
-    <span class="text-lg font-semibold">부서 목록</span>
+    <span class="text-sm sm:text-lg font-semibold">부서 목록</span>
     <button data-action="expandAll" class="text-blue-900 dark:text-blue-300">
       전체 펼치기
     </button>
   </div>
 
-  <div class="p-7">
+  <div class="p-3 sm:p-7">
     <div
       th:replace="~{this :: deptTreeNodes(
                 nodes=${tree},
@@ -106,7 +106,7 @@
           </svg>
         </button>
         <div
-          class="edit-menu absolute right-0 top-full z-50 hidden w-48 rounded-md shadow-lg ring-1 ring-black/5 focus:outline-none dark:bg-[#1E1E1E] dark:ring-white/10"
+          class="edit-menu absolute right-0 top-full z-50 hidden w-48 rounded-md shadow-lg ring-1 ring-black/5 focus:outline-none bg-white dark:bg-[#1E1E1E] dark:ring-white/10"
         >
           <ul>
             <li

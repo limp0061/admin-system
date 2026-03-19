@@ -60,6 +60,10 @@ document.addEventListener('click', (e) => {
       }
       break;
     }
+    case 'openMobileDetail':
+      e.stopPropagation();
+      openDetailModal(btn);
+      break;
   }
 });
 

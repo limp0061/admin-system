@@ -37,10 +37,11 @@
 
 ### 4. 구현 예정 기능
 
-- CSRF 및 CORS 보안 설정 적용
+- CSRF 보안 설정 적용
 - 대시보드 및 통계 기능 구현
 - 사용자 개별 설정
 - 배치 스케줄러(파일 삭제 등)
+- 서버 메모리 부족으로 배포 서버 변경(GCP -> ORACLE)
 
 ### 5. 실행방법
 
@@ -52,7 +53,7 @@
 #### 2. 로컬 환경 설정 및 실행 순서
 
 1. **설정 파일 준비**
-   - `application-secret.yml.sample` 파일의 이름을 `application-secret.yml`로 변경합니다.
+    - `application-secret.yml.sample` 파일의 이름을 `application-secret.yml`로 변경합니다.
 2. **프로젝트 빌드**
    ```bash
    ./gradlew clean build
@@ -62,13 +63,13 @@
    docker compose -f docker-compose-local.yml up -d
    ```
 4. **애플리케이션 실행**
-   - Spring Boot 메인 클래스 실행 또는 터미널에서 `./gradlew bootRun` 입력
+    - Spring Boot 메인 클래스 실행 또는 터미널에서 `./gradlew bootRun` 입력
 
 ### 6. 테스트 계정
 
-| 이메일            | 비밀번호 | 권한           |
-| ----------------- | -------- | -------------- |
-| user1@kyj2579.com | 1234     | SUPER (최상위) |
+| 이메일               | 비밀번호 | 권한          |
+|-------------------|------|-------------|
+| user1@kyj2579.com | 1234 | SUPER (최상위) |
 
 ### 7. 개발 환경 설정
 

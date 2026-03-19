@@ -83,6 +83,17 @@ document.addEventListener('click', (e) => {
     case 'deleteResource':
       deleteResource(btn);
       break;
+    case 'clickCard':
+      checkRow(btn);
+      const checkbox = btn.querySelector('.check-box') as HTMLInputElement;
+      if (checkbox) {
+        btn.classList.toggle('is-selected', checkbox.checked);
+      }
+      break;
+    case 'openMobileDetail':
+      e.stopPropagation();
+      openResourceModal('EDIT', btn);
+      break;
   }
 });
 
