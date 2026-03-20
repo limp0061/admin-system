@@ -1,5 +1,16 @@
 export type HttpMethod = 'POST' | 'GET' | 'DELETE' | 'PUT' | 'PATCH';
 
+function getCsrf() {
+  return {
+    token:
+      (document.querySelector('meta[name="_csrf"]') as HTMLMetaElement)
+        ?.content ?? '',
+    header:
+      (document.querySelector('meta[name="_csrf_header"]') as HTMLMetaElement)
+        ?.content ?? 'X-CSRF-TOKEN',
+  };
+}
+
 export interface requestConfig {
   method: HttpMethod;
   body?: any;
@@ -11,11 +22,13 @@ export const sendRequest = async (
   options: requestConfig,
   responseType: 'JSON' | 'TEXT' = 'JSON',
 ) => {
+  const { token, header } = getCsrf();
   const response = await fetch(url, {
     method: options.method,
     headers: {
       'Content-Type': 'application/json',
       ...options.headers,
+      [header]: token,
     },
     body: options.body ? JSON.stringify(options.body) : null,
   });
@@ -42,10 +55,12 @@ export const sendMultipartRequest = async (
   options: any,
   responseType: 'JSON' | 'TEXT' = 'JSON',
 ) => {
+  const { token, header } = getCsrf();
   const response = await fetch(url, {
     method: options.method,
     headers: {
       ...options.headers,
+      [header]: token,
     },
     body: options.body as FormData,
   });
