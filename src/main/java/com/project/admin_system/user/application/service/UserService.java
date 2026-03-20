@@ -120,7 +120,7 @@ public class UserService {
             userValidator.validateDuplicateEmailId(dto.emailId());
         }
 
-        if (!user.getUserCode().equals(dto.userCode())) {
+        if (user.getUserCode() != null && !user.getUserCode().equals(dto.userCode())) {
             userValidator.validateDuplicateUserCode(dto.userCode());
         }
 
