@@ -1,5 +1,6 @@
 package com.project.admin_system.user.domain;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -25,4 +26,7 @@ public interface UserRepository extends JpaRepository<User, Long>, UserRepositor
     Optional<User> findByEmailId(String username);
 
     boolean existsByRoleId(Long roleId);
+
+
+    List<User> findByUserStatusAndDeletedAtBefore(UserStatus userStatus, LocalDateTime dateTime);
 }

@@ -3,6 +3,7 @@ package com.project.admin_system.common.service;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,9 +12,12 @@ import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.CopyObjectRequest;
+import software.amazon.awssdk.services.s3.model.Delete;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.DeleteObjectsRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
+import software.amazon.awssdk.services.s3.model.ObjectIdentifier;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
@@ -72,6 +76,29 @@ public class S3StorageManager {
             log.info("[S3 삭제] key={}", key);
         } catch (S3Exception e) {
             log.error("[S3 삭제 실패] key={} | {}", key, e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void deleteFiles(List<String> keys) {
+        if (keys.isEmpty()) {
+            return;
+        }
+
+        List<ObjectIdentifier> objects = keys.stream()
+                .map(key -> ObjectIdentifier.builder().key(key).build())
+                .toList();
+
+        DeleteObjectsRequest request = DeleteObjectsRequest.builder()
+                .bucket(bucketName)
+                .delete(Delete.builder().objects(objects).build())
+                .build();
+
+        try {
+            s3Client.deleteObjects(request);
+            log.info("[S3 배치 삭제] {}개 삭제", keys.size());
+        } catch (S3Exception e) {
+            log.error("[S3 배치 삭제 실패] | {}", e.getMessage());
             throw new RuntimeException(e);
         }
     }

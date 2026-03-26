@@ -1,6 +1,8 @@
 package com.project.admin_system.file.domain;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FileRepository extends JpaRepository<File, Long>, FileRepositoryCustom {
@@ -9,4 +11,11 @@ public interface FileRepository extends JpaRepository<File, Long>, FileRepositor
     List<File> findAllByDomainTypeAndDomainId(DomainType domainType, Long domainId);
 
     List<File> findByDomainIdInAndDomainType(List<Long> ids, DomainType domainType);
+
+    List<File> findByStatus(FileStatus fileStatus);
+
+
+    List<File> findByStatusAndCreatedAtBefore(FileStatus fileStatus, LocalDateTime expiredTime);
+
+    Optional<File> findByFilePath(String filePath);
 }

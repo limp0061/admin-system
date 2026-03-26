@@ -118,7 +118,7 @@ const openRoleModal = async (
   if (!request) return;
 
   const params = new URLSearchParams();
-  params.set('mode', mode);
+  params.set('mode', mode.toLowerCase());
 
   if (id && id !== 'undefined' && request.param) {
     params.set(request.param, id);

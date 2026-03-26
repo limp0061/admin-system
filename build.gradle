@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'com.project'
-version = '1.4.0-SNAPSHOT'
+version = '1.5.0-SNAPSHOT'
 
 java {
     toolchain {
@@ -90,6 +90,17 @@ dependencies {
        IP 검증
     =========================*/
     implementation 'commons-validator:commons-validator:1.7'
+
+    /* ========================
+       Shed Lock 스케줄러 중복실행 방지
+     ========================*/
+    implementation 'net.javacrumbs.shedlock:shedlock-spring:7.7.0'
+    implementation 'net.javacrumbs.shedlock:shedlock-provider-jdbc-template:7.7.0'
+
+    /* ========================
+       Cron Util
+     ========================*/
+    implementation 'com.cronutils:cron-utils:9.2.1'
 
     /* =========================
        Test

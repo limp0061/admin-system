@@ -88,7 +88,7 @@ public class DeptController {
                 .upperDeptId(upperDeptId)
                 .build()
         );
-        model.addAttribute("mode", mode);
+        model.addAttribute("mode", mode.toUpperCase());
         return "components/modal-layout";
     }
 
@@ -103,7 +103,7 @@ public class DeptController {
         model.addAttribute("templateName", "page/dept/modal-add");
         model.addAttribute("fragmentName", "content");
         model.addAttribute("dept", DeptResponse.from(deptService.findDeptById(id)));
-        model.addAttribute("mode", mode);
+        model.addAttribute("mode", mode.toUpperCase());
         return "components/modal-layout";
     }
 
@@ -118,7 +118,7 @@ public class DeptController {
 
         model.addAttribute("result", deptValidResponse);
         model.addAttribute("dept", deptValidResponse.dept());
-        model.addAttribute("mode", mode);
+        model.addAttribute("mode", mode.toUpperCase());
         model.addAttribute("templateName", "page/dept/modal-delete");
         model.addAttribute("fragmentName", "content");
         return "components/modal-layout";

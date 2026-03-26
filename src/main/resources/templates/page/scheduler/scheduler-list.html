@@ -1,0 +1,27 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{fragments/common-head :: commonHead}"></th:block>
+  <title>관리자 | 스케줄러 관리</title>
+</head>
+
+<body class="min-h-screen">
+<div class="flex min-h-screen">
+  <nav th:replace="~{fragments/nav :: nav}"></nav>
+  <div class="flex flex-1 flex-col min-w-0">
+    <header th:replace="~{fragments/header :: header}"></header>
+    <main class="vt-main flex flex-1 flex-col">
+      <div id="list-wrapper" class="flex flex-1 flex-col">
+        <div th:replace="~{page/scheduler/scheduler-main::schedulerMain}"></div>
+      </div>
+    </main>
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+  </div>
+</div>
+<div id="modal-root" class="relative z-[9999]"></div>
+<div th:replace="~{components/common-ui :: toast}"></div>
+<script type="module" th:src="@{/js/menu/menu.js}"></script>
+<script type="module" th:src="@{/js/page/scheduler/scheduler-list.js}"></script>
+<script type="module" th:src="@{/js/common/index.js}"></script>
+</body>
+</html>

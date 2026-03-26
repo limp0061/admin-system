@@ -11,6 +11,7 @@ import com.project.admin_system.file.domain.DomainType;
 import com.project.admin_system.file.domain.File;
 import com.project.admin_system.file.domain.FileRepository;
 import com.project.admin_system.file.domain.FileStatus;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -29,13 +30,27 @@ public class FileService {
     private final S3StorageManager storageManager;
     private final FileRepository fileRepository;
 
-    public String fileUpload(MultipartFile file, DomainType domainType, Long userId) {
+    @Transactional
+    public String fileUpload(MultipartFile file, DomainType domainType, Long domainId) {
 
         String originalName = Objects.requireNonNull(file.getOriginalFilename());
         String savedFileName = generateUniqueName(originalName);
-        String fullPath = domainType.resolvePath(userId, savedFileName);
+        String fullPath = domainType.resolvePath(domainId, savedFileName);
 
         storageManager.upload(fullPath, file);
+
+        File fileEntity = File.builder()
+                .originalName(originalName)
+                .storedFileName(savedFileName)
+                .filePath(fullPath)
+                .fileSize(file.getSize())
+                .contentType(file.getContentType())
+                .domainType(domainType)
+                .domainId(domainId)
+                .status(FileStatus.STORAGE)
+                .build();
+
+        fileRepository.save(fileEntity);
 
         log.info("파일 업로드 | path: {}", fullPath);
         return fullPath;
@@ -48,9 +63,13 @@ public class FileService {
         return null;
     }
 
-    public void deleteFile(String profilePath) {
-        log.info("파일 삭제 | path: {}", profilePath);
-        storageManager.deleteFile(profilePath);
+    @Transactional
+    public void deleteFile(String filePath) {
+        log.info("파일 삭제 | path: {}", filePath);
+        storageManager.deleteFile(filePath);
+
+        fileRepository.findByFilePath(filePath)
+                .ifPresent(fileRepository::delete);
     }
 
     @Transactional
@@ -117,5 +136,28 @@ public class FileService {
     public void softDeleteFiles(List<Long> ids, DomainType domainType) {
         List<File> files = fileRepository.findByDomainIdInAndDomainType(ids, domainType);
         files.forEach(File::markAsDeleted);
+    }
+
+    public List<File> findDeletedFiles() {
+        return fileRepository.findByStatus(FileStatus.DELETED);
+    }
+
+    public List<File> findExpiredTempFiles() {
+        LocalDateTime expiredTime = LocalDateTime.now().minusHours(24);
+        return fileRepository.findByStatusAndCreatedAtBefore(FileStatus.TEMP, expiredTime);
+    }
+
+    public void deleteFiles(List<File> files) {
+        if (files.isEmpty()) {
+            log.info("삭제할 파일이 없습니다");
+            return;
+        }
+
+        List<String> keys = files.stream()
+                .map(File::getFilePath)
+                .toList();
+
+        storageManager.deleteFiles(keys);
+        fileRepository.deleteAllInBatch(files);
     }
 }

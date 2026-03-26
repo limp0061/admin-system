@@ -47,6 +47,7 @@ export const MENU: MenuItem[] = [
     children: [
       { name: '감사 로그', url: '/logs/audit' },
       { name: '활동 로그', url: '/logs/history/login' },
+      { name: '스케줄러 로그', url: '/logs/schedulers' },
     ],
   },
   {
@@ -57,5 +58,11 @@ export const MENU: MenuItem[] = [
       { name: '로그인 통계', url: '/statistics/login' },
       { name: '시스템 통계', url: '/statistics/system' },
     ],
+  },
+  {
+    name: '시스템',
+    icon: 'system',
+    collapsed: true,
+    children: [{ name: '스케줄러 실행', url: '/schedulers/run' }],
   },
 ];

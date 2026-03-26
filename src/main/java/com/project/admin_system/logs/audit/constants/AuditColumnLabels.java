@@ -48,6 +48,14 @@ public class AuditColumnLabels {
             "isForce", "강제 발송"
     );
 
+    public static final Map<String, String> SCHEDULER = Map.of(
+            "name", "스케줄러명",
+            "cron", "실행 주기",
+            "lastRunAt", "마지막 실행 시간",
+            "enabled", "사용 여부",
+            "description", "스케줄러 설명"
+    );
+
     public static Map<String, String> getMapByTargetEntity(AuditTarget targetEntity) {
         return switch (targetEntity) {
             case USER -> USER;
@@ -57,6 +65,7 @@ public class AuditColumnLabels {
             case ROLE -> ROLE;
             case RESOURCE -> RESOURCE;
             case NOTICE -> NOTICE;
+            case SCHEDULER -> SCHEDULER;
         };
     }
 }

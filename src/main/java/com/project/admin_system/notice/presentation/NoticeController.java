@@ -63,7 +63,7 @@ public class NoticeController {
         model.addAttribute("templateName", "page/notice/modal-add");
         model.addAttribute("fragmentName", "content");
         model.addAttribute("types", NoticeType.values());
-        model.addAttribute("mode", mode);
+        model.addAttribute("mode", mode.toUpperCase());
         return "components/modal-layout";
     }
 
@@ -79,7 +79,7 @@ public class NoticeController {
         model.addAttribute("templateName", "page/notice/modal-add");
         model.addAttribute("fragmentName", "content");
         model.addAttribute("types", NoticeType.values());
-        model.addAttribute("mode", mode);
+        model.addAttribute("mode", mode.toUpperCase());
         return "components/modal-layout";
     }
 

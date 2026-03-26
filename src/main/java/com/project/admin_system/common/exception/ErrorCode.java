@@ -67,6 +67,13 @@ public enum ErrorCode {
     // IP 정규식
     INVALID_IP_FORMAT(HttpStatus.BAD_REQUEST, "IP의 형식이 올바르지 않습니다."),
 
+    // 스케줄러
+    SCHEDULER_NOT_FOUND(HttpStatus.BAD_REQUEST, "존재하지 않는 스케줄러 입니다"),
+    SCHEDULER_EXECUTION_FAILED(HttpStatus.BAD_REQUEST, "스케줄러 실행에 실패했습니다"),
+    SCHEDULER_NOT_RUNNING(HttpStatus.BAD_REQUEST, "스케줄러가 실행중이지 않습니다"),
+    SCHEDULER_ALREADY_RUNNING(HttpStatus.BAD_REQUEST, "스케줄러가 이미 실행 중입니다"),
+    INVALID_SCHEDULER_MODE(HttpStatus.BAD_REQUEST, "존재하지 않는 스케줄러 상태입니다"),
+
     INVALID_DATE_RANGE(HttpStatus.BAD_REQUEST, "시작일은 종료일보다 클 수 없습니다."),
     DATE_REQUIRED(HttpStatus.BAD_REQUEST, "검색 기간을 모두 선택해주세요."),
     DATE_RANGE_EXCEEDED(HttpStatus.BAD_REQUEST, "조회 기간은 90일을 초과할 수 없습니다.");

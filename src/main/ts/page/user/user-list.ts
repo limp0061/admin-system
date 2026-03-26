@@ -283,18 +283,18 @@ const openEditModal = async (btn: HTMLElement): Promise<void> => {
 
   const checkedBoxes =
     document.querySelectorAll<HTMLInputElement>('.check-box:checked');
-
-  let ids = Array.from(checkedBoxes).map((check) => Number(check.value));
-  if (ids.length <= 0) {
+  if (checkedBoxes.length <= 0) {
     showToast('사용자를 선택해주세요.', 'error');
     return;
   }
   const mode = btn.dataset.mode || '';
   const params = new URLSearchParams();
 
-  params.set('mode', mode);
+  params.set('mode', mode.toLowerCase());
 
-  ids.forEach((id) => params.append('ids', String(id)));
+  checkedBoxes.forEach((box) => {
+    params.append('ids', box.value);
+  });
   const url = `/users/modal/changeStatus?${params.toString()}`;
 
   try {

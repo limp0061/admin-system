@@ -218,9 +218,11 @@ const clearInput = async (e: Event) => {
 const openDeptUserModal = async (btn: HTMLElement): Promise<void> => {
   const checkedBoxes =
     document.querySelectorAll<HTMLInputElement>('.check-box:checked');
-  let ids = Array.from(checkedBoxes).map((check) => Number(check.value));
+
   const params = new URLSearchParams();
-  ids.forEach((id) => params.append('ids', String(id)));
+  checkedBoxes.forEach((box) => {
+    params.append('ids', box.value);
+  });
 
   const url = `/user-depts/modal/form?${params.toString()}`;
   try {
@@ -247,15 +249,16 @@ const openDeptUserConfirmModal = async (
   const checkedBoxes =
     document.querySelectorAll<HTMLInputElement>('.check-box:checked');
 
-  let ids = Array.from(checkedBoxes).map((check) => Number(check.value));
-  if (ids.length <= 0) {
+  if (checkedBoxes.length <= 0) {
     showToast('사용자를 선택해주세요.', 'error');
     return;
   }
   const params = new URLSearchParams();
-  params.set('mode', mode);
+  params.set('mode', mode.toLowerCase());
+  checkedBoxes.forEach((box) => {
+    params.append('ids', box.value);
+  });
 
-  ids.forEach((id) => params.append('ids', String(id)));
   const url = `/user-depts/modal/delete?${params.toString()}`;
 
   try {

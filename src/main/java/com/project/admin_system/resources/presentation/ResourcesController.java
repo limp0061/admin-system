@@ -6,13 +6,13 @@ import static com.project.admin_system.common.dto.CustomConstants.XML_HTTP_REQUE
 import com.project.admin_system.common.dto.PageResponse;
 import com.project.admin_system.resources.application.dto.ResourcesListResponse;
 import com.project.admin_system.resources.application.dto.ResourcesSearchRequest;
+import com.project.admin_system.resources.application.dto.RoleDto;
 import com.project.admin_system.resources.application.dto.RoleTreeDto;
 import com.project.admin_system.resources.application.dto.RoleValidResponse;
 import com.project.admin_system.resources.application.service.ResourcesService;
+import com.project.admin_system.resources.application.service.RoleService;
 import com.project.admin_system.resources.application.validate.RoleValidator;
 import com.project.admin_system.resources.domain.Method;
-import com.project.admin_system.resources.application.dto.RoleDto;
-import com.project.admin_system.resources.application.service.RoleService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -115,7 +115,7 @@ public class ResourcesController {
         model.addAttribute("templateName", "page/resource/role/modal-add");
         model.addAttribute("fragmentName", "content");
         model.addAttribute("role", RoleTreeDto.setParentId(parentId));
-        model.addAttribute("mode", mode);
+        model.addAttribute("mode", mode.toUpperCase());
         return "components/modal-layout";
     }
 
@@ -130,7 +130,7 @@ public class ResourcesController {
         model.addAttribute("templateName", "page/resource/role/modal-add");
         model.addAttribute("fragmentName", "content");
         model.addAttribute("role", RoleTreeDto.from(roleService.findRoleById(id)));
-        model.addAttribute("mode", mode);
+        model.addAttribute("mode", mode.toUpperCase());
         return "components/modal-layout";
     }
 

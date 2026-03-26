@@ -64,7 +64,7 @@
     </div>
     <div class="flex w-full items-center gap-2 sm:w-auto">
       <th:block th:if="${pageType.name() == 'LIST'}">
-        <button class="btn btn-primary flex-1 sm:flex-none p-4 sm:px-4 justify-center" data-action="add">
+        <button class="btn btn-primary flex-1 sm:flex-none md:w-28 p-4 sm:px-4 justify-center" data-action="add">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -81,7 +81,7 @@
           </svg>
           <span>추가</span>
         </button>
-        <button class="btn btn-danger flex-1 sm:flex-none p-4 sm:px-4 justify-center" data-action="status"
+        <button class="btn btn-danger flex-1 sm:flex-none md:w-28 p-4 sm:px-4 justify-center" data-action="status"
                 data-mode="DELETED">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -101,7 +101,7 @@
         </button>
         <div class="relative flex-1 sm:flex-none justify-center">
           <button
-            class="btn btn-status w-full ignore-close gap-0 border border-gray-300 sm:px-4 justify-center"
+            class="btn btn-status w-full ignore-close md:w-28 gap-0 border border-gray-300 sm:px-4 justify-center"
             data-action="btnDropDown"
           >
             <span>상태 변경</span>
@@ -147,7 +147,7 @@
         </div>
       </th:block>
       <th:block th:if="${pageType.name() == 'APPROVAL'}">
-        <button class="btn btn-primary flex-1 sm:flex-none p-4 sm:px-4 justify-center" data-action="status"
+        <button class="btn btn-primary flex-1 sm:flex-none p-4 md:w-28 sm:px-4 justify-center" data-action="status"
                 data-mode="APPROVE">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -166,7 +166,7 @@
           </svg>
           승인
         </button>
-        <button class="btn btn-danger flex-1 sm:flex-none p-4 sm:px-4 justify-center" data-action="status"
+        <button class="btn btn-danger flex-1 sm:flex-none p-4 md:w-28 sm:px-4 justify-center" data-action="status"
                 data-mode="REJECT">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -187,7 +187,7 @@
         </button>
       </th:block>
       <th:block th:if="${pageType.name() == 'DELETED'}">
-        <button class="btn btn-primary flex-1 sm:flex-none p-4 sm:px-4 justify-center" data-action="status"
+        <button class="btn btn-primary flex-1 sm:flex-none p-4 md:w-28 sm:px-4 justify-center" data-action="status"
                 data-mode="ACTIVE">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -206,7 +206,7 @@
           </svg>
           복구
         </button>
-        <button class="btn btn-danger flex-1 sm:flex-none p-4 sm:px-4 justify-center" data-action="status"
+        <button class="btn btn-danger flex-1 sm:flex-none p-4 md:w-28 sm:px-4 justify-center" data-action="status"
                 data-mode="REMOVE">
           <svg
             xmlns="http://www.w3.org/2000/svg"

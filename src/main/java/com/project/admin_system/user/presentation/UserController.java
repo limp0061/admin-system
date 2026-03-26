@@ -147,7 +147,7 @@ public class UserController {
         model.addAttribute("count", userService.countByIds(ids));
         model.addAttribute("ids", ids);
 
-        model.addAttribute("mode", UserStatusMode.valueOf(mode));
+        model.addAttribute("mode", UserStatusMode.valueOf(mode.toUpperCase()));
         return "components/modal-layout";
     }
 }
