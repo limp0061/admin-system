@@ -1,0 +1,57 @@
+<div
+  th:fragment="schedulerTable"
+  class="flex h-full w-full flex-1 flex-col text-xs"
+>
+  <div class="flex-1 overflow-y-auto">
+    <table class="table w-full">
+      <thead class="border border-b-2">
+      <tr>
+        <th class="w-12 !text-center">
+          <input
+            type="checkbox"
+            data-action="checkToggle"
+            class="check-all size-3 cursor-pointer"
+          />
+        </th>
+        <th class="min-w-0 flex-1">이름</th>
+        <th class="w-[15%]">실행 주기</th>
+        <th class="w-[20%]">예정 시간</th>
+        <th class="w-[20%] hidden md:table-cell">마지막 실행</th>
+        <th class="w-[10%]">사용 여부</th>
+      </tr>
+      </thead>
+      <tbody class="divide-y dark:divide-zinc-800">
+      <tr th:if="${#lists.isEmpty(list.content)}">
+        <td colspan="6" class="py-16 text-center text-gray-400">
+          등록된 스케줄러가 없습니다.
+        </td>
+      </tr>
+      <tr
+        th:unless="${#lists.isEmpty(list.content)}"
+        th:each="item : ${list.content}"
+        th:data-id="${item.id}"
+        class="hover:cursor-pointer hover:bg-gray-50"
+        data-action="clickRow"
+      >
+        <td class="text-center align-middle">
+          <input
+            type="checkbox"
+            class="check-box size-3"
+            th:value="${item.id}"
+          />
+        </td>
+        <td class="max-w-0 truncate" th:text="${item.name}"></td>
+        <td th:text="${item.cron}"></td>
+        <td
+          th:text="${#temporals.format(item.nextRunAt, 'yyyy-MM-dd HH:mm')}"
+        ></td>
+        <td class="hidden md:table-cell"
+            th:text="${#temporals.format(item.lastRunAt, 'yyyy-MM-dd HH:mm')}"
+        ></td>
+        <td
+          th:text="${item.enabled ? '사용' : '중지'}"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

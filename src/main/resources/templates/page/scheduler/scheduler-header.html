@@ -1,0 +1,21 @@
+<div th:fragment="schedulerHeader" class="flex w-full items-center justify-end">
+  <div
+    class="flex w-full gap-1 pb-3 md:w-auto">
+    <button
+      class="btn btn-status w-full md:w-24 flex-1 md:flex-none border border-gray-300 sm:px-4 justify-center hover:cursor-pointer"
+      data-action="openExecuteModal"
+    >실행
+    </button>
+    <button
+      class="btn btn-primary w-full md:w-24 flex-1 md:flex-none p-4 sm:px-4 justify-center hover:cursor-pointer"
+      data-action="openResumeModal"
+    >활성화
+    </button>
+    <button
+      class="btn btn-danger w-full md:w-24 flex-1 md:flex-none p-4 sm:px-4 justify-center hover:cursor-pointer"
+      data-action="openSuspendModal"
+    >비활성화
+    </button>
+    <div th:replace="~{components/view-controller::viewController}"></div>
+  </div>
+</div>

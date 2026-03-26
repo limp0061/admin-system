@@ -151,13 +151,14 @@ const openEditModal = async (btn: HTMLElement): Promise<void> => {
     return;
   }
 
-  let ids = Array.from(checkedBoxes).map((check) => Number(check.value));
   const mode = btn.dataset.mode || '';
   const params = new URLSearchParams();
 
-  params.set('mode', mode);
+  params.set('mode', mode.toLowerCase());
 
-  ids.forEach((id) => params.append('ids', String(id)));
+  checkedBoxes.forEach((box) => {
+    params.append('ids', box.value);
+  });
   const url = `/users/modal/changeStatus?${params.toString()}`;
 
   try {

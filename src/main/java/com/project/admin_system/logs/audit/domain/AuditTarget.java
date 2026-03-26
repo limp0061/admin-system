@@ -10,7 +10,8 @@ public enum AuditTarget {
     USER_DEPT("사용자 부서"),
     ROLE("권한"),
     RESOURCE("리소스"),
-    NOTICE("공지사항");
+    NOTICE("공지사항"),
+    SCHEDULER("스케줄러");
 
     private final String label;
 

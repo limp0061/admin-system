@@ -1,0 +1,58 @@
+<div th:fragment="content" class="fixed inset-0 flex items-start justify-center pt-[10vh] bg-black/60">
+  <div class="modal-confirm">
+    <div class="p-2 text-center">
+      <div
+        class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full"
+        th:classappend="${mode eq 'SUSPEND' ? 'bg-red-50' : 'bg-blue-50'}"
+      >
+        <svg
+          class="h-8 w-8"
+          th:classappend="${mode eq 'SUSPEND' ? 'text-red-500' : 'text-blue-500'}"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            th:if="${mode ne 'SUSPEND'}"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M5 13l4 4L19 7"
+          />
+          <path
+            th:if="${mode eq 'SUSPEND'}"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+          />
+        </svg>
+      </div>
+
+      <p class="text-sm leading-relaxed text-gray-500">
+        <span class="font-medium text-gray-700 dark:text-slate-200 whitespace-pre-line"
+              th:text="${message}">
+        </span>
+      </p>
+    </div>
+
+    <div class="btn-list mt-4 flex justify-end gap-3">
+      <button
+        type="button"
+        th:data-action="${mode eq 'EXECUTE' ? 'execute' : (mode eq 'RESUME' ? 'resume' : 'suspend')}"
+        th:data-ids="${#strings.listJoin(ids, ',')}"
+        th:classappend="${mode eq 'SUSPEND' ? 'btn-danger' : 'btn-primary'}"
+        class="btn"
+        th:text="${mode eq 'EXECUTE' ? '실행' : (mode eq 'RESUME' ? '활성화' : '중지')}"
+      >
+      </button>
+      <button
+        type="button"
+        onClick="closeModal()"
+        class="btn btn-white px-4 dark:bg-zinc-300 dark:hover:bg-zinc-400"
+      >
+        닫기
+      </button>
+    </div>
+  </div>
+</div>

@@ -65,7 +65,7 @@ public class UserApiController {
             @RequestBody UserStatusChangeRequest request
     ) {
         userService.updateUserStatus(request);
-        String message = switch (request.mode()) {
+        String message = switch (request.mode().toUpperCase()) {
             case "DELETED", "REMOVE", "REJECT" -> "사용자 정보가 삭제되었습니다.";
             case "APPROVE" -> "사용자가 승인되었습니다.";
             case "UNLOCKED" -> "사용자의 잠금이 해제되었습니다.";

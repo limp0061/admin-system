@@ -16,7 +16,7 @@ public record UserConfigDto(
 
     public static UserConfigDto from(UserConfig userConfig) {
         return new UserConfigDto(
-                userConfig.getUserId(),
+                userConfig.getId(),
                 userConfig.isReceivedNotice(),
                 userConfig.getLastNoticeCheckAt()
         );

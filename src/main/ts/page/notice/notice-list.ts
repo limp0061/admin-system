@@ -238,7 +238,7 @@ const openNoticeModal = async (
   if (!request) return;
 
   const params = new URLSearchParams();
-  params.set('mode', mode);
+  params.set('mode', mode.toLowerCase());
 
   if (id && id !== 'undefined' && request.param) {
     params.set(request.param, id);
@@ -446,14 +446,15 @@ const openDeleteModal = async (): Promise<void> => {
   const checkedBoxes =
     document.querySelectorAll<HTMLInputElement>('.check-box:checked');
 
-  let ids = Array.from(checkedBoxes).map((check) => Number(check.value));
-  if (ids.length <= 0) {
+  if (checkedBoxes.length <= 0) {
     showToast('공지를 선택해주세요.', 'error');
     return;
   }
 
   const params = new URLSearchParams();
-  ids.forEach((id) => params.append('ids', String(id)));
+  checkedBoxes.forEach((box) => {
+    params.append('ids', box.value);
+  });
   const url = `/notices/modal/delete?${params.toString()}`;
   try {
     const html = await sendRequest(url, { method: 'GET' }, 'TEXT');

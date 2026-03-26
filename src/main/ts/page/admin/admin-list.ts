@@ -388,14 +388,15 @@ const openDeleteModal = async (): Promise<void> => {
   const checkedBoxes =
     document.querySelectorAll<HTMLInputElement>('.check-box:checked');
 
-  let ids = Array.from(checkedBoxes).map((check) => Number(check.value));
-  if (ids.length <= 0) {
+  if (checkedBoxes.length === 0) {
     showToast('관리자를 선택해주세요.', 'error');
     return;
   }
 
   const params = new URLSearchParams();
-  ids.forEach((id) => params.append('ids', String(id)));
+  checkedBoxes.forEach((box) => {
+    params.append('ids', box.value);
+  });
   const url = `/admins/modal/delete?${params.toString()}`;
   try {
     const html = await sendRequest(url, { method: 'GET' }, 'TEXT');

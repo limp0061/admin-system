@@ -12,8 +12,7 @@ public record NoticeAuditLog(
         String startAt,
         String endAt
 ) {
-    private static final DateTimeFormatter FORMATTER =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     public static NoticeAuditLog from(Notice notice) {
         return new NoticeAuditLog(

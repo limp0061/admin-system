@@ -12,6 +12,7 @@ import com.project.admin_system.file.domain.DomainType;
 import com.project.admin_system.logs.audit.application.dto.AuditLogDetailRequest;
 import com.project.admin_system.logs.audit.application.dto.AuditLogUpdateRequest;
 import com.project.admin_system.logs.audit.application.service.AuditLogService;
+import com.project.admin_system.logs.audit.domain.AuditAction;
 import com.project.admin_system.logs.audit.domain.AuditTarget;
 import com.project.admin_system.logs.history.application.service.PasswordHistoryService;
 import com.project.admin_system.logs.history.domain.PasswordChangeType;
@@ -31,6 +32,7 @@ import com.project.admin_system.user.domain.UserStatus;
 import com.project.admin_system.user.domain.UserStatusMode;
 import com.project.admin_system.userdept.domain.UserDept;
 import jakarta.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -150,7 +152,7 @@ public class UserService {
                     .build();
 
             passwordHistoryService.savePasswordHistory(passwordHistory);
-            auditLogService.logPasswordChange(AuditTarget.USER,
+            auditLogService.logCreate(AuditTarget.USER, AuditAction.UPDATE_PASSWORD,
                     List.of(new AuditLogDetailRequest(user.getId(), user.getEmailId(), null)));
         }
 
@@ -203,18 +205,20 @@ public class UserService {
 
     @Transactional
     public void updateUserStatus(UserStatusChangeRequest request) {
-        UserStatusMode userStatus = UserStatusMode.valueOf(request.mode());
+        UserStatusMode userStatus = UserStatusMode.valueOf(request.mode().toUpperCase());
         List<Long> ids = request.ids();
 
         if (userStatus == UserStatusMode.REMOVE || userStatus == UserStatusMode.REJECT) {
             List<Long> validIds = userValidator.validateForDelete(ids);
             List<User> users = userRepository.findAllById(validIds);
 
+            fileService.softDeleteFiles(validIds, DomainType.PROFILE);
+
             List<AuditLogDetailRequest> detailRequests = users.stream()
                     .map(user -> new AuditLogDetailRequest(user.getId(), user.getEmailId(), UserAuditLog.from(user)))
                     .toList();
 
-            userRepository.deleteAllById(validIds);
+            userRepository.deleteAllInBatch(users);
             auditLogService.logDelete(AuditTarget.USER, detailRequests);
         } else {
             List<User> users = findUsersByIdIn(ids);
@@ -238,5 +242,13 @@ public class UserService {
 
     public List<UserSearchResponse> searchAllActiveUsers(String keyword) {
         return userRepository.searchAllActiveUsers(keyword);
+    }
+
+    public List<User> findDeletedUsers(LocalDateTime dateTime) {
+        return userRepository.findByUserStatusAndDeletedAtBefore(UserStatus.DELETED, dateTime);
+    }
+
+    public void deleteUsers(List<User> users) {
+        userRepository.deleteAllInBatch(users);
     }
 }

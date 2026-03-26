@@ -77,7 +77,7 @@ public class UserDeptController {
             Model model
     ) {
         List<UserDeptDto> users = userDeptService.validateUserDepts(ids);
-        model.addAttribute("mode", mode);
+        model.addAttribute("mode", mode.toUpperCase());
         model.addAttribute("list", users);
         model.addAttribute("deptId", deptId);
         model.addAttribute("count", users.size());

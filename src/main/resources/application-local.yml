@@ -3,6 +3,7 @@ spring:
     init:
       mode: always
       data-locations:
+        - file:./sql/00_shedlock.sql
         - file:./sql/01_dept-data.sql
         - file:./sql/02_role-data.sql
         - file:./sql/03_user-data.sql

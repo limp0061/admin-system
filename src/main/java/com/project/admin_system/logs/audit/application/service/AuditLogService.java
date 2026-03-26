@@ -47,6 +47,12 @@ public class AuditLogService {
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void logCreate(AuditTarget targetEntity, AuditAction auditAction,
+                          List<AuditLogDetailRequest> detailRequests) {
+        saveAudit(targetEntity, auditAction, detailRequests);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void logUpdate(AuditTarget targetEntity, List<AuditLogUpdateRequest> updateRequests) {
 
         List<AuditLogDetailRequest> details = new ArrayList<>();
@@ -80,11 +86,6 @@ public class AuditLogService {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void logDelete(AuditTarget targetEntity, List<AuditLogDetailRequest> detailRequests) {
         saveAudit(targetEntity, AuditAction.DELETE, detailRequests);
-    }
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void logPasswordChange(AuditTarget targetEntity, List<AuditLogDetailRequest> detailRequests) {
-        saveAudit(targetEntity, AuditAction.UPDATE_PASSWORD, detailRequests);
     }
 
 

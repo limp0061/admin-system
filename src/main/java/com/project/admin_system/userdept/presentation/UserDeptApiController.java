@@ -22,7 +22,7 @@ public class UserDeptApiController {
             @RequestBody UserDeptRequest request
     ) {
         userDeptService.changeUserDept(request);
-        String message = "EDIT".equals(request.mode()) ? "구성원을 변경했습니다" : "구성원을 제거하였습니다";
+        String message = "EDIT".equalsIgnoreCase(request.mode()) ? "구성원을 변경했습니다" : "구성원을 제거하였습니다";
         return ResponseEntity.ok(new ApiResponse<>(message));
     }
 }

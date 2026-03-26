@@ -8,11 +8,9 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import java.sql.Types;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
-import org.hibernate.annotations.JdbcTypeCode;
 
 @Getter
 @Entity
@@ -30,8 +28,7 @@ public class Notice extends BaseEntity {
     @Column(length = 100, nullable = false)
     private String title;
 
-    @JdbcTypeCode(Types.LONGVARCHAR)
-    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
     @Column(nullable = false)
